@@ -9,26 +9,25 @@ import android.widget.TextView;
 import com.example.budgetassistant.R;
 import com.example.budgetassistant.models.Transaction;
 
+import java.util.ArrayList;
+
 public class AlertAdapter extends  android.widget.BaseAdapter {
 
     LayoutInflater aInflater;
-    Transaction[] upcomingTransactions;
+    ArrayList<Transaction> mData = new ArrayList<Transaction>();
 
 
-    public AlertAdapter(Context c,Transaction[] transactions) {
-        upcomingTransactions =transactions;
+    public AlertAdapter(Context c) {
         aInflater = (LayoutInflater) c.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
     }
 
     @Override
     public int getCount() {
-        return upcomingTransactions.length;
+        return mData.size();
     }
 
     @Override
-    public Object getItem(int i) {
-        return upcomingTransactions[i];
-    }
+    public Transaction getItem(int i) {return mData.get(i);}
 
     @Override
     public long getItemId(int i) {
@@ -45,9 +44,11 @@ public class AlertAdapter extends  android.widget.BaseAdapter {
         TextView countdownNumTextView = (TextView) v.findViewById(R.id.CountdownNum);
         TextView countdownUnitTextView = (TextView) v.findViewById(R.id.CountdownUnit);
 
-        String desc = upcomingTransactions[i].Description;
-        String cost = Float.toString(upcomingTransactions[i].Amount);
-        String occur = upcomingTransactions[i].Frequency;
+        Transaction transaction = getItem(i);
+
+        String desc = transaction.Description;
+        String cost = Float.toString(transaction.Expense);
+        String occur = transaction.Frequency;
 
         //TODO: Calculate countdown
         String countNum = Double.toString(Math.random() * 5f);
@@ -60,5 +61,9 @@ public class AlertAdapter extends  android.widget.BaseAdapter {
         countdownUnitTextView.setText(countUnit);
 
         return v;
+    }
+
+    public void addItem(Transaction transaction){
+        mData.add(transaction);
     }
 }

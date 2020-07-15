@@ -54,7 +54,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="35dp"
-            android:text="@string/money_value_label"
+            android:text="Account Balance"
             android:textAllCaps="false"
             android:textColor="#FFFFFF" />
 
@@ -68,7 +68,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
-                android:text="@string/test_money_value"
+                android:text="$5000"
                 android:textColor="#FFFFFF"
                 android:textSize="50sp"
                 android:textStyle="bold" />

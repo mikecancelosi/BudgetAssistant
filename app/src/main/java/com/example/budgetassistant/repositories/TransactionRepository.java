@@ -27,12 +27,12 @@ public class TransactionRepository {
         return data;
     }
     private void setTransactions(){
-        dataSet.add(new Transaction(500.35f,true,"Steam Summer Sale", TransactionCategories.OTHER, "11/29/2020"));
-        dataSet.add(new Transaction(13.25f,true,"Venmo", TransactionCategories.FOOD, "11/29/2020"));
-        dataSet.add(new Transaction(800.31f,true,"Matt Peterson", TransactionCategories.BILLS, "12/02/2020"));
-        dataSet.add(new Transaction(60.34f,true,"Shoprite", TransactionCategories.FOOD, "12/15/2020"));
-        dataSet.add(new Transaction(10.30f,false,"Venmo", TransactionCategories.OTHER, "12/15/2020"));
-        dataSet.add(new Transaction(12.55f,true,"Shoprite", TransactionCategories.FOOD, "1/9/2021"));
+        dataSet.add(new Transaction(0f,500.35f,"Steam Summer Sale", TransactionCategories.OTHER, "11/29/2020"));
+        dataSet.add(new Transaction(0f,13.25f,"Venmo", TransactionCategories.FOOD, "11/29/2020"));
+        dataSet.add(new Transaction(0f,800.31f,"Matt Peterson", TransactionCategories.BILLS, "12/02/2020"));
+        dataSet.add(new Transaction(0f,60.34f,"Shoprite", TransactionCategories.FOOD, "12/15/2020"));
+        dataSet.add(new Transaction(10.30f,0f,"Venmo", TransactionCategories.OTHER, "12/15/2020"));
+        dataSet.add(new Transaction(0f,12.55f,"Shoprite", TransactionCategories.FOOD, "1/9/2021"));
 
     }
 }

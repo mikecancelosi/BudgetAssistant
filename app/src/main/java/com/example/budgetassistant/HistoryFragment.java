@@ -11,7 +11,9 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ListView;
 
+import com.example.budgetassistant.adapters.TransactionHistoryAdapter;
 import com.example.budgetassistant.models.Transaction;
 import com.example.budgetassistant.viewmodels.TransactionHistoryViewModel;
 
@@ -22,9 +24,9 @@ import java.util.List;
  */
 public class HistoryFragment extends Fragment {
 
-    private TransactionHistoryViewModel transactionHistoryViewModel;
-    private TransactionAdapter transactionAdapter;
-    private RecyclerView recyclerView;
+    private TransactionHistoryViewModel mTransactionHistoryViewModel;
+    private TransactionHistoryAdapter mTransactionAdapter;
+    private ListView mListView;
 
     public HistoryFragment() {
         // Required empty public constructor
@@ -41,27 +43,25 @@ public class HistoryFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view =  inflater.inflate(R.layout.fragment_history, container, false);
-        recyclerView = (RecyclerView) view.findViewById(R.id.HistoryList);
+        mListView = (ListView) view.findViewById(R.id.HistoryList);
 
 
-        transactionHistoryViewModel = new ViewModelProvider(this).get(TransactionHistoryViewModel.class);
-        transactionHistoryViewModel.init();
-        transactionHistoryViewModel.getTransactions().observe(getViewLifecycleOwner(), new Observer<List<Transaction>>() {
+        mTransactionHistoryViewModel = new ViewModelProvider(this).get(TransactionHistoryViewModel.class);
+        mTransactionHistoryViewModel.init();
+        mTransactionHistoryViewModel.getTransactions().observe(getViewLifecycleOwner(), new Observer<List<Transaction>>() {
             @Override
             public void onChanged(List<Transaction> transactions) {
-                transactionAdapter.notifyDataSetChanged();
+                mTransactionAdapter.notifyDataSetChanged();
             }
         });
-        initRecyclerView();
+        initListView();
 
         return view;
     }
 
-    private void initRecyclerView(){
-        LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity());
-        recyclerView.setLayoutManager(layoutManager);
+    private void initListView(){
 
-        transactionAdapter = new TransactionAdapter(transactionHistoryViewModel.getTransactions().getValue(),getActivity());
-        recyclerView.setAdapter(transactionAdapter);
+        mTransactionAdapter = new TransactionHistoryAdapter(getActivity());
+        mListView.setAdapter(mTransactionAdapter);
     }
 }

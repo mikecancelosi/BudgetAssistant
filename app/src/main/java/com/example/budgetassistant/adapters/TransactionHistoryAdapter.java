@@ -37,7 +37,7 @@ public class TransactionHistoryAdapter  extends BaseAdapter {
     }
 
     @Override
-    public Object getItem(int i) {
+    public Transaction getItem(int i) {
         return mData.get(i);
     }
 
@@ -64,13 +64,20 @@ public class TransactionHistoryAdapter  extends BaseAdapter {
     }
 
     private void initItem(View view, int index){
+        TextView descriptionText = view.findViewById(R.id.DescriptionTextView);
+        TextView costText = view.findViewById(R.id.AmountTextView);
 
-
+        Transaction transaction = getItem(index);
+        descriptionText.setText(transaction.Description);
+        float amount = transaction.Income != 0f ? transaction.Income : transaction.Expense;
+        costText.setText(Float.toString(amount));
     }
 
     private void initHeader(View view,int index){
         TextView dateText = view.findViewById(R.id.DateTextView);
-        dateText.setText(mData.get(index).DateOfTransaction);
+
+        Transaction transaction = getItem(index);
+        dateText.setText(transaction.DateOfTransaction);
     }
 
 
