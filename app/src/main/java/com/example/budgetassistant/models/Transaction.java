@@ -12,6 +12,13 @@ public class Transaction {
     public String DateOfTransaction;
     public String Frequency;
 
+    public Transaction(String date){
+        Amount = 0f;
+        Expense = true;
+        Description = "Not Available";
+        Category = TransactionCategories.OTHER;
+        DateOfTransaction = date;    }
+
     public Transaction(float amount, boolean expense, String description, TransactionCategories category, String date) {
         Amount = amount;
         Expense = expense;
