@@ -89,6 +89,13 @@
 
     </LinearLayout>
 
+    <fragment
+        android:id="@+id/PayPeriodBreakdown"
+        android:name="com.example.budgetassistant.PayPeriodBreakdownFragment"
+        android:layout_width="match_parent"
+        android:layout_height="300dp"
+        android:layout_weight="0"
+        tools:layout="@layout/fragment_pay_period_breakdown" />
 
 
     <LinearLayout

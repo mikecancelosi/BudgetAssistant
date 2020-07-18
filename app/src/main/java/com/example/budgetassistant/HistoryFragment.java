@@ -60,7 +60,6 @@ public class HistoryFragment extends Fragment {
     }
 
     private void initListView(){
-
         mTransactionAdapter = new TransactionHistoryAdapter(getActivity());
         mListView.setAdapter(mTransactionAdapter);
     }

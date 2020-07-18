@@ -2,10 +2,15 @@ package com.example.budgetassistant.models;
 
 import android.media.Image;
 
+import com.example.budgetassistant.TransactionCategories;
 import com.example.budgetassistant.models.Transaction;
 
+import java.time.LocalDate;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+
+import static java.time.temporal.ChronoUnit.DAYS;
 
 public class UserSettings {
 
@@ -45,32 +50,31 @@ public class UserSettings {
         return recurringTransactions.get(i);
     }
 
-    private HashMap<String, Float> idealBreakdown;
-    public HashMap<String,Float> getIdealBreakdown(){
+    private HashMap<TransactionCategories, Float> idealBreakdown;
+    public HashMap<TransactionCategories,Float> getIdealBreakdown(){
         return idealBreakdown;
     }
-    public Boolean setIdealBreakdown(HashMap<String,Float> breakdown){
+    public void setIdealBreakdown(HashMap<TransactionCategories,Float> breakdown){
         idealBreakdown = breakdown;
-        return true;
     }
 
-    private List<Transaction> transactionHistory;
-    public List<Transaction> getTransactionHistory(){
-        return transactionHistory;
+    private float budget;
+    public float getBudget() {
+        return budget;
     }
-    public void setTransactionHistory(List<Transaction> transactions){
-        transactionHistory = transactions;
+
+    private Income income;
+    public Income GetIncome(){
+        return income;
     }
-    public void addHistoricalTransaction(Transaction transaction){
-        transactionHistory.add(transaction);
+    public void SetIncome(Income newIncome){
+        income = newIncome;
     }
-    public void removeHistoricalTransaction(int i){
-        transactionHistory.remove(i);
+    private Date nextPaycheckDate;
+    public Date GetNextPaycheckDate(){
+        return nextPaycheckDate;
     }
-    public void editHistoricalTransaction(int i, Transaction transaction){
-        transactionHistory.set(i, transaction);
-    }
-    public Transaction getHistoricalTransaction(int i){
-        return transactionHistory.get(i);
+    public int GetNumberOfDaysToNextPaycheck(){
+      return (int) DAYS.between(LocalDate.now(),LocalDate.parse(GetNextPaycheckDate().toString()));
     }
 }

@@ -1,0 +1,52 @@
+package com.example.budgetassistant.repositories;
+
+import androidx.lifecycle.MutableLiveData;
+
+import com.example.budgetassistant.TransactionCategories;
+import com.example.budgetassistant.models.Income;
+import com.example.budgetassistant.models.Transaction;
+import com.example.budgetassistant.models.UserSettings;
+
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+
+public class UserSettingsRepository {
+    private static UserSettingsRepository instance;
+    public static UserSettingsRepository getInstance(){
+        if(instance == null){
+            instance = new UserSettingsRepository();
+        }
+        return instance;
+    }
+
+    private UserSettings dataSet = new UserSettings();
+    public MutableLiveData<UserSettings> getSettings(){
+        setSettings();
+        MutableLiveData<UserSettings> data = new MutableLiveData<>();
+        data.setValue(dataSet);
+        return data;
+    }
+    private void setSettings(){
+        dataSet = new UserSettings();
+        dataSet.setName("Mike Cancelosi");
+        Income income = new Income(1000f,14,new Date((long)1594915200000f)); // This number represents 07/16/2020 ( ms since 01/01/1970 )
+        dataSet.SetIncome(income);
+        dataSet.setRecurringTransactions(createRecurringTransactionPayments());
+        dataSet.setIdealBreakdown(createIdealBreakdown());
+    }
+    private static List<Transaction> createRecurringTransactionPayments(){
+        List<Transaction> transactions = new ArrayList<Transaction>();
+        transactions.add(new Transaction(0f,200f,"Car Payment", TransactionCategories.TRANSPORTATION,"01/01/01","Monthly"));
+        transactions.add(new Transaction(0f,50f,"Spotify", TransactionCategories.SUBSCRIPTION,"01/01/01","Monthly"));
+        transactions.add(new Transaction(0f,10f,"DollarShaveClub", TransactionCategories.SUBSCRIPTION,"01/01/01","Quarterly"));
+        transactions.add(new Transaction(0f,50f,"Dad's Gift", TransactionCategories.GIFT,"01/01/01","Yearly"));
+        return transactions;
+    }
+    private static HashMap<TransactionCategories,Float> createIdealBreakdown(){
+        HashMap<TransactionCategories,Float> breakdown = new HashMap<>();
+
+        return breakdown;
+    }
+}
