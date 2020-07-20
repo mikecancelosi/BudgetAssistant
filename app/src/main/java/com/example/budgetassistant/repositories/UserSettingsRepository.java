@@ -9,6 +9,7 @@ import com.example.budgetassistant.models.UserSettings;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -40,10 +41,11 @@ public class UserSettingsRepository {
     }
     private static List<Transaction> createRecurringTransactionPayments(){
         List<Transaction> transactions = new ArrayList<Transaction>();
-        transactions.add(new Transaction(0f,200f,"Car Payment", TransactionCategories.TRANSPORTATION,"01/01/01","Monthly"));
-        transactions.add(new Transaction(0f,50f,"Spotify", TransactionCategories.SUBSCRIPTION,"01/01/01","Monthly"));
-        transactions.add(new Transaction(0f,10f,"DollarShaveClub", TransactionCategories.SUBSCRIPTION,"01/01/01","Quarterly"));
-        transactions.add(new Transaction(0f,50f,"Dad's Gift", TransactionCategories.GIFT,"01/01/01","Yearly"));
+        Calendar calInstance = Calendar.getInstance();
+        transactions.add(new Transaction(0f,200f,"Car Payment", TransactionCategories.TRANSPORTATION, new Date((long) 1561953600000f),"Monthly")); // 2019/07/01
+        transactions.add(new Transaction(0f,50f,"Spotify", TransactionCategories.SUBSCRIPTION,new Date((long) 1548738000000f),"Monthly")); // 2019/01/29
+        transactions.add(new Transaction(0f,10f,"DollarShaveClub", TransactionCategories.SUBSCRIPTION,new Date((long) 1548738000000f),"Quarterly"));
+        transactions.add(new Transaction(0f,50f,"Dad's Gift", TransactionCategories.GIFT,new Date((long) 1548738000000f),"Yearly"));
         return transactions;
     }
     private static HashMap<TransactionCategories,Float> createIdealBreakdown(){

@@ -16,11 +16,9 @@ public class UserSettingsViewModel extends ViewModel {
     private MutableLiveData<UserSettings> mSettings;
     private UserSettingsRepository mRepo;
 
-    public UserSettingsViewModel(){
-        init();
-    }
 
-    private void init(){
+
+    public void init(){
         if(mSettings != null){
             return;
         }

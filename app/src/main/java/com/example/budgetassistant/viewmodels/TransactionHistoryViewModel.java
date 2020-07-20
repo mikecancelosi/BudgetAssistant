@@ -2,6 +2,7 @@ package com.example.budgetassistant.viewmodels;
 
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
+import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModel;
 
 import com.example.budgetassistant.models.Transaction;
@@ -12,14 +13,21 @@ import java.util.List;
 public class TransactionHistoryViewModel extends ViewModel {
 
     private MutableLiveData<List<Transaction>> mTransactions;
-    private TransactionRepository tRepo;
+    private TransactionRepository mRepo;
 
     public void init(){
         if(mTransactions != null){
             return;
         }
-        tRepo = TransactionRepository.getInstance();
-        mTransactions = tRepo.getTransactions();
+        mRepo = TransactionRepository.getInstance();
+        mRepo.getTransactions().observeForever(new Observer<List<Transaction>>() {
+            @Override
+            public void onChanged(List<Transaction> transactions) {
+               mTransactions = mRepo.getTransactions();
+
+            }
+        });
+        mTransactions = mRepo.getTransactions();
     }
 
     public LiveData<List<Transaction>> getTransactions(){

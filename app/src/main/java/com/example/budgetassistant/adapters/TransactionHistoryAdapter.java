@@ -11,6 +11,7 @@ import com.example.budgetassistant.R;
 import com.example.budgetassistant.models.Transaction;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.TreeSet;
 
 public class TransactionHistoryAdapter  extends BaseAdapter {
@@ -77,7 +78,7 @@ public class TransactionHistoryAdapter  extends BaseAdapter {
         TextView dateText = view.findViewById(R.id.DateTextView);
 
         Transaction transaction = getItem(index);
-        dateText.setText(transaction.DateOfTransaction);
+        dateText.setText(transaction.DateOfTransaction.toString());
     }
 
 
@@ -87,7 +88,7 @@ public class TransactionHistoryAdapter  extends BaseAdapter {
         notifyDataSetChanged();
     }
 
-    public void addHeader(String date){
+    public void addHeader(Date date){
         mData.add(new Transaction(date));
         mHeaderIndices.add(mData.size()-1);
         notifyDataSetChanged();

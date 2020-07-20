@@ -31,6 +31,7 @@ public class PayPeriodBreakdownViewModel extends ViewModel {
     private UserSettingsRepository mSettingsRepo;
     private UserSettings mSettings;
 
+
     public void init(){
         if(payPeriodBreakdown != null){
             return;
