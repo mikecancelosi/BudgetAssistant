@@ -21,6 +21,10 @@
         android:layout_width="match_parent"
         android:layout_height="90dp"
         android:layout_weight="1"
-        app:menu="@menu/menu_navigation"/>
+        android:background="@color/colorPrimaryDark"
+        app:itemIconTint="@color/colorOnPrimary"
+        app:itemTextColor="@color/colorOnPrimary"
+        app:labelVisibilityMode="unlabeled"
+        app:menu="@menu/menu_navigation" />
 
 </LinearLayout>
