@@ -5,14 +5,19 @@ import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListView;
+import android.widget.TextView;
 
 import com.example.budgetassistant.adapters.AlertAdapter;
 import com.example.budgetassistant.adapters.TransactionHistoryAdapter;
+import com.example.budgetassistant.models.BankAccount;
+import com.example.budgetassistant.models.UserSettings;
 import com.example.budgetassistant.viewmodels.AlertViewModel;
+import com.example.budgetassistant.viewmodels.BankAccountViewModel;
 import com.example.budgetassistant.viewmodels.TransactionHistoryViewModel;
 import com.example.budgetassistant.viewmodels.UserSettingsViewModel;
 
@@ -25,6 +30,7 @@ public class HomeFragment extends Fragment {
     private AlertAdapter mAlertAdapter;
     private ListView mListView;
     private UserSettingsViewModel mUserSettings;
+    private BankAccountViewModel mBankAccount;
 
     public HomeFragment() {
         // Required empty public constructor
@@ -41,11 +47,28 @@ public class HomeFragment extends Fragment {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_home, container, false);
 
-        mUserSettings = UserSettingsViewModel.getInstance();
 
+        setUpHeader(view);
         setUpList(view);
 
         return view;
+    }
+
+    private void setUpHeader(View view){
+        //Set account balance
+        mBankAccount = new BankAccountViewModel();
+        mBankAccount.init();
+        TextView AccountBalance = (TextView) view.findViewById(R.id.BankAccountBalance);
+        BankAccount account = mBankAccount.getAccount().getValue();
+        AccountBalance.setText("$" + account.Balance);
+
+        //Set user name and picture
+        mUserSettings =  new UserSettingsViewModel();
+
+        TextView nameText = (TextView) view.findViewById(R.id.UserName);
+        UserSettings settings = mUserSettings.getSettings().getValue();
+        nameText.setText(settings.getName());
+
     }
 
     private void setUpList(View view){

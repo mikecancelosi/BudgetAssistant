@@ -36,7 +36,7 @@
                 android:layout_marginRight="5dp"
                 android:layout_weight="1"
                 android:gravity="right|center_vertical"
-                android:text="Mike Cancelosi"
+                android:text="User Name"
                 android:textColor="@color/colorOnPrimary"
                 android:textSize="14sp"
                 android:textStyle="bold" />
@@ -59,7 +59,7 @@
             android:textColor="@color/colorOnPrimary" />
 
         <TextView
-            android:id="@+id/BudgetValue"
+            android:id="@+id/BankAccountBalance"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:text="$5000"

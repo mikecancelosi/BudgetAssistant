@@ -16,12 +16,16 @@ public class UserSettingsViewModel extends ViewModel {
     private MutableLiveData<UserSettings> mSettings;
     private UserSettingsRepository mRepo;
 
-    public void init(){
+    public UserSettingsViewModel(){
+        init();
+    }
+
+    private void init(){
         if(mSettings != null){
             return;
         }
         mRepo = UserSettingsRepository.getInstance();
-        mSettings =mRepo.getSettings();
+        mSettings = mRepo.getSettings();
     }
 
     public LiveData<UserSettings> getSettings(){

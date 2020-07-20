@@ -5,4 +5,11 @@ public class BankAccount {
     public int Balance;
     public String BankName;
     public String DisplayName;
+
+    public BankAccount(String accountNumber, int balance, String bankName, String displayName) {
+        AccountNumber = accountNumber;
+        Balance = balance;
+        BankName = bankName;
+        DisplayName = displayName;
+    }
 }
