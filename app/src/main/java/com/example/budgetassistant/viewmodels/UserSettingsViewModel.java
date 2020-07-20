@@ -1,21 +1,30 @@
 package com.example.budgetassistant.viewmodels;
 
+import androidx.lifecycle.LiveData;
+import androidx.lifecycle.MutableLiveData;
+import androidx.lifecycle.ViewModel;
+
+import com.example.budgetassistant.models.Transaction;
 import com.example.budgetassistant.models.UserSettings;
 import com.example.budgetassistant.repositories.TransactionRepository;
+import com.example.budgetassistant.repositories.UserSettingsRepository;
 
-public class UserSettingsViewModel {
+import java.util.List;
 
-    private static UserSettingsViewModel instance;
-    public static UserSettingsViewModel getInstance(){
-        if(instance == null){
-            instance = new UserSettingsViewModel();
+public class UserSettingsViewModel extends ViewModel {
+
+    private MutableLiveData<UserSettings> mSettings;
+    private UserSettingsRepository mRepo;
+
+    public void init(){
+        if(mSettings != null){
+            return;
         }
-        return instance;
+        mRepo = UserSettingsRepository.getInstance();
+        mSettings =mRepo.getSettings();
     }
 
-    private UserSettings userSettings;
-
-    public UserSettings GetUserSettings(){
-        return userSettings;
+    public LiveData<UserSettings> getSettings(){
+        return mSettings;
     }
 }

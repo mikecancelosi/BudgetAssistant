@@ -6,6 +6,7 @@ import com.example.budgetassistant.TransactionCategories;
 import com.example.budgetassistant.models.Transaction;
 
 import java.time.LocalDate;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -60,7 +61,27 @@ public class UserSettings {
 
     private float budget;
     public float getBudget() {
+        if(budget == 0f){
+            setBudget();
+        }
         return budget;
+    }
+    private void setBudget(){
+        float Income = GetIncome().Amount;
+        HashMap<TransactionCategories,Float> breakdown = getIdealBreakdown();
+        float allocatedAmount = 0f;
+        List<TransactionCategories> allocatedCategories = Arrays.asList(
+                TransactionCategories.INVESTMENT,
+                TransactionCategories.SAVINGS,
+                TransactionCategories.SUBSCRIPTION,
+                TransactionCategories.BILL);
+
+        for(TransactionCategories cat : allocatedCategories) {
+            if (breakdown.containsKey(cat)) {
+                allocatedAmount += breakdown.get(cat);
+            }
+        }
+        budget = Income - allocatedAmount;
     }
 
     private Income income;
@@ -69,12 +90,5 @@ public class UserSettings {
     }
     public void SetIncome(Income newIncome){
         income = newIncome;
-    }
-    private Date nextPaycheckDate;
-    public Date GetNextPaycheckDate(){
-        return nextPaycheckDate;
-    }
-    public int GetNumberOfDaysToNextPaycheck(){
-      return (int) DAYS.between(LocalDate.now(),LocalDate.parse(GetNextPaycheckDate().toString()));
     }
 }

@@ -26,6 +26,7 @@ public class TransactionRepository {
         return data;
     }
     private void setTransactions(){
+        dataSet.clear();
         dataSet.add(new Transaction(0f,500.35f,"Steam Summer Sale", TransactionCategories.OTHER, "11/29/2020"));
         dataSet.add(new Transaction(0f,13.25f,"Venmo", TransactionCategories.FOOD, "11/29/2020"));
         dataSet.add(new Transaction(0f,800.31f,"Matt Peterson", TransactionCategories.BILL, "12/02/2020"));

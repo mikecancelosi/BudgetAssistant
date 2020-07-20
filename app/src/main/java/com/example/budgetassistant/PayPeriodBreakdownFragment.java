@@ -3,6 +3,7 @@ package com.example.budgetassistant;
 import android.graphics.Color;
 import android.os.Bundle;
 
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
@@ -52,7 +53,7 @@ public class PayPeriodBreakdownFragment extends Fragment {
         mPayPeriodViewModel.getBreakdown().observe(getViewLifecycleOwner(), new Observer<PayPeriodBreakdown>() {
             @Override
             public void onChanged(PayPeriodBreakdown payPeriodBreakdown) {
-
+                setChart();
             }
         });
         setChart();
@@ -66,35 +67,44 @@ public class PayPeriodBreakdownFragment extends Fragment {
         List<PieEntry> pieEntries = new ArrayList<>();
         PayPeriodBreakdown breakdown = mPayPeriodViewModel.getBreakdown().getValue();
 
-        for(Transaction t : breakdown.categorizedTransactions){
-            pieEntries.add(new PieEntry(t.Expense,t.Category.name()));
-        }
+        pieEntries.add(new PieEntry(breakdown.spentPercentage,"Expenses"));
+        pieEntries.add(new PieEntry(breakdown.unspentPercentage,"Unspent"));
 
         PieDataSet dataSet = new PieDataSet(pieEntries,"");
         dataSet.setColors(ColorTemplate.LIBERTY_COLORS); //
-        dataSet.setXValuePosition(PieDataSet.ValuePosition.OUTSIDE_SLICE);
-        dataSet.setSliceSpace(2f);
-        dataSet.setValueLinePart2Length(.5f);
-        dataSet.setValueTextSize(14f);
-        PieData data = new PieData(dataSet);
+        dataSet.setDrawValues(false);
+        mChart.setDrawEntryLabels(false);
 
+
+        PieData data = new PieData(dataSet);
         // Use percentages.
         data.setValueFormatter(new PercentFormatter(mChart));
         mChart.setUsePercentValues(true);
-
         mChart.setData(data);
+
+        mChart.setTouchEnabled(false);
+        //Set ChartSizes
+        mChart.setHoleRadius(50f);
+        dataSet.setSelectionShift(0f);
+        //Set margin
         mChart.setExtraLeftOffset(30f);
         mChart.setExtraRightOffset(30f);
-
-        mChart.setEntryLabelColor(Color.BLACK);
-        mChart.spin(2500,270,360, Easing.EaseOutBounce);
-
         //Remove legend.
         Legend legend = mChart.getLegend();
         legend.setEnabled(false);
         //Remove description
         Description des = mChart.getDescription();
         des.setEnabled(false);
+        //Set colors
+        mChart.setHoleColor(00000000);
+        dataSet.setColors(new int[]{R.color.colorPrimary,R.color.colorPrimaryDark},getContext());
+        //Set Text
+        int daysLeftInPayPeriod = mPayPeriodViewModel.getDaysLeftInPayPeriod();
+        mChart.setCenterText(daysLeftInPayPeriod + " Days left");
+
+
+
         mChart.invalidate();
+
     }
 }

@@ -1,5 +1,7 @@
 package com.example.budgetassistant.viewmodels;
 
+import android.util.Log;
+
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.Observer;
@@ -11,6 +13,7 @@ import com.example.budgetassistant.models.PayPeriodBreakdown;
 import com.example.budgetassistant.models.Transaction;
 import com.example.budgetassistant.models.UserSettings;
 import com.example.budgetassistant.repositories.TransactionRepository;
+import com.example.budgetassistant.repositories.UserSettingsRepository;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -25,12 +28,16 @@ import static java.time.temporal.ChronoUnit.DAYS;
 public class PayPeriodBreakdownViewModel extends ViewModel {
     private MutableLiveData<PayPeriodBreakdown> payPeriodBreakdown;
     private TransactionRepository mRepo;
+    private UserSettingsRepository mSettingsRepo;
     private UserSettings mSettings;
 
     public void init(){
         if(payPeriodBreakdown != null){
             return;
         }
+        mSettingsRepo = UserSettingsRepository.getInstance();
+        mSettings = mSettingsRepo.getSettings().getValue();
+
         mRepo = TransactionRepository.getInstance();
         mRepo.getTransactions().observeForever(new Observer<List<Transaction>>() {
             @Override
@@ -50,11 +57,13 @@ public class PayPeriodBreakdownViewModel extends ViewModel {
        float budget = mSettings.getBudget();
        float spentPercentage = budget / totalSpent;
 
-       int daysLeftInPayPeriod = mSettings.GetNumberOfDaysToNextPaycheck();
-       int payPeriodInDays = mSettings.GetIncome().PayPeriodInDays;
+       Income income = mSettings.GetIncome();
+       int daysLeftInPayPeriod = income.GetNumberOfDaysToNextPaycheck();
+       int payPeriodInDays = income.PayPeriodInDays;
        float idealSpentPercentage = (float)daysLeftInPayPeriod/payPeriodInDays;
 
         breakdown = new PayPeriodBreakdown(spentPercentage,max(0,1f-spentPercentage),idealSpentPercentage);
+        payPeriodBreakdown = new MutableLiveData<>();
         payPeriodBreakdown.setValue(breakdown);
     }
 
@@ -70,4 +79,5 @@ public class PayPeriodBreakdownViewModel extends ViewModel {
     public LiveData<PayPeriodBreakdown> getBreakdown(){
         return payPeriodBreakdown;
     }
+    public int getDaysLeftInPayPeriod(){return mSettings.GetIncome().GetNumberOfDaysToNextPaycheck();}
 }

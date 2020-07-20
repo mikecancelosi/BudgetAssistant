@@ -68,7 +68,7 @@ public class StatsFragment extends Fragment {
         dataSet.setValueTextSize(14f);
         PieData data = new PieData(dataSet);
 
-        PieChart chart = (PieChart) view.findViewById(R.id.PieBreakdown);
+        PieChart chart = (PieChart) view.findViewById(R.id.PayPeriodBreakdown);
         chart.setData(data);
         chart.setExtraLeftOffset(30f);
         chart.setExtraRightOffset(30f);

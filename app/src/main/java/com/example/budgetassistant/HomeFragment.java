@@ -14,6 +14,7 @@ import com.example.budgetassistant.adapters.AlertAdapter;
 import com.example.budgetassistant.adapters.TransactionHistoryAdapter;
 import com.example.budgetassistant.viewmodels.AlertViewModel;
 import com.example.budgetassistant.viewmodels.TransactionHistoryViewModel;
+import com.example.budgetassistant.viewmodels.UserSettingsViewModel;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -23,6 +24,7 @@ public class HomeFragment extends Fragment {
     private AlertViewModel mAlertViewModel;
     private AlertAdapter mAlertAdapter;
     private ListView mListView;
+    private UserSettingsViewModel mUserSettings;
 
     public HomeFragment() {
         // Required empty public constructor
@@ -38,6 +40,8 @@ public class HomeFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_home, container, false);
+
+        mUserSettings = UserSettingsViewModel.getInstance();
 
         setUpList(view);
 

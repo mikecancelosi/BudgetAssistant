@@ -13,6 +13,7 @@ public enum TransactionCategories {
     UPKEEP,
     VACATION,
     INVESTMENT,
+    SAVINGS,
     SUBSCRIPTION,
     OTHER,
 }
