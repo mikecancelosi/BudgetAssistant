@@ -45,6 +45,7 @@ public class UserSettingsRepository {
         transactions.add(new Transaction(0f,50f,"Spotify", TransactionCategories.SUBSCRIPTION,new Date((long) 1548738000000f),"Monthly")); // 2019/01/29
         transactions.add(new Transaction(0f,10f,"DollarShaveClub", TransactionCategories.SUBSCRIPTION,new Date((long) 1548738000000f),"Quarterly"));
         transactions.add(new Transaction(0f,50f,"Dad's Gift", TransactionCategories.GIFT,new Date((long) 1548738000000f),"Yearly"));
+        transactions.add(new Transaction(0f,1f,"Wikipedia Donation", TransactionCategories.GIFT,new Date((long) 1548738000000f),"Monthly"));
         return transactions;
     }
     private static HashMap<TransactionCategories,Float> createIdealBreakdown(){

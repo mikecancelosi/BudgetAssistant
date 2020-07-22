@@ -6,7 +6,6 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -26,7 +25,6 @@ import com.github.mikephil.charting.formatter.PercentFormatter;
 import com.github.mikephil.charting.utils.ColorTemplate;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 /**
@@ -78,7 +76,7 @@ public class PayPeriodSummaryFragment extends Fragment {
         List<PieEntry> pieEntries = new ArrayList<>();
         TransactionSummary breakdown = mTransactionSummaryViewModel.getSummary().getValue();
 
-        float expensePercentage = breakdown.GetExpenseTotal() / breakdown.Budget;
+        float expensePercentage = mTransactionSummaryViewModel.GetExpenseTotal() / breakdown.Budget;
         pieEntries.add(new PieEntry(expensePercentage,"Expenses"));
         if(expensePercentage < 1) {
             pieEntries.add(new PieEntry(1-expensePercentage, "Unspent"));
@@ -113,7 +111,7 @@ public class PayPeriodSummaryFragment extends Fragment {
         mChart.setHoleColor(00000000);
         dataSet.setColors(new int[]{R.color.colorPrimary,R.color.colorPrimaryDark},getContext());
         //Set Text
-        int daysLeftInPayPeriod = breakdown.GetDaysLeftInTimePeriod();
+        int daysLeftInPayPeriod = mTransactionSummaryViewModel.GetDaysLeftInTimePeriod();
         mChart.setCenterText(daysLeftInPayPeriod + " Days left");
 
 

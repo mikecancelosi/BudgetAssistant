@@ -35,10 +35,10 @@ public class TransactionRepository {
         dataSet.add(new Transaction(0f,60.34f,"Shoprite", TransactionCategories.FOOD,  new Date((long) 1561780800000f)));
         dataSet.add(new Transaction(10.30f,0f,"Venmo", TransactionCategories.OTHER,  new Date((long)1556510400000f)));
         dataSet.add(new Transaction(0f,12.55f,"Shoprite", TransactionCategories.FOOD,  new Date((long) 1548738000000f)));
-        //Current pay period
 
+        //Current pay period
         dataSet.add(new Transaction(0f,110.14f,"Shoprite", TransactionCategories.FOOD,  new Date((long) 1595044800000f)));
-        dataSet.add(new Transaction(10.30f,0f,"Venmo", TransactionCategories.OTHER,  new Date((long)1595044800000f)));
+        dataSet.add(new Transaction(11.30f,0f,"Venmo", TransactionCategories.OTHER,  new Date((long)1595044800000f)));
         dataSet.add(new Transaction(0f,32.55f,"Shoprite", TransactionCategories.FOOD,  new Date((long) 1595217600000f)));
         dataSet.add(new Transaction(0f,182.55f,"Amazon", TransactionCategories.OTHER,  new Date((long) 1595217600000f)));
         dataSet.add(new Transaction(0f,122.13f,"Wine And Spirits", TransactionCategories.PARTYING,  new Date((long) 1595217600000f)));

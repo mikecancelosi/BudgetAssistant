@@ -9,6 +9,7 @@ import androidx.lifecycle.ViewModel;
 
 import com.example.budgetassistant.DateExtensions;
 import com.example.budgetassistant.PayPeriodSummaryFragment;
+import com.example.budgetassistant.TransactionCategories;
 import com.example.budgetassistant.models.BankAccount;
 import com.example.budgetassistant.models.Income;
 import com.example.budgetassistant.models.Transaction;
@@ -22,6 +23,7 @@ import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 
 public class TransactionSummaryViewModel extends ViewModel {
@@ -105,7 +107,6 @@ public class TransactionSummaryViewModel extends ViewModel {
                 transactionsInRange.add(trans);
             }
         }
-        Log.d("?" , transactionsInRange.size() + "");
         summary.Transactions = transactionsInRange;
         //Set budget
         int periodInDays = DateExtensions.GetDaysBetween(startCal.getTime(),endCal.getTime());
@@ -118,5 +119,69 @@ public class TransactionSummaryViewModel extends ViewModel {
 
     public LiveData<TransactionSummary> getSummary(){
         return mSummary;
+    }
+
+    public int GetTimePeriodInDays(){
+        TransactionSummary summary = mSummary.getValue();
+        return DateExtensions.GetDaysBetween(summary.StartDate,summary.EndDate);
+    }
+    public int GetDaysLeftInTimePeriod(){
+        Calendar c = Calendar.getInstance();
+        TransactionSummary summary = mSummary.getValue();
+        return DateExtensions.GetDaysBetween(c.getTime(),summary.EndDate);
+    }
+
+    public float GetExpenseTotal(){
+        float expense = 0f;
+
+        TransactionSummary summary = mSummary.getValue();
+        for(Transaction t : summary.Transactions){
+            expense += t.Expense;
+        }
+
+        return expense;
+    }
+    public float GetIncomeTotal(){
+        float income = 0f;
+        TransactionSummary summary = mSummary.getValue();
+        for(Transaction t : summary.Transactions){
+            income += t.Income;
+        }
+        return income;
+    }
+
+    public String GetTimePeriodLabel(){
+        int daysInTimePeriod = GetTimePeriodInDays();
+        if(daysInTimePeriod == 7){
+            return "Weekly";
+        } else if(daysInTimePeriod > 25 && daysInTimePeriod < 33){
+            return "Monthly";
+        } else if(daysInTimePeriod > 80 && daysInTimePeriod < 105){
+            return "Quarterly";
+        } else if(daysInTimePeriod > 360){
+            return "Annually";
+        } else{
+            return "Custom";
+        }
+    }
+
+    public HashMap<TransactionCategories,Float> GetCategorizedExpenseValues(){
+        float expenseTotal = 0f;
+        HashMap<TransactionCategories,Float> categorizedData = new HashMap<TransactionCategories,Float>();
+        TransactionSummary summary = getSummary().getValue();
+        for(Transaction t : summary.Transactions){
+            if(t.Expense > 0f) {
+                expenseTotal += t.Expense;
+                TransactionCategories category = t.Category;
+                if (categorizedData.containsKey(category)) {
+                    Float value = categorizedData.get(category);
+                    value += t.Expense;
+                } else {
+                    categorizedData.put(category, t.Expense);
+                }
+            }
+        }
+
+        return categorizedData;
     }
 }
