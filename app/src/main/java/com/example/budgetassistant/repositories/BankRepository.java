@@ -23,6 +23,6 @@ public class BankRepository {
 
     }
     public void setAccount(){
-        mAccount = new BankAccount("x5554",13850,"TD Bank","Spending Account");
+        mAccount = new BankAccount("x5554",13850.84f,"TD Bank","Spending Account");
     }
 }

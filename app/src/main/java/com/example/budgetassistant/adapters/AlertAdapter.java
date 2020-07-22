@@ -69,7 +69,7 @@ public class AlertAdapter extends  android.widget.BaseAdapter {
         descriptionTextView.setText(desc);
         amountTextView.setText(cost);
         occurrenceTextView.setText(occur);
-        countdownNumTextView.setText("" + transaction.GetDaysLeft());
+        countdownNumTextView.setText("" + transaction.GetDaysLeftUntilNextRecurrentCharge());
         countdownUnitTextView.setText("Days");
 
         return view;

@@ -1,7 +1,8 @@
 package com.example.budgetassistant;
 
 public enum TransactionCategories {
-    BILL,
+    RENT,
+    UTILITIES,
     TRANSPORTATION,
     HEALTH,
     PARTYING,
@@ -17,3 +18,4 @@ public enum TransactionCategories {
     SUBSCRIPTION,
     OTHER,
 }
+

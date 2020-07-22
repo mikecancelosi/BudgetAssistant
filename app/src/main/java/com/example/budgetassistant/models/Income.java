@@ -42,6 +42,7 @@ public class Income {
         c.setTime(new Date());
         return date;
     }
+
     public int GetNumberOfDaysToNextPaycheck(){
         Date nextPaycheckDate = GetNextPaycheckDate();
         DateTimeFormatter dtf = DateTimeFormatter.ofPattern(getDateFormat());

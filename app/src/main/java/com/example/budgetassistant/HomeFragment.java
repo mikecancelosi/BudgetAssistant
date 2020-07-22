@@ -84,7 +84,6 @@ public class HomeFragment extends Fragment {
     private void setUpHeader(){
         //Set account balance
         TextView AccountBalance = (TextView) view.findViewById(R.id.BankAccountBalance);
-        Log.d("?","?" + (mAccount ==null));
         AccountBalance.setText("$" + mAccount.Balance);
 
         //Set user name and picture
@@ -98,8 +97,7 @@ public class HomeFragment extends Fragment {
 
         AlertAdapter alertAdapter = new AlertAdapter(view.getContext());
         for(Transaction transaction : mUserSettings.getRecurringTransactions()){
-            Log.d("!","" + transaction.GetDaysLeft());
-            if(transaction.GetDaysLeft() <= mUserSettings.GetIncome().GetNumberOfDaysToNextPaycheck()) {
+            if(transaction.GetDaysLeftUntilNextRecurrentCharge() <= mUserSettings.GetIncome().GetNumberOfDaysToNextPaycheck()) {
                 alertAdapter.addItem(transaction);
             }
         }

@@ -3,15 +3,10 @@ package com.example.budgetassistant.models;
 import android.media.Image;
 
 import com.example.budgetassistant.TransactionCategories;
-import com.example.budgetassistant.models.Transaction;
 
-import java.time.LocalDate;
 import java.util.Arrays;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
-
-import static java.time.temporal.ChronoUnit.DAYS;
 
 public class UserSettings {
 
@@ -74,7 +69,7 @@ public class UserSettings {
                 TransactionCategories.INVESTMENT,
                 TransactionCategories.SAVINGS,
                 TransactionCategories.SUBSCRIPTION,
-                TransactionCategories.BILL);
+                TransactionCategories.RENT);
 
         for(TransactionCategories cat : allocatedCategories) {
             if (breakdown.containsKey(cat)) {

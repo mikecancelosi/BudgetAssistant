@@ -49,26 +49,32 @@ public class Transaction {
         Frequency = frequency;
     }
 
-    public int GetDaysLeft(){
-        Calendar c = Calendar.getInstance();
-        Calendar calToday = Calendar.getInstance();
-        c.setTime(DateOfTransaction);
-        int Days = DateExtensions.GetDaysBetween(c.getTime(),calToday.getTime());
-        Log.d("!",  c.getTime() + " | " + calToday.getTime());
-            switch (Frequency){
+    public Transaction(float income, float expense, TransactionCategories category) {
+        Income = income;
+        Expense = expense;
+        Category = category;
+    }
+
+    public int GetDaysLeftUntilNextRecurrentCharge(){
+        if(Frequency != "OneTime") {
+            Calendar c = Calendar.getInstance();
+            Calendar calToday = Calendar.getInstance();
+            c.setTime(DateOfTransaction);
+            int Days = DateExtensions.GetDaysBetween(c.getTime(), calToday.getTime());
+            switch (Frequency) {
                 case "Monthly":
-                    while(c.before(calToday)){
-                        c.add(Calendar.MONTH,1);
+                    while (c.before(calToday)) {
+                        c.add(Calendar.MONTH, 1);
                     }
                     break;
                 case "Quarterly":
-                    while(c.before(calToday)){
-                        c.add(Calendar.MONTH,3);
+                    while (c.before(calToday)) {
+                        c.add(Calendar.MONTH, 3);
                     }
                     break;
                 case "Yearly":
-                    while(c.before(calToday)){
-                        c.add(Calendar.YEAR,1);
+                    while (c.before(calToday)) {
+                        c.add(Calendar.YEAR, 1);
                     }
                     break;
                 default:
@@ -81,6 +87,9 @@ public class Transaction {
             long diffDays = diffTime / (1000 * 60 * 60 * 24);
 
             return (int) diffDays;
+        }else{
+            return -1;
+        }
 
     }
 }

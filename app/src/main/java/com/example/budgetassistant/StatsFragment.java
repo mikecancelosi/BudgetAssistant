@@ -47,42 +47,11 @@ public class StatsFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_stats, container, false);
-        setupPieChart(view);
         setupMonthlyTrendBarChart(view);
         setupCategoryBreakdown(view);
         return view;
     }
 
-    private void setupPieChart(View view) {
-        //Populating a list of PieEntries
-        List<PieEntry> pieEntries = new ArrayList<>();
-        for(int i =0; i<pieBreakdownData.length;i++){
-            pieEntries.add(new PieEntry(pieBreakdownData[i],categoryNames[i]));
-        }
-
-        PieDataSet dataSet = new PieDataSet(pieEntries,"");
-        dataSet.setColors(ColorTemplate.LIBERTY_COLORS); //
-        dataSet.setXValuePosition(PieDataSet.ValuePosition.OUTSIDE_SLICE);
-        dataSet.setSliceSpace(2f);
-        dataSet.setValueLinePart2Length(.5f);
-        dataSet.setValueTextSize(14f);
-        PieData data = new PieData(dataSet);
-
-        PieChart chart = (PieChart) view.findViewById(R.id.PayPeriodBreakdown);
-        chart.setData(data);
-        chart.setExtraLeftOffset(30f);
-        chart.setExtraRightOffset(30f);
-
-        chart.setEntryLabelColor(Color.BLACK);
-        chart.spin(2500,270,360,Easing.EaseOutBounce);
-
-        Legend legend = chart.getLegend();
-        legend.setEnabled(false);
-
-        Description des = chart.getDescription();
-        des.setEnabled(false);
-        chart.invalidate();
-    }
 
     private void setupMonthlyTrendBarChart(View view){
         BarChart chart = (BarChart) view.findViewById(R.id.MonthlyTrendChart);

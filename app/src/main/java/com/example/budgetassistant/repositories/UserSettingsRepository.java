@@ -8,7 +8,6 @@ import com.example.budgetassistant.models.Transaction;
 import com.example.budgetassistant.models.UserSettings;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
@@ -50,7 +49,7 @@ public class UserSettingsRepository {
     }
     private static HashMap<TransactionCategories,Float> createIdealBreakdown(){
         HashMap<TransactionCategories,Float> breakdown = new HashMap<>();
-        breakdown.put(TransactionCategories.BILL,.35f);
+        breakdown.put(TransactionCategories.RENT,.35f);
         breakdown.put(TransactionCategories.TRANSPORTATION,.15f);
         breakdown.put(TransactionCategories.FOOD,.15f);
         breakdown.put(TransactionCategories.INVESTMENT,.10f);
