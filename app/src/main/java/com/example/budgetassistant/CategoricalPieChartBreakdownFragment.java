@@ -62,7 +62,7 @@ public class CategoricalPieChartBreakdownFragment extends Fragment {
         for(Map.Entry<TransactionCategories,Float> t : mViewModel.GetCategorizedExpenseValues().entrySet()){
             pieEntries.add(new PieEntry(t.getValue(), t.getKey().name()));
         }
-        float savings = summary.Budget - mViewModel.GetExpenseTotal();
+        float savings = summary.Budget - summary.GetExpenseTotal();
 
 
         int colorId = savings > 0 ? R.color.colorPrimary : R.color.colorSecondary;

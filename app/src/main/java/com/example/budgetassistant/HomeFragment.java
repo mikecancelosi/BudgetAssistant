@@ -97,7 +97,7 @@ public class HomeFragment extends Fragment {
 
         AlertAdapter alertAdapter = new AlertAdapter(view.getContext());
         for(Transaction transaction : mUserSettings.getRecurringTransactions()){
-            if(transaction.GetDaysLeftUntilNextRecurrentCharge() <= mUserSettings.GetIncome().GetNumberOfDaysToNextPaycheck()) {
+            if(transaction.GetDaysLeftUntilNextRecurrentCharge() <= mSettingsViewModel.GetNumberOfDaysToNextPaycheck()) {
                 alertAdapter.addItem(transaction);
             }
         }

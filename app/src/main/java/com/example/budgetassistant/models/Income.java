@@ -25,13 +25,7 @@ public class Income {
     public Date GetNextPaycheckDate(){
         Calendar c = Calendar.getInstance();
         c.setTime(LastPaycheck);
-        c.add(Calendar.DAY_OF_MONTH, PayPeriodInDays);
+        c.add(Calendar.DATE, PayPeriodInDays);
         return c.getTime();
-    }
-
-    public int GetNumberOfDaysToNextPaycheck(){
-        Date nextPaycheckDate = GetNextPaycheckDate();
-        Calendar c = Calendar.getInstance();
-        return DateExtensions.GetDaysBetween(c.getTime(),nextPaycheckDate);
     }
 }

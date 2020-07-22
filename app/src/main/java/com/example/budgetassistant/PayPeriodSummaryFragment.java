@@ -76,7 +76,7 @@ public class PayPeriodSummaryFragment extends Fragment {
         List<PieEntry> pieEntries = new ArrayList<>();
         TransactionSummary breakdown = mTransactionSummaryViewModel.getSummary().getValue();
 
-        float expensePercentage = mTransactionSummaryViewModel.GetExpenseTotal() / breakdown.Budget;
+        float expensePercentage = breakdown.GetExpenseTotal() / breakdown.Budget;
         pieEntries.add(new PieEntry(expensePercentage,"Expenses"));
         if(expensePercentage < 1) {
             pieEntries.add(new PieEntry(1-expensePercentage, "Unspent"));
@@ -111,7 +111,7 @@ public class PayPeriodSummaryFragment extends Fragment {
         mChart.setHoleColor(00000000);
         dataSet.setColors(new int[]{R.color.colorPrimary,R.color.colorPrimaryDark},getContext());
         //Set Text
-        int daysLeftInPayPeriod = mTransactionSummaryViewModel.GetDaysLeftInTimePeriod();
+        int daysLeftInPayPeriod = breakdown.GetDaysLeftInTimePeriod();
         mChart.setCenterText(daysLeftInPayPeriod + " Days left");
 
 
