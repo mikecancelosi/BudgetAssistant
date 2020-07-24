@@ -8,6 +8,7 @@ import com.example.budgetassistant.models.Transaction;
 import com.example.budgetassistant.models.UserSettings;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
@@ -32,11 +33,11 @@ public class UserSettingsRepository {
     }
     private void setSettings(){
         dataSet = new UserSettings();
-        dataSet.setName("Mike Cancelosi");
-        Income income = new Income(1000f,14,new Date((long)1594915200000f)); // This number represents 07/16/2020 ( ms since 01/01/1970 )
-        dataSet.SetIncome(income);
-        dataSet.setRecurringTransactions(createRecurringTransactionPayments());
-        dataSet.setIdealBreakdown(createIdealBreakdown());
+        dataSet.name = "Mike Cancelosi";
+        dataSet.income = new Income(1000f,14,new Date((long)1594915200000f)); // This number represents 07/16/2020 ( ms since 01/01/1970 )
+        dataSet.recurringTransactions = createRecurringTransactionPayments();
+        dataSet.idealBreakdown = createIdealBreakdown();
+        dataSet.budget = determineBudget(dataSet.income.Amount,dataSet.idealBreakdown);
     }
     private static List<Transaction> createRecurringTransactionPayments(){
         List<Transaction> transactions = new ArrayList<Transaction>();
@@ -59,6 +60,21 @@ public class UserSettingsRepository {
         breakdown.put(TransactionCategories.SUBSCRIPTION,.05f);
         breakdown.put(TransactionCategories.OTHER,.10f);
         return breakdown;
+    }
+    private static Float determineBudget(float userIncome, HashMap<TransactionCategories,Float> breakdown){
+        float allocatedAmount = 0f;
+        List<TransactionCategories> allocatedCategories = Arrays.asList(
+                TransactionCategories.INVESTMENT,
+                TransactionCategories.SAVINGS,
+                TransactionCategories.SUBSCRIPTION,
+                TransactionCategories.RENT);
+
+        for(TransactionCategories cat : allocatedCategories) {
+            if (breakdown.containsKey(cat)) {
+                allocatedAmount += breakdown.get(cat);
+            }
+        }
+       return userIncome - allocatedAmount;
     }
 
 

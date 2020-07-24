@@ -34,7 +34,7 @@ public class UserSettingsViewModel extends ViewModel {
     }
 
     public Date GetNextPaycheckDate(){
-        Income income = getSettings().getValue().GetIncome();
+        Income income = getSettings().getValue().income;
         Calendar c = Calendar.getInstance();
         c.setTime(income.LastPaycheck);
         c.add(Calendar.DAY_OF_MONTH, income.PayPeriodInDays);

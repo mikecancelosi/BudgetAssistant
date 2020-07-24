@@ -88,7 +88,7 @@ public class HomeFragment extends Fragment {
 
         //Set user name and picture
         TextView nameText = (TextView) view.findViewById(R.id.UserName);
-        nameText.setText(mUserSettings.getName());
+        nameText.setText(mUserSettings.name);
     }
 
     private void setUpList(){
@@ -96,7 +96,7 @@ public class HomeFragment extends Fragment {
         ListView myListView = (ListView) view.findViewById(R.id.BillList);
 
         AlertAdapter alertAdapter = new AlertAdapter(view.getContext());
-        for(Transaction transaction : mUserSettings.getRecurringTransactions()){
+        for(Transaction transaction : mUserSettings.recurringTransactions){
             if(transaction.GetDaysLeftUntilNextRecurrentCharge() <= mSettingsViewModel.GetNumberOfDaysToNextPaycheck()) {
                 alertAdapter.addItem(transaction);
             }
