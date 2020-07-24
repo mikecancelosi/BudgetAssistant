@@ -48,7 +48,6 @@ public class StatsFragment extends Fragment {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_stats, container, false);
         setupMonthlyTrendBarChart(view);
-        setupCategoryBreakdown(view);
         return view;
     }
 
@@ -112,61 +111,4 @@ public class StatsFragment extends Fragment {
         chart.invalidate();
     }
 
-    private  void setupCategoryBreakdown(View view){
-        BarChart chart = view.findViewById(R.id.CategoryBreakdown);
-
-        ArrayList<BarEntry> monthlyTrendData = new ArrayList<>();
-        for(int i=0; i< 6; i++){
-            int catCount = 3;
-            float[] values = new float[catCount];
-            for(int j=0; j< catCount; j++){
-                values[j] = (float)(Math.random() * 10) + 5;
-            }
-            monthlyTrendData.add(new BarEntry(i,values));
-        }
-
-        BarDataSet set = new BarDataSet(monthlyTrendData,"Category Breakdown");
-        set.setColors(ColorTemplate.LIBERTY_COLORS);
-        set.setDrawIcons(false);
-        BarData data = new BarData(set);
-        chart.setData(data);
-        data.setBarWidth(.3f);
-
-        //Chart Visuals
-        XAxis xAxis = chart.getXAxis();
-
-        //Remove description
-        Description des = chart.getDescription();
-        des.setEnabled(false);
-        //remove legend
-        Legend legend = chart.getLegend();
-        legend.setEnabled(false);
-        //Remove grid lines
-        xAxis.setDrawGridLines(false);
-        chart.setFitBars(true);
-        chart.getAxisLeft().setDrawGridLines(false);
-        chart.getAxisRight().setDrawGridLines(false);
-        chart.getAxisLeft().setEnabled(false);
-        chart.getAxisRight().setEnabled(false);
-        // Animate graph
-        chart.animateY(1000);
-        // Remove right labels
-        chart.getAxisRight().setDrawLabels(false);
-        //Set XAxis label to the bottom
-        xAxis.setPosition(XAxis.XAxisPosition.BOTTOM);
-        //Remove bottom padding
-        chart.getAxisLeft().setAxisMinimum(0f);
-        chart.getAxisRight().setAxisMinimum(0f);
-        //Remove interactivity
-        chart.setTouchEnabled(false);
-        //Set Labels
-        final String[] labels = new String[]{"Rent","Food","Em","Booze","Gas","Games"};
-        xAxis.setValueFormatter(new ValueFormatter() {
-            @Override
-            public String getFormattedValue(float value) {
-                return labels[(int)value];
-            }
-        });
-        chart.invalidate();
-    }
 }

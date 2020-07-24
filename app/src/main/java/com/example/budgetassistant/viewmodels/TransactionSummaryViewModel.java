@@ -61,31 +61,13 @@ public class TransactionSummaryViewModel extends ViewModel {
         setSummary();
     }
 
-    public void init(Date startDate, Date endDate){
-        if(mSummary != null){
-            return;
-        }
+    public void setDateRange(Date startDate, Date endDate){
         mStartDate = startDate;
         mEndDate = endDate;
 
-        mTransactionRepo = TransactionRepository.getInstance();
-        mSettingsRepo = UserSettingsRepository.getInstance();
-        mTransactionRepo.getTransactions().observeForever(new Observer<List<Transaction>>() {
-            @Override
-            public void onChanged(List<Transaction> transactions) {
-                setSummary();
-            }
-        });
-        mSettingsRepo.getSettings().observeForever(new Observer<UserSettings>() {
-            @Override
-            public void onChanged(UserSettings settings) {
-                setSummary();
-            }
-        });
-
-
         setSummary();
     }
+
 
     private void setSummary(){
         TransactionSummary summary = new TransactionSummary();
@@ -122,7 +104,7 @@ public class TransactionSummaryViewModel extends ViewModel {
     }
 
     public String GetTimePeriodLabel(){
-        int daysInTimePeriod = getSummary().getValue().GetTimePeriodInDays();
+        int daysInTimePeriod = GetTimePeriodInDays();
         if(daysInTimePeriod == 7){
             return "Weekly";
         } else if(daysInTimePeriod > 25 && daysInTimePeriod < 33){
@@ -154,5 +136,41 @@ public class TransactionSummaryViewModel extends ViewModel {
         }
 
         return categorizedData;
+    }
+
+    public Float GetCategoryExpenseValue(TransactionCategories category){
+        HashMap<TransactionCategories,Float> map = GetCategorizedExpenseValues();
+        if(map.containsKey(category)){
+            return map.get(category);
+        }else{
+            return 0f;
+        }
+    }
+
+    public int GetTimePeriodInDays(){
+        TransactionSummary summary =getSummary().getValue();
+        return DateExtensions.GetDaysBetween(summary.StartDate,summary.EndDate);
+    }
+
+    public int GetDaysLeftInTimePeriod(){
+        Calendar c = Calendar.getInstance();
+        return DateExtensions.GetDaysBetween(c.getTime(),getSummary().getValue().EndDate);
+    }
+
+    public float GetExpenseTotal(){
+        float expense = 0f;
+
+        for(Transaction t : getSummary().getValue().Transactions){
+            expense += t.Expense;
+        }
+
+        return expense;
+    }
+    public float GetIncomeTotal(){
+        float income = 0f;
+        for(Transaction t : getSummary().getValue().Transactions){
+            income += t.Income;
+        }
+        return income;
     }
 }

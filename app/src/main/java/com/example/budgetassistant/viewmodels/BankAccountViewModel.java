@@ -6,11 +6,7 @@ import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModel;
 
 import com.example.budgetassistant.models.BankAccount;
-import com.example.budgetassistant.models.Transaction;
 import com.example.budgetassistant.repositories.BankRepository;
-import com.example.budgetassistant.repositories.TransactionRepository;
-
-import java.util.List;
 
 public class BankAccountViewModel extends ViewModel {
     private MutableLiveData<BankAccount> mAccount;

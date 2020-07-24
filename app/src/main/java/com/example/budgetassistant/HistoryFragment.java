@@ -5,8 +5,6 @@ import android.os.Bundle;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
 
 import android.view.LayoutInflater;
 import android.view.View;
@@ -15,7 +13,8 @@ import android.widget.ListView;
 
 import com.example.budgetassistant.adapters.TransactionHistoryAdapter;
 import com.example.budgetassistant.models.Transaction;
-import com.example.budgetassistant.viewmodels.TransactionHistoryViewModel;
+import com.example.budgetassistant.models.TransactionSummary;
+import com.example.budgetassistant.viewmodels.TransactionSummaryViewModel;
 
 import java.util.List;
 
@@ -24,7 +23,7 @@ import java.util.List;
  */
 public class HistoryFragment extends Fragment {
 
-    private TransactionHistoryViewModel mTransactionHistoryViewModel;
+    private TransactionSummaryViewModel mTransactionViewModel;
     private TransactionHistoryAdapter mTransactionAdapter;
     private ListView mListView;
 
@@ -46,11 +45,11 @@ public class HistoryFragment extends Fragment {
         mListView = (ListView) view.findViewById(R.id.HistoryList);
 
 
-        mTransactionHistoryViewModel = new ViewModelProvider(this).get(TransactionHistoryViewModel.class);
-        mTransactionHistoryViewModel.init();
-        mTransactionHistoryViewModel.getTransactions().observe(getViewLifecycleOwner(), new Observer<List<Transaction>>() {
+        mTransactionViewModel = new ViewModelProvider(this).get(TransactionSummaryViewModel.class);
+        mTransactionViewModel.init();
+        mTransactionViewModel.getSummary().observe(getViewLifecycleOwner(), new Observer<TransactionSummary>() {
             @Override
-            public void onChanged(List<Transaction> transactions) {
+            public void onChanged(TransactionSummary summary) {
                 mTransactionAdapter.notifyDataSetChanged();
             }
         });
@@ -61,6 +60,9 @@ public class HistoryFragment extends Fragment {
 
     private void initListView(){
         mTransactionAdapter = new TransactionHistoryAdapter(getActivity());
+        for(Transaction t : mTransactionViewModel.getSummary().getValue().Transactions){
+            mTransactionAdapter.addItem(t);
+        }
         mListView.setAdapter(mTransactionAdapter);
     }
 }
