@@ -23,7 +23,7 @@
         android:textSize="18sp"
         android:textStyle="bold" />
 
-    <com.github.mikephil.charting.charts.BarChart
+    <com.github.mikephil.charting.charts.HorizontalBarChart
         android:id="@+id/CategoricalBreakdownSummaryBarChart"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />

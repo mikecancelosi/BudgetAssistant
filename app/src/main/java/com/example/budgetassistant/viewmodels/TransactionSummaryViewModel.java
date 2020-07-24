@@ -40,7 +40,7 @@ public class TransactionSummaryViewModel extends ViewModel {
         mTransactionRepo = TransactionRepository.getInstance();
         mSettingsRepo = UserSettingsRepository.getInstance();
         UserSettings settings = mSettingsRepo.getSettings().getValue();
-        Income income = settings.GetIncome();
+        Income income = settings.income;
 
         mStartDate = income.LastPaycheck;
         mEndDate = income.GetNextPaycheckDate();
@@ -75,7 +75,7 @@ public class TransactionSummaryViewModel extends ViewModel {
         summary.EndDate = mEndDate;
         List<Transaction> transactionSourceData = mTransactionRepo.getTransactions().getValue();
         UserSettings settings = mSettingsRepo.getSettings().getValue();
-        Income income = settings.GetIncome();
+        Income income = settings.income;
         // Get transactions in the correct date range.
         List<Transaction> transactionsInRange = new ArrayList<>();
         Calendar startCal = Calendar.getInstance();
@@ -172,5 +172,26 @@ public class TransactionSummaryViewModel extends ViewModel {
             income += t.Income;
         }
         return income;
+    }
+
+    public void adjustDateTimelineToFitTransactions(){
+        Calendar startDate = Calendar.getInstance();
+        Calendar endDate = Calendar.getInstance();
+        endDate.setTime(new Date(0L));
+        startDate.setTime(new Date(Long.MAX_VALUE));
+        for(Transaction t : mSummary.getValue().Transactions){
+            Calendar transCal = Calendar.getInstance();
+            transCal.setTime(t.DateOfTransaction);
+            if(startDate.after(transCal)){
+                startDate.setTime(transCal.getTime());
+            }
+
+            if(endDate.before(transCal)){
+                endDate.setTime(transCal.getTime());
+            }
+        }
+
+        mStartDate = startDate.getTime();
+        mEndDate = endDate.getTime();
     }
 }

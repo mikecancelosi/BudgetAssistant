@@ -57,7 +57,7 @@ public class PayPeriodSummaryFragment extends Fragment {
             }
         });
         UserSettings settings = mSettingsViewModel.getSettings().getValue();
-        Income income = settings.GetIncome();
+        Income income = settings.income;
         mTransactionSummaryViewModel.init();
         mTransactionSummaryViewModel.getSummary().observe(getViewLifecycleOwner(), new Observer<TransactionSummary>() {
             @Override
