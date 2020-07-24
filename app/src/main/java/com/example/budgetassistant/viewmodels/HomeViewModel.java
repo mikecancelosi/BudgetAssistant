@@ -6,6 +6,7 @@ import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModel;
 
 import com.example.budgetassistant.DateExtensions;
+import com.example.budgetassistant.TransactionHelper;
 import com.example.budgetassistant.models.BankAccount;
 import com.example.budgetassistant.models.Income;
 import com.example.budgetassistant.models.Transaction;
@@ -40,6 +41,10 @@ public class HomeViewModel extends ViewModel {
         mTransactionRepo = TransactionRepository.getInstance();
         mSettingsRepo = UserSettingsRepository.getInstance();
         mBankRepo = BankRepository.getInstance();
+        mTransactions = mTransactionRepo.getTransactions();
+        mAccount = mBankRepo.getAccount();
+        mSettings = mSettingsRepo.getSettings();
+
 
         mTransactionRepo.getTransactions().observeForever(new Observer<List<Transaction>>() {
             @Override
@@ -70,21 +75,12 @@ public class HomeViewModel extends ViewModel {
     }
 
     private List<Transaction> getTransactionsForPayPeriod(){
-        List<Transaction> transactions = new ArrayList<>();
-        Calendar startCal = Calendar.getInstance();
-        Income inc = getSettings().getValue().income;
-        startCal.setTime(inc.LastPaycheck);
-        Calendar endCal = Calendar.getInstance();
-        endCal.setTime(inc.GetNextPaycheckDate());
-        Calendar transCal = Calendar.getInstance();
-        for(Transaction t : getTransactions().getValue()){
-           transCal.setTime(t.DateOfTransaction);
-            if(startCal.getTime() == t.DateOfTransaction || (transCal.after(startCal) && transCal.before(endCal))){
-                transactions.add(t);
-            }
-        }
+        List<Transaction> source = getTransactions().getValue();
+        Income income = getSettings().getValue().income;
+        Date startDate = income.LastPaycheck;
+        Date endDate = income.GetNextPaycheckDate();
 
-        return transactions;
+        return TransactionHelper.getTransactionsInTimeFrame(source,startDate,endDate);
     }
 
     public Float getExpenseAsPercentage(){

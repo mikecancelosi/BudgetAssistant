@@ -7,15 +7,14 @@ import androidx.lifecycle.ViewModel;
 
 import com.example.budgetassistant.DateExtensions;
 import com.example.budgetassistant.TransactionCategories;
-import com.example.budgetassistant.models.BankAccount;
+import com.example.budgetassistant.TransactionHelper;
 import com.example.budgetassistant.models.Income;
 import com.example.budgetassistant.models.Transaction;
-import com.example.budgetassistant.models.TransactionSummary;
 import com.example.budgetassistant.models.UserSettings;
-import com.example.budgetassistant.repositories.BankRepository;
 import com.example.budgetassistant.repositories.TransactionRepository;
 import com.example.budgetassistant.repositories.UserSettingsRepository;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -23,82 +22,114 @@ import java.util.HashMap;
 import java.util.List;
 
 public class StatsViewModel extends ViewModel {
-    private MutableLiveData<TransactionSummary> mSummary;
-    private TransactionRepository mTransactionRepo;
     private UserSettingsRepository mSettingsRepo;
+    private MutableLiveData<UserSettings> mSettings;
+    public LiveData<UserSettings> getSettings(){
+        return mSettings;
+    }
+    private TransactionRepository mTransactionRepo;
+    private MutableLiveData<List<Transaction>> mTransactions;
+    public LiveData<List<Transaction>> getTransactions(){
+        return mTransactions;
+    }
 
     public void init(){
-        if(mSummary != null){
+        if(mSettings != null){
             return;
         }
         mTransactionRepo = TransactionRepository.getInstance();
         mSettingsRepo = UserSettingsRepository.getInstance();
+        mTransactions = mTransactionRepo.getTransactions();
+        mSettings = mSettingsRepo.getSettings();
+
         mTransactionRepo.getTransactions().observeForever(new Observer<List<Transaction>>() {
             @Override
             public void onChanged(List<Transaction> transactions) {
-                setSummary();
+                mTransactions.setValue(transactions);
             }
         });
         mSettingsRepo.getSettings().observeForever(new Observer<UserSettings>() {
             @Override
             public void onChanged(UserSettings settings) {
-                setSummary();
+                mSettings.setValue(settings);
             }
         });
-
     }
 
-    public void setSummary(){
-        TransactionSummary summary = new TransactionSummary();
-        summary.StartDate = new Date(0L);
-        summary.EndDate = new Date(Long.MAX_VALUE);
-        List<Transaction> transactionSourceData = mTransactionRepo.getTransactions().getValue();
-        UserSettings settings = mSettingsRepo.getSettings().getValue();
-        Income income = settings.income;
-        // Get transactions in the correct date range.
-        List<Transaction> transactionsInRange = new ArrayList<>();
-        Calendar startCal = Calendar.getInstance();
-        startCal.setTime(summary.StartDate);
-        Calendar endCal = Calendar.getInstance();
-        endCal.setTime(summary.EndDate);
-        Calendar transCal = Calendar.getInstance();
-        for(Transaction trans : transactionSourceData){
-            transCal.setTime(trans.DateOfTransaction);
-            if((transCal.after(startCal) || transCal.getTime() == startCal.getTime()) && transCal.before(endCal)){
-                transactionsInRange.add(trans);
+
+    public HashMap<TransactionCategories,Float> getCategorizedExpensesForPayPeriod(){
+       HashMap<TransactionCategories,Float> map = new HashMap<>();
+       List<Transaction> source = getTransactions().getValue();
+       Income income = getSettings().getValue().income;
+       Date startDate = income.LastPaycheck;
+       Date endDate = income.GetNextPaycheckDate();
+
+       for(Transaction t : TransactionHelper.getTransactionsInTimeFrame(source,startDate,endDate)){
+            TransactionCategories category = t.Category;
+            if(map.containsKey(category)){
+                float existingValue = map.get(category);
+                map.put(category, existingValue + t.Expense);
+            }else{
+                map.put(category, t.Expense);
             }
+       }
+
+       return map;
+    }
+
+    public Float getUnspentBudgetForPayPeriod(){
+        Income income = getSettings().getValue().income;
+        List<Transaction> sourceData = getTransactions().getValue();
+        Date startDate = income.LastPaycheck;
+        Date endDate = income.GetNextPaycheckDate();
+        List<Transaction> transactionsInPayPeriod = TransactionHelper.getTransactionsInTimeFrame(sourceData,startDate,endDate);
+        Float expenses = 0f;
+        for(Transaction t : transactionsInPayPeriod){
+            expenses += t.Expense;
         }
-        summary.Transactions = transactionsInRange;
-        //Set budget
-        int periodInDays = DateExtensions.GetDaysBetween(startCal.getTime(),endCal.getTime());
-        int paycheckCount = periodInDays / income.PayPeriodInDays;
-        summary.Budget = income.Amount * paycheckCount;
-
-        mSummary = new MutableLiveData<>();
-        mSummary.setValue(summary);
-    }
-    public LiveData<TransactionSummary> getSummary(){
-        return mSummary;
-    }
-
-    public HashMap<TransactionCategories,Float> getCategorizedExpenses(){
-        return null;
-    }
-
-    public Float getUnspentBudget(){
-        return 0f;
+        return income.Amount - expenses;
     }
 
     public Float getIdealValueForCategory(TransactionCategories category){
-        return 0f;
+        HashMap<TransactionCategories,Float> breakdown = getSettings().getValue().idealBreakdown;
+        if(breakdown.containsKey(category)){
+            return breakdown.get(category);
+        }else{
+            return 0f;
+        }
     }
 
     public Float getLifetimeAverageValueForCategory(TransactionCategories category){
-        return 0f;
+        //Get start and end dates of transactional history to accurately measure average
+        Calendar startCal = Calendar.getInstance();
+        startCal.setTime(new Date(Long.MAX_VALUE));
+        Calendar endCal = Calendar.getInstance();
+        Calendar transCal = Calendar.getInstance();
+        List<Transaction> transactions = getTransactions().getValue();
+        float catExpense = 0f;
+        for(Transaction t :transactions){
+            transCal.setTime(t.DateOfTransaction);
+            if(transCal.before(startCal)){
+                startCal.setTime(t.DateOfTransaction);
+            }
+            if(t.Category == category)
+            {
+                catExpense += t.Expense;
+            }
+        }
+        int daysOfData = DateExtensions.GetDaysBetween(startCal.getTime(),endCal.getTime());
+
+        return catExpense / daysOfData;
     }
 
+
     public Float getCurrentValueForCategory(TransactionCategories category){
-        return 0f;
+        HashMap<TransactionCategories,Float> map = getCategorizedExpensesForPayPeriod();
+        if(map.containsKey(category)){
+            return map.get(category);
+        }else{
+            return 0f;
+        }
     }
 
     public int getTimePeriodInDays(){

@@ -35,8 +35,8 @@ import java.util.List;
  */
 public class HomeFragment extends Fragment {
     private ListView mListView;
-
     private HomeViewModel mViewModel;
+    private View view;
 
     public HomeFragment() {
         // Required empty public constructor
@@ -51,7 +51,7 @@ public class HomeFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-       View view = inflater.inflate(R.layout.fragment_home, container, false);
+        view = inflater.inflate(R.layout.fragment_home, container, false);
 
         mViewModel = new ViewModelProvider(this).get(HomeViewModel.class);
         mViewModel.init();
@@ -59,40 +59,43 @@ public class HomeFragment extends Fragment {
         mViewModel.getSettings().observe(getViewLifecycleOwner(), new Observer<UserSettings>() {
             @Override
             public void onChanged(UserSettings settings) {
-                setUpHeader();
-                setUpList();
+                setUpUI();
             }
         });
 
         mViewModel.getAccount().observe(getViewLifecycleOwner(), new Observer<BankAccount>() {
             @Override
             public void onChanged(BankAccount account) {
-                setUpHeader();
-                setUpList();
+                setUpUI();
             }
         });
 
-        setUpHeader();
-        setUpList();
+        setUpUI();
 
         return view;
     }
 
+    private void setUpUI(){
+        setUpHeader();
+        setUpList();
+        setupPayPeriodSummaryPieChart();
+    }
+
     private void setUpHeader(){
         //Set account balance
-        TextView AccountBalance = (TextView) getView().findViewById(R.id.BankAccountBalance);
+        TextView AccountBalance = (TextView) view.findViewById(R.id.BankAccountBalance);
         AccountBalance.setText("$" + mViewModel.getAccount().getValue().Balance);
 
         //Set user name and picture
-        TextView nameText = (TextView) getView().findViewById(R.id.UserName);
+        TextView nameText = (TextView) view.findViewById(R.id.UserName);
         nameText.setText(mViewModel.getSettings().getValue().name);
     }
 
     private void setUpList(){
         Resources res = getResources();
-        ListView myListView = (ListView) getView().findViewById(R.id.BillList);
+        ListView myListView = (ListView) view.findViewById(R.id.BillList);
 
-        AlertAdapter alertAdapter = new AlertAdapter(getView().getContext());
+        AlertAdapter alertAdapter = new AlertAdapter(view.getContext());
         for(Transaction transaction : mViewModel.getSettings().getValue().recurringTransactions){
             if(transaction.GetDaysLeftUntilNextRecurrentCharge() <= mViewModel.getDaysUntilNextPaycheck()) {
                 alertAdapter.addItem(transaction);
@@ -103,7 +106,7 @@ public class HomeFragment extends Fragment {
     }
 
     public void setupPayPeriodSummaryPieChart(){
-        PieChart mChart = (PieChart) getView().findViewById(R.id.PieBreakdown);
+        PieChart mChart = (PieChart) view.findViewById(R.id.PieBreakdown);
 
         //Populating a list of PieEntries
         List<PieEntry> pieEntries = new ArrayList<>();
@@ -118,7 +121,6 @@ public class HomeFragment extends Fragment {
         dataSet.setColors(ColorTemplate.LIBERTY_COLORS); //
         dataSet.setDrawValues(false);
         mChart.setDrawEntryLabels(false);
-
 
         PieData data = new PieData(dataSet);
         // Use percentages.

@@ -1,26 +1,25 @@
 package com.example.budgetassistant;
 
-import android.graphics.Color;
 import android.os.Bundle;
 
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.Observer;
+import androidx.lifecycle.ViewModelProvider;
 
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.example.budgetassistant.models.TransactionSummary;
+import com.example.budgetassistant.models.BankAccount;
+import com.example.budgetassistant.models.Transaction;
 import com.example.budgetassistant.models.UserSettings;
+import com.example.budgetassistant.viewmodels.HomeViewModel;
 import com.example.budgetassistant.viewmodels.StatsViewModel;
-import com.github.mikephil.charting.animation.Easing;
-import com.github.mikephil.charting.charts.BarChart;
 import com.github.mikephil.charting.charts.HorizontalBarChart;
 import com.github.mikephil.charting.charts.PieChart;
 import com.github.mikephil.charting.components.Description;
 import com.github.mikephil.charting.components.Legend;
-import com.github.mikephil.charting.components.LimitLine;
 import com.github.mikephil.charting.components.XAxis;
 import com.github.mikephil.charting.data.BarData;
 import com.github.mikephil.charting.data.BarDataSet;
@@ -43,6 +42,7 @@ import java.util.Map;
 public class StatsFragment extends Fragment {
 
     private StatsViewModel mViewModel;
+    private View view;
 
     public StatsFragment() {
         // Required empty public constructor
@@ -53,18 +53,42 @@ public class StatsFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View view = inflater.inflate(R.layout.fragment_stats, container, false);
+        view = inflater.inflate(R.layout.fragment_stats, container, false);
+
+        mViewModel = new ViewModelProvider(this).get(StatsViewModel.class);
+        mViewModel.init();
+
+        mViewModel.getSettings().observe(getViewLifecycleOwner(), new Observer<UserSettings>() {
+            @Override
+            public void onChanged(UserSettings settings) {
+                setUpUI();
+            }
+        });
+
+        mViewModel.getTransactions().observe(getViewLifecycleOwner(), new Observer<List<Transaction>>() {
+            @Override
+            public void onChanged(List<Transaction> transactions) {
+                setUpUI();
+            }
+        });
+        setUpUI();
+
         return view;
     }
 
+    private void setUpUI(){
+        setupCategoricalHorizontalBarChart();
+        setupCategoryExpensePieChart();
+    }
+
     private void setupCategoryExpensePieChart(){
-        PieChart chart = getView().findViewById(R.id.CategoricalPieChart);
+        PieChart chart = view.findViewById(R.id.CategoricalPieChart);
         List<PieEntry> pieEntries = new ArrayList<>();
-        for(Map.Entry<TransactionCategories,Float> t : mViewModel.getCategorizedExpenses().entrySet()){
+        for(Map.Entry<TransactionCategories,Float> t : mViewModel.getCategorizedExpensesForPayPeriod().entrySet()){
             pieEntries.add(new PieEntry(t.getValue(), t.getKey().name()));
         }
 
-        float savings = mViewModel.getUnspentBudget();
+        float savings = mViewModel.getUnspentBudgetForPayPeriod();
         int colorId = savings > 0 ? R.color.colorPrimary : R.color.colorSecondary;
         int colorValue = ContextCompat.getColor(getContext(),colorId);
 
@@ -98,7 +122,7 @@ public class StatsFragment extends Fragment {
     // TODO: Adjust for percentage / Actual $
     // TODO: Adjust for month view.
     private void setupCategoricalHorizontalBarChart(){
-        HorizontalBarChart chart = (HorizontalBarChart)getView().findViewById(R.id.CategoricalBreakdownSummaryBarChart);
+        HorizontalBarChart chart = (HorizontalBarChart) view.findViewById(R.id.CategoricalBreakdownSummaryBarChart);
         List<BarEntry> entries = new ArrayList<>();
 
         int daysInPeriod = mViewModel.getTimePeriodInDays();
@@ -116,7 +140,12 @@ public class StatsFragment extends Fragment {
         }
 
         BarDataSet set = new BarDataSet(entries,"");
-        set.setColors(ColorTemplate.LIBERTY_COLORS);
+        int[] colorId = new int[] {R.color.colorPrimary,R.color.colorPrimaryDark,R.color.colorSecondary};
+        int[] colors = new int[] {ContextCompat.getColor(getContext(),colorId[0]),
+                                  ContextCompat.getColor(getContext(),colorId[1]),
+                                  ContextCompat.getColor(getContext(),colorId[2])};
+
+        set.setColors(colors);
         set.setDrawIcons(false);
         BarData data = new BarData(set);
         chart.setData(data);
