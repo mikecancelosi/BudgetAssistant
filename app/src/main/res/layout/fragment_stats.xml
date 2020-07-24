@@ -12,25 +12,51 @@
         android:layout_height="wrap_content"
         android:orientation="vertical">
 
-        <fragment
-            android:id="@+id/fragment"
-            android:name="com.example.budgetassistant.CategoricalPieChartBreakdownFragment"
-            android:layout_width="match_parent"
-            android:layout_height="300dp"
-            android:layout_marginHorizontal="10dp"
-            android:layout_marginVertical="10dp"
-            android:layout_weight="1"
-            tools:layout="@layout/categorical_pie_chart_breakdown_fragment" />
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_height="match_parent"
+            android:layout_width="match_parent">
+            <TextView
+                android:id="@+id/CategoricalPieChartHeader"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="10dp"
+                android:text="Category breakdown for this pay period"
+                android:textAlignment="center"
+                android:textAllCaps="false"
+                android:textColor="@color/colorOnBackground"
+                android:textSize="18sp"
+                android:textStyle="bold" />
 
-        <fragment
-            android:id="@+id/CategoryBreakdownSummary"
-            android:name="com.example.budgetassistant.CategoricalHistoricalSummaryBarGraphFragment"
+            <com.github.mikephil.charting.charts.PieChart
+                android:id="@+id/CategoricalPieChart"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" />
+        </LinearLayout>
+
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="500dp"
-            android:layout_marginHorizontal="10dp"
-            android:layout_marginVertical="5dp"
-            android:layout_weight="1"
-            tools:layout="@layout/categorical_historical_summary_bar_graph_fragment" />
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/CategoricalHistoricalBarGraphHeader"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="10dp"
+                android:text="Category breakdown summary
+"
+                android:textAlignment="center"
+                android:textAllCaps="false"
+                android:textColor="@color/colorOnBackground"
+                android:textSize="18sp"
+                android:textStyle="bold" />
+
+            <com.github.mikephil.charting.charts.HorizontalBarChart
+                android:id="@+id/CategoricalBreakdownSummaryBarChart"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" />
+        </LinearLayout>
 
         <com.github.mikephil.charting.charts.BarChart
             android:id="@+id/MonthlyTrendChart"

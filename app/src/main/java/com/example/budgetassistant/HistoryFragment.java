@@ -13,8 +13,7 @@ import android.widget.ListView;
 
 import com.example.budgetassistant.adapters.TransactionHistoryAdapter;
 import com.example.budgetassistant.models.Transaction;
-import com.example.budgetassistant.models.TransactionSummary;
-import com.example.budgetassistant.viewmodels.TransactionSummaryViewModel;
+import com.example.budgetassistant.viewmodels.TransactionHistoryViewModel;
 
 import java.util.List;
 
@@ -23,7 +22,7 @@ import java.util.List;
  */
 public class HistoryFragment extends Fragment {
 
-    private TransactionSummaryViewModel mTransactionViewModel;
+    private TransactionHistoryViewModel mViewModel;
     private TransactionHistoryAdapter mTransactionAdapter;
     private ListView mListView;
 
@@ -45,11 +44,11 @@ public class HistoryFragment extends Fragment {
         mListView = (ListView) view.findViewById(R.id.HistoryList);
 
 
-        mTransactionViewModel = new ViewModelProvider(this).get(TransactionSummaryViewModel.class);
-        mTransactionViewModel.init();
-        mTransactionViewModel.getSummary().observe(getViewLifecycleOwner(), new Observer<TransactionSummary>() {
+        mViewModel = new ViewModelProvider(this).get(TransactionHistoryViewModel.class);
+        mViewModel.init();
+        mViewModel.getTransactions().observe(getViewLifecycleOwner(), new Observer<List<Transaction>>() {
             @Override
-            public void onChanged(TransactionSummary summary) {
+            public void onChanged(List<Transaction> transactions) {
                 mTransactionAdapter.notifyDataSetChanged();
             }
         });
@@ -60,7 +59,7 @@ public class HistoryFragment extends Fragment {
 
     private void initListView(){
         mTransactionAdapter = new TransactionHistoryAdapter(getActivity());
-        for(Transaction t : mTransactionViewModel.getSummary().getValue().Transactions){
+        for(Transaction t : mViewModel.getTransactions().getValue()){
             mTransactionAdapter.addItem(t);
         }
         mListView.setAdapter(mTransactionAdapter);
