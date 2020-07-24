@@ -7,7 +7,6 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,11 +16,8 @@ import android.widget.TextView;
 import com.example.budgetassistant.adapters.AlertAdapter;
 import com.example.budgetassistant.models.BankAccount;
 import com.example.budgetassistant.models.Transaction;
-import com.example.budgetassistant.models.TransactionSummary;
 import com.example.budgetassistant.models.UserSettings;
-import com.example.budgetassistant.viewmodels.BankAccountViewModel;
 import com.example.budgetassistant.viewmodels.HomeViewModel;
-import com.example.budgetassistant.viewmodels.UserSettingsViewModel;
 import com.github.mikephil.charting.charts.PieChart;
 import com.github.mikephil.charting.components.Description;
 import com.github.mikephil.charting.components.Legend;
@@ -32,7 +28,6 @@ import com.github.mikephil.charting.formatter.PercentFormatter;
 import com.github.mikephil.charting.utils.ColorTemplate;
 
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.List;
 
 /**
