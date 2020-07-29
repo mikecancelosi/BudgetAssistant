@@ -132,17 +132,21 @@ public class StatsFragment extends Fragment {
         List<BarEntry> entries = new ArrayList<>();
 
         int daysInPeriod = mViewModel.getTimePeriodInDays();
+        final List<String> labels = new ArrayList<>();
         for(int i = 0 ; i < TransactionCategories.values().length;i++){
             TransactionCategories category = TransactionCategories.values()[i];
-            //Find Ideal Value
-            float ideal = mViewModel.getIdealValueForCategory(category);
-            //Find Current Pay Period Value
-            float current = mViewModel.getCurrentValueForCategory(category);
-            //Find Lifetime average value
-            float average = mViewModel.getLifetimeAverageValueForCategory(category);
-            //Set entry
-            BarEntry entry = new BarEntry(i,new float[] {ideal,current,average});
-            entries.add(entry);
+            if(category != TransactionCategories.INCOME) {
+                labels.add(category.name());
+                //Find Ideal Value
+                float ideal = mViewModel.getIdealValueForCategory(category);
+                //Find Current Pay Period Value
+                float current = mViewModel.getCurrentValueForCategory(category);
+                //Find Lifetime average value
+                float average = mViewModel.getLifetimeAverageValueForCategory(category);
+                //Set entry
+                BarEntry entry = new BarEntry(labels.size() - 1, new float[]{ideal, current, average});
+                entries.add(entry);
+            }
         }
 
         BarDataSet set = new BarDataSet(entries,"");
@@ -153,6 +157,7 @@ public class StatsFragment extends Fragment {
 
         set.setColors(colors);
         set.setDrawIcons(false);
+        set.setDrawValues(false);
         BarData data = new BarData(set);
         chart.setData(data);
         data.setBarWidth(.2f);
@@ -180,10 +185,7 @@ public class StatsFragment extends Fragment {
         //Remove interactivity
         chart.setTouchEnabled(false);
         // Set category labels
-        final List<String> labels = new ArrayList<>();
-        for(TransactionCategories cat : TransactionCategories.values()){
-            labels.add(cat.name());
-        }
+
         chart.getXAxis().setValueFormatter(new ValueFormatter() {
             @Override
             public String getFormattedValue(float value) {
@@ -243,7 +245,6 @@ public class StatsFragment extends Fragment {
         chart.getXAxis().setValueFormatter(new IndexAxisValueFormatter(){
         @Override
                 public String getFormattedValue(float value){
-            Log.d("!", value + " | " + labels.size());
             return labels.get((int) value);
         }
         });
