@@ -222,13 +222,15 @@ public class StatsFragment extends Fragment {
         //Remove interactivity
         chart.setTouchEnabled(false);
 
+
         final List<String> labels = new ArrayList<>();
         List<BarEntry> entries = new ArrayList<>();
 
-        for(int i = 0; i < 5; i++){
+        for(int i = 13; i >= 0; i--){
             Calendar monthCal = Calendar.getInstance();
             monthCal.add(Calendar.MONTH,i * -1);
             String monthName = new SimpleDateFormat("MMM").format(monthCal.getTime());
+
             labels.add(monthName);
             entries.add(new BarEntry(i,mViewModel.getExpensesInMonth(i)));
         }
@@ -240,7 +242,7 @@ public class StatsFragment extends Fragment {
         BarData data = new BarData(set);
         data.setBarWidth(.1f);
         chart.setData(data);
-
+        chart.getXAxis().setLabelCount(labels.size());
 
         chart.getXAxis().setValueFormatter(new IndexAxisValueFormatter(){
         @Override

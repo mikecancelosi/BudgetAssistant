@@ -1,5 +1,7 @@
 package com.example.budgetassistant.viewmodels;
 
+import android.util.Log;
+
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.Observer;
@@ -122,19 +124,19 @@ public class StatsViewModel extends ViewModel {
     public Float getExpensesInMonth(int monthsFromCurrent){
         Calendar startCal = Calendar.getInstance();
         Calendar endCal = Calendar.getInstance();
-        for(int i= 0 ; i < monthsFromCurrent; i++){
-            startCal.add(Calendar.MONTH,-1);
-            endCal.add(Calendar.MONTH,-1);
-        }
+        startCal.add(Calendar.MONTH,-1 * monthsFromCurrent);
+        endCal.add(Calendar.MONTH,-1 * monthsFromCurrent);
         //Set startCal to the first of the month
         startCal.set(Calendar.DAY_OF_MONTH, 1);
         //Set endCal to the end of the month
         endCal.add(Calendar.MONTH,1);
         endCal.set(Calendar.DAY_OF_MONTH, 1);
-        endCal.add(Calendar.DATE,-1);
+        endCal.add(Calendar.DATE,-1); // TODO: Set to start/end of day.
 
        List<Transaction> transactionSourceData = getTransactions().getValue();
+       Log.d("!", "" + transactionSourceData.size());
        List<Transaction> transactionInMonth = TransactionHelper.getTransactionsInTimeFrame(transactionSourceData,startCal.getTime(),endCal.getTime());
+       Log.d(startCal.getTime() + " | " + endCal.getTime()," : " + transactionInMonth.size());
        return TransactionHelper.getExpenseTotal(transactionInMonth);
     }
 

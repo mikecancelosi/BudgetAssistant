@@ -33,13 +33,11 @@ public class TransactionRepository {
     }
     private void setTransactions(){
         dataSet.clear();
-
-        Calendar transCal = Calendar.getInstance();
         for(int i = 0; i < 14;i++){
             //create 14 months of data; i is months before current
-            transCal.add(Calendar.MONTH, -1);
-
-            YearMonth yearMonthObject = YearMonth.of(transCal.get(Calendar.YEAR),transCal.get(Calendar.MONTH));
+            Calendar transCal = Calendar.getInstance();
+            transCal.add(Calendar.MONTH, i * -1);
+            YearMonth yearMonthObject = YearMonth.of(transCal.get(Calendar.YEAR),transCal.get(Calendar.MONTH) + 1);
             int daysInMonth = yearMonthObject.lengthOfMonth();
             for(int j = daysInMonth; j > 0; j--){
                 //Create data for each day in the month
