@@ -7,6 +7,7 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,6 +17,7 @@ import com.example.budgetassistant.models.Transaction;
 import com.example.budgetassistant.models.UserSettings;
 import com.example.budgetassistant.viewmodels.HomeViewModel;
 import com.example.budgetassistant.viewmodels.StatsViewModel;
+import com.github.mikephil.charting.charts.BarChart;
 import com.github.mikephil.charting.charts.HorizontalBarChart;
 import com.github.mikephil.charting.charts.PieChart;
 import com.github.mikephil.charting.components.Description;
@@ -27,12 +29,15 @@ import com.github.mikephil.charting.data.BarEntry;
 import com.github.mikephil.charting.data.PieData;
 import com.github.mikephil.charting.data.PieDataSet;
 import com.github.mikephil.charting.data.PieEntry;
+import com.github.mikephil.charting.formatter.IndexAxisValueFormatter;
 import com.github.mikephil.charting.formatter.ValueFormatter;
 import com.github.mikephil.charting.utils.ColorTemplate;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 import java.util.Map;
 
@@ -79,6 +84,7 @@ public class StatsFragment extends Fragment {
     private void setUpUI(){
         setupCategoricalHorizontalBarChart();
         setupCategoryExpensePieChart();
+        setupMonthlyTrendBarChart();
     }
 
     private void setupCategoryExpensePieChart(){
@@ -191,5 +197,57 @@ public class StatsFragment extends Fragment {
 
     }
 
+    private void setupMonthlyTrendBarChart(){
+        BarChart chart = (BarChart) view.findViewById(R.id.MonthlyTrendChart);
+
+        //Chart Visuals
+        //Remove description
+        Description des = chart.getDescription();
+        des.setEnabled(false);
+        //remove legend
+        Legend legend = chart.getLegend();
+        legend.setEnabled(false);
+        //Remove vertical grid lines
+        chart.getXAxis().setDrawGridLines(false);
+        chart.setFitBars(true);
+        // Remove right labels
+        chart.getAxisRight().setDrawLabels(false);
+        //Set XAxis labels to the bottom
+        chart.getXAxis().setPosition(XAxis.XAxisPosition.BOTTOM);
+        //Remove bottom padding
+        chart.getAxisLeft().setAxisMinimum(0f);
+        chart.getAxisRight().setAxisMinimum(0f);
+        //Remove interactivity
+        chart.setTouchEnabled(false);
+
+        final List<String> labels = new ArrayList<>();
+        List<BarEntry> entries = new ArrayList<>();
+
+        for(int i = 0; i < 5; i++){
+            Calendar monthCal = Calendar.getInstance();
+            monthCal.add(Calendar.MONTH,i * -1);
+            String monthName = new SimpleDateFormat("MMM").format(monthCal.getTime());
+            labels.add(monthName);
+            entries.add(new BarEntry(i,mViewModel.getExpensesInMonth(i)));
+        }
+
+        BarDataSet set = new BarDataSet(entries,"");
+        set.setColor(ContextCompat.getColor(getContext(),R.color.colorPrimary));
+        set.setDrawIcons(false);
+        set.setDrawValues(false);
+        BarData data = new BarData(set);
+        data.setBarWidth(.1f);
+        chart.setData(data);
+
+
+        chart.getXAxis().setValueFormatter(new IndexAxisValueFormatter(){
+        @Override
+                public String getFormattedValue(float value){
+            Log.d("!", value + " | " + labels.size());
+            return labels.get((int) value);
+        }
+        });
+        chart.invalidate();
+    }
 
 }

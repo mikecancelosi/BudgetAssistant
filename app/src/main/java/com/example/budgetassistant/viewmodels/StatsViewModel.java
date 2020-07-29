@@ -83,10 +83,7 @@ public class StatsViewModel extends ViewModel {
         Date startDate = income.LastPaycheck;
         Date endDate = income.GetNextPaycheckDate();
         List<Transaction> transactionsInPayPeriod = TransactionHelper.getTransactionsInTimeFrame(sourceData,startDate,endDate);
-        Float expenses = 0f;
-        for(Transaction t : transactionsInPayPeriod){
-            expenses += t.Expense;
-        }
+        Float expenses = TransactionHelper.getExpenseTotal(transactionsInPayPeriod);
         return income.Amount - expenses;
     }
 
@@ -120,6 +117,25 @@ public class StatsViewModel extends ViewModel {
         int daysOfData = DateExtensions.GetDaysBetween(startCal.getTime(),endCal.getTime());
 
         return catExpense / daysOfData;
+    }
+
+    public Float getExpensesInMonth(int monthsFromCurrent){
+        Calendar startCal = Calendar.getInstance();
+        Calendar endCal = Calendar.getInstance();
+        for(int i= 0 ; i < monthsFromCurrent; i++){
+            startCal.add(Calendar.MONTH,-1);
+            endCal.add(Calendar.MONTH,-1);
+        }
+        //Set startCal to the first of the month
+        startCal.set(Calendar.DAY_OF_MONTH, 1);
+        //Set endCal to the end of the month
+        endCal.add(Calendar.MONTH,1);
+        endCal.set(Calendar.DAY_OF_MONTH, 1);
+        endCal.add(Calendar.DATE,-1);
+
+       List<Transaction> transactionSourceData = getTransactions().getValue();
+       List<Transaction> transactionInMonth = TransactionHelper.getTransactionsInTimeFrame(transactionSourceData,startCal.getTime(),endCal.getTime());
+       return TransactionHelper.getExpenseTotal(transactionInMonth);
     }
 
 

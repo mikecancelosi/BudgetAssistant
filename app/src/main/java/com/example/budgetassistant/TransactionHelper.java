@@ -29,4 +29,12 @@ public class TransactionHelper {
         return transactions;
     }
 
+    public static Float getExpenseTotal(List<Transaction> transactions){
+        Float expenseTotal = 0f;
+        for(Transaction t : transactions){
+            expenseTotal += t.Expense;
+        }
+        return expenseTotal;
+    }
+
 }
