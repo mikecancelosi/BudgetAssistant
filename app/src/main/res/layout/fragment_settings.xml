@@ -6,7 +6,8 @@
     android:layout_height="match_parent"
     android:background="@color/colorBackground"
     android:orientation="vertical"
-    tools:context=".SettingsFragment">
+    tools:context=".SettingsFragment"
+    tools:layout_marginTop="-7dp">
 
     <!-- TODO: Update blank fragment layout -->
     <LinearLayout
@@ -19,10 +20,10 @@
         <ImageView
             android:id="@+id/UserProfilePicture"
             android:layout_width="match_parent"
-            android:layout_height="150dp"
+            android:layout_height="120dp"
             android:layout_marginHorizontal="40dp"
             android:layout_marginTop="30dp"
-            android:layout_marginBottom="10dp"
+            android:layout_marginBottom="20dp"
             tools:src="@tools:sample/avatars" />
 
         <TextView
@@ -32,7 +33,7 @@
             android:text="Mike Cancelosi"
             android:textAlignment="center"
             android:textColor="@color/colorOnPrimary"
-            android:textSize="24sp" />
+            android:textSize="30sp" />
 
         <TextView
             android:id="@+id/memberSinceLabel"
@@ -49,8 +50,7 @@
         android:id="@+id/BankAccountConnection"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_margin="10dp"
-        android:background="@color/colorSurface"
+        android:layout_marginTop="20dp"
         android:elevation="5dp"
         android:orientation="vertical"
         android:padding="10dp">
@@ -73,6 +73,59 @@
             android:elevation="5dp" />
 
 
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/Income"
+        android:layout_width="match_parent"
+        android:layout_height="150dp"
+        android:layout_marginHorizontal="10dp"
+        android:layout_marginVertical="10dp"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/textView6"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Income"
+            android:textSize="18sp"
+            android:textStyle="bold" />
+
+        <LinearLayout
+            android:id="@+id/IncomeItem"
+            android:layout_width="match_parent"
+            android:layout_height="100dp"
+            android:layout_marginHorizontal="10dp"
+            android:layout_marginVertical="10dp"
+            android:background="@color/colorOnPrimary"
+            android:elevation="5dp"
+            android:orientation="vertical"
+            android:padding="15dp">
+
+            <TextView
+                android:id="@+id/IncomeDollarAmount"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal|center_vertical"
+                android:text="$3000"
+                android:textAlignment="center"
+                android:textSize="24sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/IncomeFrequency"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="every 2 weeks"
+                android:textAlignment="center" />
+
+            <TextView
+                android:id="@+id/IncomeNextPaycheck"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="next: 09/27/20"
+                android:textAlignment="center" />
+        </LinearLayout>
     </LinearLayout>
 
 </LinearLayout>

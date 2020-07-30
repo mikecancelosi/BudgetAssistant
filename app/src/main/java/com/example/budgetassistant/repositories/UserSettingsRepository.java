@@ -45,7 +45,6 @@ public class UserSettingsRepository {
         dataSet.income = new Income(1000f,14,new Date((long)1594915200000f)); // This number represents 07/16/2020 ( ms since 01/01/1970 )
         dataSet.recurringTransactions = createRecurringTransactionPayments();
         dataSet.idealBreakdown = createIdealBreakdown();
-        dataSet.budget = determineBudget(dataSet.income.Amount,dataSet.idealBreakdown);
         dataSet.accounts.add(new BankAccount("15202593282",13322,"Visa","Main Account"));
         dataSet.accounts.add(new BankAccount("84641112479",3000,"Mastercard","Savings Account"));
         dataSet.joinDate = Calendar.getInstance().getTime();

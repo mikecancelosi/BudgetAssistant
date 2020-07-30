@@ -56,23 +56,52 @@ public class SettingsFragment extends Fragment {
     }
 
     private void setupUI(){
+        UserSettings settings = mViewModel.getSettings().getValue();
+
+        setupHeader(settings);
+        setupAccountsList(settings);
+        setupRecurringPayments(settings);
+        setupIncome(settings);
+        setupBreakdown(settings);
+
+    }
+
+    private void setupHeader(UserSettings settings){
         ImageView userProfilePic = view.findViewById(R.id.UserProfilePicture);
         TextView userHeading = view.findViewById(R.id.UsernameDisplay);
         TextView joinLabel = view.findViewById(R.id.memberSinceLabel);
-
-        ListView accountListView = view.findViewById(R.id.AccountListView);
-
-        UserSettings settings = mViewModel.getSettings().getValue();
 
         userProfilePic.setImageResource(settings.profilePicture);
         userHeading.setText(settings.name);
         SimpleDateFormat sdf = new SimpleDateFormat("MMMM yyyy");
         joinLabel.setText("Member since " + sdf.format(settings.joinDate));
+    }
 
+    private void setupAccountsList(UserSettings settings){
+        ListView accountListView = view.findViewById(R.id.AccountListView);
         BankAccountAdapter bankAdapter = new BankAccountAdapter(getContext());
         for(BankAccount account : settings.accounts){
             bankAdapter.addItem(account);
         }
         accountListView.setAdapter(bankAdapter);
+    }
+
+    private void setupIncome(UserSettings settings){
+        TextView paycheckAmount = view.findViewById(R.id.IncomeDollarAmount);
+        TextView frequencyText = view.findViewById(R.id.IncomeFrequency);
+        TextView nextPayText = view.findViewById(R.id.IncomeNextPaycheck);
+
+        paycheckAmount.setText("$" + settings.income.Amount);
+        frequencyText.setText("Every " + settings.income.PayPeriodInDays + " Days");
+        SimpleDateFormat sdf = new SimpleDateFormat("MM/dd/yy");
+        nextPayText.setText("Next check on " + sdf.format(settings.income.GetNextPaycheckDate()));
+    }
+
+    private void setupRecurringPayments(UserSettings settings){
+
+    }
+
+    private void setupBreakdown(UserSettings settings){
+
     }
 }

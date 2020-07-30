@@ -84,7 +84,7 @@ public class HomeViewModel extends ViewModel {
     }
 
     public Float getExpenseAsPercentage(){
-        float budget = getSettings().getValue().budget;
+        float budget = getSettings().getValue().income.Amount;
         float expenses = 0f;
         List<Transaction> transactionsInPayPeriod = getTransactionsForPayPeriod();
         for(Transaction t : transactionsInPayPeriod){
