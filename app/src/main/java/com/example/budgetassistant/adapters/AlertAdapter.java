@@ -14,13 +14,13 @@ import java.util.ArrayList;
 
 public class AlertAdapter extends  android.widget.BaseAdapter {
 
-    LayoutInflater aInflater;
+    LayoutInflater mInflater;
     ArrayList<Transaction> mData = new ArrayList<>();
     private Context mContext;
 
 
     public AlertAdapter(Context c) {
-        aInflater = (LayoutInflater) c.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        mInflater = (LayoutInflater) c.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         mContext = c;
     }
 
@@ -40,7 +40,7 @@ public class AlertAdapter extends  android.widget.BaseAdapter {
     @Override
     public View getView(int i, View view, ViewGroup viewGroup) {
 
-         view = aInflater.inflate(R.layout.alert,null);
+         view = mInflater.inflate(R.layout.alert,null);
 
         TextView descriptionTextView = (TextView) view.findViewById(R.id.Description);
         TextView amountTextView = (TextView) view.findViewById(R.id.AmountTextView);

@@ -26,12 +26,15 @@ public class TransactionRepository {
 
     private ArrayList<Transaction> dataSet = new ArrayList<>();
     public MutableLiveData<List<Transaction>> getTransactions(){
-        setTransactions();
+        if(dataSet.size() == 0) {
+            setTransactions();
+        }
         MutableLiveData<List<Transaction>> data = new MutableLiveData<>();
         data.setValue(dataSet);
         return data;
     }
-    private void setTransactions(){
+
+    private void setTransactions() {
         dataSet.clear();
         for(int i = 0; i < 14;i++){
             //create 14 months of data; i is months before current

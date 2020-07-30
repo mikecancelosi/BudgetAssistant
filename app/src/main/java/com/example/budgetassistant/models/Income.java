@@ -16,6 +16,12 @@ public class Income {
     public int PayPeriodInDays;
     public Date LastPaycheck;
 
+    public Income(){
+        Amount = 0f;
+        PayPeriodInDays = -1;
+        LastPaycheck = new Date();
+    }
+
     public Income(float amount, int payPeriodInDays, Date lastPaycheck) {
         Amount = amount;
         PayPeriodInDays = payPeriodInDays;
