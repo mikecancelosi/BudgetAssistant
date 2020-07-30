@@ -134,9 +134,7 @@ public class StatsViewModel extends ViewModel {
         endCal.add(Calendar.DATE,-1); // TODO: Set to start/end of day.
 
        List<Transaction> transactionSourceData = getTransactions().getValue();
-       Log.d("!", "" + transactionSourceData.size());
        List<Transaction> transactionInMonth = TransactionHelper.getTransactionsInTimeFrame(transactionSourceData,startCal.getTime(),endCal.getTime());
-       Log.d(startCal.getTime() + " | " + endCal.getTime()," : " + transactionInMonth.size());
        return TransactionHelper.getExpenseTotal(transactionInMonth);
     }
 

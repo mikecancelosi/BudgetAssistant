@@ -10,6 +10,7 @@ import android.widget.TextView;
 import com.example.budgetassistant.R;
 import com.example.budgetassistant.models.Transaction;
 
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.TreeSet;
@@ -22,6 +23,8 @@ public class TransactionHistoryAdapter  extends BaseAdapter {
     private ArrayList<Transaction> mData = new ArrayList<Transaction>();
     private TreeSet<Integer> mHeaderIndices = new TreeSet<Integer>();
     private LayoutInflater mInflater;
+
+    private static DecimalFormat df = new DecimalFormat("0.00");
 
     public TransactionHistoryAdapter(Context context){
         mInflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
@@ -71,7 +74,8 @@ public class TransactionHistoryAdapter  extends BaseAdapter {
         Transaction transaction = getItem(index);
         descriptionText.setText(transaction.Description);
         float amount = transaction.Income != 0f ? transaction.Income : transaction.Expense;
-        costText.setText(Float.toString(amount));
+        String displayAmount = "$" + df.format(amount);
+        costText.setText(displayAmount);
     }
 
     private void initHeader(View view,int index){
@@ -80,8 +84,6 @@ public class TransactionHistoryAdapter  extends BaseAdapter {
         Transaction transaction = getItem(index);
         dateText.setText(transaction.DateOfTransaction.toString());
     }
-
-
 
     public void addItem(final Transaction transaction){
         mData.add(transaction);

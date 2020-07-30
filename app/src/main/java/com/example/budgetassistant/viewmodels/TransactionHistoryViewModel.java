@@ -8,7 +8,13 @@ import androidx.lifecycle.ViewModel;
 import com.example.budgetassistant.models.Transaction;
 import com.example.budgetassistant.repositories.TransactionRepository;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.TreeMap;
 
 public class TransactionHistoryViewModel extends ViewModel {
 
@@ -22,12 +28,27 @@ public class TransactionHistoryViewModel extends ViewModel {
         }
 
         mRepo = TransactionRepository.getInstance();
+        mTransactions = mRepo.getTransactions();
         mRepo.getTransactions().observeForever(new Observer<List<Transaction>>() {
             @Override
             public void onChanged(List<Transaction> transactions) {
                 mTransactions.setValue(transactions);
             }
         });
+    }
+
+    public TreeMap<Date,List<Transaction>> getDatedTransactions(){
+        TreeMap<Date,List<Transaction>> map = new TreeMap<>(Collections.<Date>reverseOrder());
+        List<Transaction> sourceData = mRepo.getTransactions().getValue();
+        for(Transaction trans : sourceData){
+            Date transDate = trans.DateOfTransaction;
+            if(map.containsKey(transDate)){
+                map.get(transDate).add(trans);
+            }else{
+                map.put(transDate, Arrays.asList(trans));
+            }
+        }
+        return map;
     }
 
 }

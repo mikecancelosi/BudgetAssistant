@@ -15,7 +15,12 @@ import com.example.budgetassistant.adapters.TransactionHistoryAdapter;
 import com.example.budgetassistant.models.Transaction;
 import com.example.budgetassistant.viewmodels.TransactionHistoryViewModel;
 
+import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.TreeMap;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -59,9 +64,14 @@ public class HistoryFragment extends Fragment {
 
     private void initListView(){
         mTransactionAdapter = new TransactionHistoryAdapter(getActivity());
-        for(Transaction t : mViewModel.getTransactions().getValue()){
-            mTransactionAdapter.addItem(t);
+        TreeMap<Date,List<Transaction>> map = mViewModel.getDatedTransactions();
+        for(Map.Entry<Date,List<Transaction>> set : map.entrySet()){
+            mTransactionAdapter.addHeader(set.getKey());
+            for(Transaction trans : set.getValue()){
+                mTransactionAdapter.addItem(trans);
+            }
         }
+
         mListView.setAdapter(mTransactionAdapter);
     }
 }
