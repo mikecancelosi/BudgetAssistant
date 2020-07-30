@@ -66,7 +66,10 @@ public class HistoryFragment extends Fragment {
         mTransactionAdapter = new TransactionHistoryAdapter(getActivity());
         TreeMap<Date,List<Transaction>> map = mViewModel.getDatedTransactions();
         for(Map.Entry<Date,List<Transaction>> set : map.entrySet()){
-            mTransactionAdapter.addHeader(set.getKey());
+            float totalExpenses = TransactionHelper.getExpenseTotal(set.getValue());
+            float totalIncome = TransactionHelper.getIncomeTotal(set.getValue());
+            mTransactionAdapter.addHeader(set.getKey(),totalIncome,totalExpenses);
+
             for(Transaction trans : set.getValue()){
                 mTransactionAdapter.addItem(trans);
             }

@@ -55,6 +55,12 @@ public class Transaction {
         Category = category;
     }
 
+    public Transaction(Date date, float income, float expense){
+        DateOfTransaction = date;
+        Income = income;
+        Expense = expense;
+    }
+
     public int GetDaysLeftUntilNextRecurrentCharge(){
         if(Frequency != "OneTime") {
             Calendar c = Calendar.getInstance();

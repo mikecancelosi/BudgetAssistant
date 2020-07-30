@@ -37,6 +37,7 @@ public class TransactionHistoryViewModel extends ViewModel {
         });
     }
 
+    //TODO: Limit to short time period, load more on scroll
     public TreeMap<Date,List<Transaction>> getDatedTransactions(){
         TreeMap<Date,List<Transaction>> map = new TreeMap<>(Collections.<Date>reverseOrder());
         List<Transaction> sourceData = mRepo.getTransactions().getValue();

@@ -37,4 +37,12 @@ public class TransactionHelper {
         return expenseTotal;
     }
 
+    public static Float getIncomeTotal(List<Transaction> transactions){
+        Float incomeTotal = 0f;
+        for(Transaction t : transactions){
+            incomeTotal += t.Income;
+        }
+        return incomeTotal;
+    }
+
 }

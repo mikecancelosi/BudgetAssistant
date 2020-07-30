@@ -4,13 +4,18 @@ import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
 import android.widget.BaseAdapter;
+import android.widget.Spinner;
 import android.widget.TextView;
 
 import com.example.budgetassistant.R;
+import com.example.budgetassistant.TransactionCategories;
 import com.example.budgetassistant.models.Transaction;
 
+import java.lang.reflect.Array;
 import java.text.DecimalFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.TreeSet;
@@ -25,8 +30,11 @@ public class TransactionHistoryAdapter  extends BaseAdapter {
     private LayoutInflater mInflater;
 
     private static DecimalFormat df = new DecimalFormat("0.00");
+    private static SimpleDateFormat sdf = new SimpleDateFormat("MM-dd-yyyy");
+    private Context con;
 
     public TransactionHistoryAdapter(Context context){
+        con = context;
         mInflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
     }
 
@@ -70,19 +78,39 @@ public class TransactionHistoryAdapter  extends BaseAdapter {
     private void initItem(View view, int index){
         TextView descriptionText = view.findViewById(R.id.DescriptionTextView);
         TextView costText = view.findViewById(R.id.AmountTextView);
+        Spinner catSpinner = view.findViewById(R.id.CategorySpinner);
 
         Transaction transaction = getItem(index);
         descriptionText.setText(transaction.Description);
         float amount = transaction.Income != 0f ? transaction.Income : transaction.Expense;
         String displayAmount = "$" + df.format(amount);
         costText.setText(displayAmount);
+
+        catSpinner.setAdapter(new ArrayAdapter<TransactionCategories>(con,android.R.layout.simple_spinner_item,TransactionCategories.values()));
+        TransactionCategories category = transaction.Category;
+        int catIndex = transaction.Category.getValue();
+        catSpinner.setSelection(catIndex);
     }
 
     private void initHeader(View view,int index){
         TextView dateText = view.findViewById(R.id.DateTextView);
+        TextView incText = view.findViewById(R.id.DateIncomeTotal);
+        TextView expText = view.findViewById(R.id.DateExpenseTotal);
+
 
         Transaction transaction = getItem(index);
-        dateText.setText(transaction.DateOfTransaction.toString());
+        dateText.setText(sdf.format(transaction.DateOfTransaction));
+        if(transaction.Income > 0) {
+            incText.setText("$" + df.format(transaction.Income));
+        }else{
+            incText.setVisibility(View.INVISIBLE);
+        }
+
+        if(transaction.Expense > 0){
+            expText.setText("$" + df.format(transaction.Expense));
+        }else{
+            expText.setVisibility(View.INVISIBLE);
+        }
     }
 
     public void addItem(final Transaction transaction){
@@ -90,8 +118,8 @@ public class TransactionHistoryAdapter  extends BaseAdapter {
         notifyDataSetChanged();
     }
 
-    public void addHeader(Date date){
-        mData.add(new Transaction(date));
+    public void addHeader(Date date, Float income, Float expenses){
+        mData.add(new Transaction(date,income,expenses));
         mHeaderIndices.add(mData.size()-1);
         notifyDataSetChanged();
     }
