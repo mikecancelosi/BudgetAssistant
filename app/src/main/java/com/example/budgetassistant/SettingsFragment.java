@@ -23,8 +23,10 @@ import com.example.budgetassistant.models.UserSettings;
 import com.example.budgetassistant.repositories.BankRepository;
 import com.example.budgetassistant.viewmodels.SettingsViewModel;
 import com.example.budgetassistant.viewmodels.StatsViewModel;
+import com.github.mikephil.charting.charts.PieChart;
 
 import java.text.SimpleDateFormat;
+import java.util.HashMap;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -83,7 +85,6 @@ public class SettingsFragment extends Fragment {
 
     private void setupAccountsList(UserSettings settings){
         RecyclerView accountListView = view.findViewById(R.id.AccountListView);
-        accountListView.setHasFixedSize(false);
         accountListView.setLayoutManager(new LinearLayoutManager(getContext()));
 
         BankAccountAdapter bankAdapter = new BankAccountAdapter(settings.accounts);
@@ -103,13 +104,31 @@ public class SettingsFragment extends Fragment {
 
     private void setupRecurringPayments(UserSettings settings){
         RecyclerView recurList = view.findViewById(R.id.RecurPaymentList);
-        recurList.setHasFixedSize(true);
         recurList.setLayoutManager(new LinearLayoutManager(getContext()));
         AlertAdapter alertAdapter = new AlertAdapter( settings.recurringTransactions);
         recurList.setAdapter(alertAdapter);
     }
 
     private void setupBreakdown(UserSettings settings){
+        TextView investText = view.findViewById(R.id.settingsBreakdownInvestValue);
+        TextView savingsText = view.findViewById(R.id.settingsBreakdownSavingsValue);
+        PieChart chart = view.findViewById(R.id.settingsBreakdownChart);
+
+        HashMap<TransactionCategories,Float> breakdown = settings.idealBreakdown;
+        if(breakdown.containsKey(TransactionCategories.INVESTMENT)) {
+            Float percentageInvest = breakdown.get(TransactionCategories.INVESTMENT);
+            investText.setText("$" + (settings.income.Amount * percentageInvest));
+        }else{
+            investText.setText("$0");
+        }
+
+        if(breakdown.containsKey(TransactionCategories.SAVINGS)){
+            Float percentageSavings = breakdown.get(TransactionCategories.SAVINGS);
+            savingsText.setText("$" + (settings.income.Amount * percentageSavings));
+        } else{
+            savingsText.setText("$0");
+        }
+
 
     }
 }

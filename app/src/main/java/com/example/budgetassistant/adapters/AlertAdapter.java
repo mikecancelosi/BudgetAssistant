@@ -19,9 +19,7 @@ import java.util.List;
 
 public class AlertAdapter extends  RecyclerView.Adapter<AlertAdapter.MyViewHolder> {
 
-    LayoutInflater mInflater;
-    List<Transaction> mData = new ArrayList<>();
-    private Context mContext;
+    List<Transaction> mData;
 
     public static class MyViewHolder extends RecyclerView.ViewHolder{
         public  TextView descriptionTextView;
