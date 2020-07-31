@@ -4,67 +4,73 @@ import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
+import androidx.recyclerview.widget.RecyclerView;
+
 import com.example.budgetassistant.R;
+import com.example.budgetassistant.models.BankAccount;
 import com.example.budgetassistant.models.Transaction;
 import com.example.budgetassistant.models.UserSettings;
 
 import java.util.ArrayList;
+import java.util.List;
 
-public class AlertAdapter extends  android.widget.BaseAdapter {
+public class AlertAdapter extends  RecyclerView.Adapter<AlertAdapter.MyViewHolder> {
 
     LayoutInflater mInflater;
-    ArrayList<Transaction> mData = new ArrayList<>();
+    List<Transaction> mData = new ArrayList<>();
     private Context mContext;
 
+    public static class MyViewHolder extends RecyclerView.ViewHolder{
+        public  TextView descriptionTextView;
+        public TextView amountTextView;
+        public TextView occurrenceTextView;
+        public TextView countdownNumTextView;
+        public TextView countdownUnitTextView;
 
-    public AlertAdapter(Context c) {
-        mInflater = (LayoutInflater) c.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        mContext = c;
+        public MyViewHolder(View itemView){
+            super(itemView);
+            descriptionTextView = (TextView) itemView.findViewById(R.id.Description);
+            amountTextView = (TextView) itemView.findViewById(R.id.AmountTextView);
+            occurrenceTextView = (TextView) itemView.findViewById(R.id.Occurrence);
+            countdownNumTextView = (TextView) itemView.findViewById(R.id.CountdownNum);
+            countdownUnitTextView = (TextView) itemView.findViewById(R.id.CountdownUnit);
+        }
+    }
+
+
+    public AlertAdapter(List<Transaction> transactions) {
+       mData = transactions;
     }
 
     @Override
-    public int getCount() {
+    public int getItemCount() {
         return mData.size();
     }
 
     @Override
-    public Transaction getItem(int i) {return mData.get(i);}
-
-    @Override
-    public long getItemId(int i) {
-        return i;
+    public AlertAdapter.MyViewHolder onCreateViewHolder(ViewGroup parent, int viewType){
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.alert, parent, false);
+        AlertAdapter.MyViewHolder vh = new AlertAdapter.MyViewHolder(view);
+        return vh;
     }
 
     @Override
-    public View getView(int i, View view, ViewGroup viewGroup) {
-
-         view = mInflater.inflate(R.layout.alert,null);
-
-        TextView descriptionTextView = (TextView) view.findViewById(R.id.Description);
-        TextView amountTextView = (TextView) view.findViewById(R.id.AmountTextView);
-        TextView occurrenceTextView = (TextView) view.findViewById(R.id.Occurrence);
-        TextView countdownNumTextView = (TextView) view.findViewById(R.id.CountdownNum);
-        TextView countdownUnitTextView = (TextView) view.findViewById(R.id.CountdownUnit);
-
-        Transaction transaction = getItem(i);
+    public void onBindViewHolder(AlertAdapter.MyViewHolder holder, int position) {
+        Transaction transaction = mData.get(position);
 
         String desc = transaction.Description;
         String cost = Float.toString(transaction.Expense);
         String occur = transaction.Frequency;
 
-
-
-        descriptionTextView.setText(desc);
-        amountTextView.setText(cost);
-        occurrenceTextView.setText(occur);
-        countdownNumTextView.setText("" + transaction.GetDaysLeftUntilNextRecurrentCharge());
-        countdownUnitTextView.setText("Days");
-
-        return view;
+        holder.descriptionTextView.setText(desc);
+        holder.amountTextView.setText(cost);
+        holder.occurrenceTextView.setText(occur);
+        holder.countdownNumTextView.setText("" + transaction.GetDaysLeftUntilNextRecurrentCharge());
+        holder.countdownUnitTextView.setText("Days");
     }
-
 
 
     public void addItem(Transaction transaction){

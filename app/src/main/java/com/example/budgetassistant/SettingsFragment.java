@@ -5,6 +5,8 @@ import android.os.Bundle;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.view.LayoutInflater;
 import android.view.View;
@@ -13,8 +15,10 @@ import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.example.budgetassistant.adapters.AlertAdapter;
 import com.example.budgetassistant.adapters.BankAccountAdapter;
 import com.example.budgetassistant.models.BankAccount;
+import com.example.budgetassistant.models.Transaction;
 import com.example.budgetassistant.models.UserSettings;
 import com.example.budgetassistant.repositories.BankRepository;
 import com.example.budgetassistant.viewmodels.SettingsViewModel;
@@ -78,11 +82,11 @@ public class SettingsFragment extends Fragment {
     }
 
     private void setupAccountsList(UserSettings settings){
-        ListView accountListView = view.findViewById(R.id.AccountListView);
-        BankAccountAdapter bankAdapter = new BankAccountAdapter(getContext());
-        for(BankAccount account : settings.accounts){
-            bankAdapter.addItem(account);
-        }
+        RecyclerView accountListView = view.findViewById(R.id.AccountListView);
+        accountListView.setHasFixedSize(false);
+        accountListView.setLayoutManager(new LinearLayoutManager(getContext()));
+
+        BankAccountAdapter bankAdapter = new BankAccountAdapter(settings.accounts);
         accountListView.setAdapter(bankAdapter);
     }
 
@@ -98,7 +102,11 @@ public class SettingsFragment extends Fragment {
     }
 
     private void setupRecurringPayments(UserSettings settings){
-
+        RecyclerView recurList = view.findViewById(R.id.RecurPaymentList);
+        recurList.setHasFixedSize(true);
+        recurList.setLayoutManager(new LinearLayoutManager(getContext()));
+        AlertAdapter alertAdapter = new AlertAdapter( settings.recurringTransactions);
+        recurList.setAdapter(alertAdapter);
     }
 
     private void setupBreakdown(UserSettings settings){

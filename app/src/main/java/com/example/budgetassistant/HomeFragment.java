@@ -6,6 +6,8 @@ import android.os.Bundle;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.view.LayoutInflater;
 import android.view.View;
@@ -93,16 +95,11 @@ public class HomeFragment extends Fragment {
 
     private void setUpList(){
         Resources res = getResources();
-        ListView myListView = (ListView) view.findViewById(R.id.BillList);
-
-        AlertAdapter alertAdapter = new AlertAdapter(view.getContext());
-        for(Transaction transaction : mViewModel.getSettings().getValue().recurringTransactions){
-            if(transaction.GetDaysLeftUntilNextRecurrentCharge() <= mViewModel.getDaysUntilNextPaycheck()) {
-                alertAdapter.addItem(transaction);
-            }
-        }
-
-        myListView.setAdapter(alertAdapter);
+        RecyclerView myRecView = (RecyclerView) view.findViewById(R.id.BillList);
+        myRecView.setHasFixedSize(true);
+        myRecView.setLayoutManager(new LinearLayoutManager(getContext()));
+        AlertAdapter alertAdapter = new AlertAdapter(mViewModel.getSettings().getValue().recurringTransactions);
+        myRecView.setAdapter(alertAdapter);
     }
 
     public void setupPayPeriodSummaryPieChart(){
