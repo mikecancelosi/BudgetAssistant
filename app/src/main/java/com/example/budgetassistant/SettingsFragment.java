@@ -2,6 +2,7 @@ package com.example.budgetassistant;
 
 import android.os.Bundle;
 
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
@@ -24,9 +25,20 @@ import com.example.budgetassistant.repositories.BankRepository;
 import com.example.budgetassistant.viewmodels.SettingsViewModel;
 import com.example.budgetassistant.viewmodels.StatsViewModel;
 import com.github.mikephil.charting.charts.PieChart;
+import com.github.mikephil.charting.components.Description;
+import com.github.mikephil.charting.components.Legend;
+import com.github.mikephil.charting.data.PieData;
+import com.github.mikephil.charting.data.PieDataSet;
+import com.github.mikephil.charting.data.PieEntry;
+import com.github.mikephil.charting.utils.ColorTemplate;
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -128,6 +140,31 @@ public class SettingsFragment extends Fragment {
         } else{
             savingsText.setText("$0");
         }
+
+        //Setup chart
+        List<PieEntry> pieEntries = new ArrayList<>();
+        for(Map.Entry<TransactionCategories,Float> t : settings.idealBreakdown.entrySet()){
+            pieEntries.add(new PieEntry(t.getValue(), t.getKey().name()));
+        }
+
+
+        PieDataSet dataSet = new PieDataSet(pieEntries,"");
+        dataSet.setColors(ColorTemplate.LIBERTY_COLORS);
+        dataSet.setDrawValues(false);
+        PieData data = new PieData(dataSet);
+        chart.setData(data);
+
+        //Remove legend.
+        Legend legend = chart.getLegend();
+        legend.setEnabled(false);
+        //Remove description
+        Description des = chart.getDescription();
+        des.setEnabled(false);
+        dataSet.setSliceSpace(2f);
+        chart.setHoleColor(00000000);
+        chart.setTouchEnabled(false);
+
+        chart.invalidate();
 
 
     }

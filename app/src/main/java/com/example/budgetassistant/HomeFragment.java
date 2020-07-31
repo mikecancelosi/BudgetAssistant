@@ -12,6 +12,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -89,8 +90,13 @@ public class HomeFragment extends Fragment {
         AccountBalance.setText("$" + mViewModel.getAccount().getValue().Balance);
 
         //Set user name and picture
+        UserSettings settings = mViewModel.getSettings().getValue();
+
         TextView nameText = (TextView) view.findViewById(R.id.UserName);
-        nameText.setText(mViewModel.getSettings().getValue().name);
+        ImageView profileView = view.findViewById(R.id.ProfilePic);
+
+        nameText.setText(settings.name);
+        profileView.setImageResource(settings.profilePicture);
     }
 
     private void setUpList(){
