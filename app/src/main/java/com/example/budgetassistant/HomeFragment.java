@@ -29,6 +29,7 @@ import com.github.mikephil.charting.data.PieDataSet;
 import com.github.mikephil.charting.data.PieEntry;
 import com.github.mikephil.charting.formatter.PercentFormatter;
 import com.github.mikephil.charting.utils.ColorTemplate;
+import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -94,6 +95,12 @@ public class HomeFragment extends Fragment {
 
         TextView nameText = (TextView) view.findViewById(R.id.UserName);
         ImageView profileView = view.findViewById(R.id.ProfilePic);
+        profileView.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View view) {
+                ((BottomNavigationView)getActivity().findViewById(R.id.BottomNav)).setSelectedItemId(R.id.destination_settings);
+            }
+        });
 
         nameText.setText(settings.name);
         profileView.setImageResource(settings.profilePicture);
@@ -106,6 +113,7 @@ public class HomeFragment extends Fragment {
         myRecView.setLayoutManager(new LinearLayoutManager(getContext()));
         AlertAdapter alertAdapter = new AlertAdapter(mViewModel.getSettings().getValue().recurringTransactions);
         myRecView.setAdapter(alertAdapter);
+
     }
 
     public void setupPayPeriodSummaryPieChart(){
