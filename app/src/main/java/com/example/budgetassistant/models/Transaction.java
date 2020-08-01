@@ -14,7 +14,6 @@ public class Transaction {
     public String Description;
     public TransactionCategories Category;
     public Date DateOfTransaction;
-    public String Frequency;
 
     public Transaction(Date date){
         Income = 0f;
@@ -40,15 +39,6 @@ public class Transaction {
         DateOfTransaction = date;
     }
 
-    public Transaction(float income, float expense, String description, TransactionCategories category, Date date, String frequency) {
-        Income = income;
-        Expense = expense;
-        Description = description;
-        Category = category;
-        DateOfTransaction = date;
-        Frequency = frequency;
-    }
-
     public Transaction(float income, float expense, TransactionCategories category) {
         Income = income;
         Expense = expense;
@@ -59,43 +49,5 @@ public class Transaction {
         DateOfTransaction = date;
         Income = income;
         Expense = expense;
-    }
-
-    public int GetDaysLeftUntilNextRecurrentCharge(){
-        if(Frequency != "OneTime") {
-            Calendar c = Calendar.getInstance();
-            Calendar calToday = Calendar.getInstance();
-            c.setTime(DateOfTransaction);
-            int Days = DateExtensions.GetDaysBetween(c.getTime(), calToday.getTime());
-            switch (Frequency) {
-                case "Monthly":
-                    while (c.before(calToday)) {
-                        c.add(Calendar.MONTH, 1);
-                    }
-                    break;
-                case "Quarterly":
-                    while (c.before(calToday)) {
-                        c.add(Calendar.MONTH, 3);
-                    }
-                    break;
-                case "Yearly":
-                    while (c.before(calToday)) {
-                        c.add(Calendar.YEAR, 1);
-                    }
-                    break;
-                default:
-                    break;
-            }
-
-            long startTime = c.getTime().getTime();
-            long endTime = calToday.getTime().getTime();
-            long diffTime = Math.abs(endTime - startTime);
-            long diffDays = diffTime / (1000 * 60 * 60 * 24);
-
-            return (int) diffDays;
-        }else{
-            return -1;
-        }
-
     }
 }

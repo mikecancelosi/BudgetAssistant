@@ -4,22 +4,23 @@ import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import androidx.fragment.app.FragmentActivity;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.budgetassistant.R;
-import com.example.budgetassistant.models.BankAccount;
+import com.example.budgetassistant.dialogs.RecurringPaymentDialog;
+import com.example.budgetassistant.models.RecurringTransaction;
 import com.example.budgetassistant.models.Transaction;
-import com.example.budgetassistant.models.UserSettings;
 
-import java.util.ArrayList;
 import java.util.List;
 
-public class AlertAdapter extends  RecyclerView.Adapter<AlertAdapter.MyViewHolder> {
+public class RecurringPaymentAdapter extends  RecyclerView.Adapter<RecurringPaymentAdapter.MyViewHolder> {
 
-    List<Transaction> mData;
+    List<RecurringTransaction> mData;
+    View view;
 
     public static class MyViewHolder extends RecyclerView.ViewHolder{
         public  TextView descriptionTextView;
@@ -27,6 +28,7 @@ public class AlertAdapter extends  RecyclerView.Adapter<AlertAdapter.MyViewHolde
         public TextView occurrenceTextView;
         public TextView countdownNumTextView;
         public TextView countdownUnitTextView;
+        public LinearLayout layout;
 
         public MyViewHolder(View itemView){
             super(itemView);
@@ -35,11 +37,12 @@ public class AlertAdapter extends  RecyclerView.Adapter<AlertAdapter.MyViewHolde
             occurrenceTextView = (TextView) itemView.findViewById(R.id.Occurrence);
             countdownNumTextView = (TextView) itemView.findViewById(R.id.CountdownNum);
             countdownUnitTextView = (TextView) itemView.findViewById(R.id.CountdownUnit);
+            layout = (LinearLayout) itemView.findViewById(R.id.Alert);
         }
     }
 
 
-    public AlertAdapter(List<Transaction> transactions) {
+    public RecurringPaymentAdapter(List<RecurringTransaction> transactions) {
        mData = transactions;
     }
 
@@ -49,29 +52,41 @@ public class AlertAdapter extends  RecyclerView.Adapter<AlertAdapter.MyViewHolde
     }
 
     @Override
-    public AlertAdapter.MyViewHolder onCreateViewHolder(ViewGroup parent, int viewType){
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.alert, parent, false);
-        AlertAdapter.MyViewHolder vh = new AlertAdapter.MyViewHolder(view);
+    public RecurringPaymentAdapter.MyViewHolder onCreateViewHolder(ViewGroup parent, int viewType){
+        view = LayoutInflater.from(parent.getContext()).inflate(R.layout.recurring_payment, parent, false);
+        RecurringPaymentAdapter.MyViewHolder vh = new RecurringPaymentAdapter.MyViewHolder(view);
         return vh;
     }
 
     @Override
-    public void onBindViewHolder(AlertAdapter.MyViewHolder holder, int position) {
-        Transaction transaction = mData.get(position);
+    public void onBindViewHolder(RecurringPaymentAdapter.MyViewHolder holder, int position) {
+        RecurringTransaction transaction = mData.get(position);
 
         String desc = transaction.Description;
-        String cost = Float.toString(transaction.Expense);
-        String occur = transaction.Frequency;
+        String cost = Float.toString(transaction.Amount);
+        String occur = transaction.getFrequency();
 
         holder.descriptionTextView.setText(desc);
         holder.amountTextView.setText(cost);
         holder.occurrenceTextView.setText(occur);
         holder.countdownNumTextView.setText("" + transaction.GetDaysLeftUntilNextRecurrentCharge());
         holder.countdownUnitTextView.setText("Days");
+        holder.layout.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View view){
+                openDialog();
+            }
+        });
+
+    }
+
+    public void openDialog(){
+        RecurringPaymentDialog dialog = new RecurringPaymentDialog();
+        dialog.show(((FragmentActivity)view.getContext()).getSupportFragmentManager(),"Example");
     }
 
 
-    public void addItem(Transaction transaction){
+    public void addItem(RecurringTransaction transaction){
         mData.add(transaction);
     }
 }

@@ -2,7 +2,6 @@ package com.example.budgetassistant;
 
 import android.os.Bundle;
 
-import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
@@ -13,17 +12,12 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.ListView;
 import android.widget.TextView;
 
-import com.example.budgetassistant.adapters.AlertAdapter;
+import com.example.budgetassistant.adapters.RecurringPaymentAdapter;
 import com.example.budgetassistant.adapters.BankAccountAdapter;
-import com.example.budgetassistant.models.BankAccount;
-import com.example.budgetassistant.models.Transaction;
 import com.example.budgetassistant.models.UserSettings;
-import com.example.budgetassistant.repositories.BankRepository;
 import com.example.budgetassistant.viewmodels.SettingsViewModel;
-import com.example.budgetassistant.viewmodels.StatsViewModel;
 import com.github.mikephil.charting.charts.PieChart;
 import com.github.mikephil.charting.components.Description;
 import com.github.mikephil.charting.components.Legend;
@@ -32,8 +26,6 @@ import com.github.mikephil.charting.data.PieDataSet;
 import com.github.mikephil.charting.data.PieEntry;
 import com.github.mikephil.charting.utils.ColorTemplate;
 
-import java.math.BigDecimal;
-import java.math.RoundingMode;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -117,8 +109,8 @@ public class SettingsFragment extends Fragment {
     private void setupRecurringPayments(UserSettings settings){
         RecyclerView recurList = view.findViewById(R.id.RecurPaymentList);
         recurList.setLayoutManager(new LinearLayoutManager(getContext()));
-        AlertAdapter alertAdapter = new AlertAdapter( settings.recurringTransactions);
-        recurList.setAdapter(alertAdapter);
+        RecurringPaymentAdapter recurringPaymentAdapter = new RecurringPaymentAdapter( settings.recurringTransactions);
+        recurList.setAdapter(recurringPaymentAdapter);
     }
 
     private void setupBreakdown(UserSettings settings){

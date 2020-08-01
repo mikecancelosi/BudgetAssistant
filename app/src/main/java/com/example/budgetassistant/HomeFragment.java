@@ -16,9 +16,8 @@ import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 
-import com.example.budgetassistant.adapters.AlertAdapter;
+import com.example.budgetassistant.adapters.RecurringPaymentAdapter;
 import com.example.budgetassistant.models.BankAccount;
-import com.example.budgetassistant.models.Transaction;
 import com.example.budgetassistant.models.UserSettings;
 import com.example.budgetassistant.viewmodels.HomeViewModel;
 import com.github.mikephil.charting.charts.PieChart;
@@ -111,8 +110,8 @@ public class HomeFragment extends Fragment {
         RecyclerView myRecView = (RecyclerView) view.findViewById(R.id.BillList);
         myRecView.setHasFixedSize(true);
         myRecView.setLayoutManager(new LinearLayoutManager(getContext()));
-        AlertAdapter alertAdapter = new AlertAdapter(mViewModel.getSettings().getValue().recurringTransactions);
-        myRecView.setAdapter(alertAdapter);
+        RecurringPaymentAdapter recurringPaymentAdapter = new RecurringPaymentAdapter(mViewModel.getSettings().getValue().recurringTransactions);
+        myRecView.setAdapter(recurringPaymentAdapter);
 
     }
 

@@ -11,15 +11,18 @@ import com.example.budgetassistant.R;
 import com.example.budgetassistant.TransactionCategories;
 import com.example.budgetassistant.models.BankAccount;
 import com.example.budgetassistant.models.Income;
+import com.example.budgetassistant.models.RecurringTransaction;
 import com.example.budgetassistant.models.Transaction;
 import com.example.budgetassistant.models.UserSettings;
 
+import java.util.AbstractMap;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class UserSettingsRepository {
     private static UserSettingsRepository instance;
@@ -49,14 +52,14 @@ public class UserSettingsRepository {
         dataSet.accounts.add(new BankAccount("84641112479",3000,"Mastercard","Savings Account"));
         dataSet.joinDate = Calendar.getInstance().getTime();
     }
-    private static List<Transaction> createRecurringTransactionPayments(){
-        List<Transaction> transactions = new ArrayList<Transaction>();
+    private static List<RecurringTransaction> createRecurringTransactionPayments(){
+        List<RecurringTransaction> transactions = new ArrayList<RecurringTransaction>();
         Calendar calInstance = Calendar.getInstance();
-        transactions.add(new Transaction(0f,200f,"Car Payment", TransactionCategories.TRANSPORTATION, new Date((long) 1561953600000f),"Monthly")); // 2019/07/01
-        transactions.add(new Transaction(0f,50f,"Spotify", TransactionCategories.SUBSCRIPTION,new Date((long) 1548738000000f),"Monthly")); // 2019/01/29
-        transactions.add(new Transaction(0f,10f,"DollarShaveClub", TransactionCategories.SUBSCRIPTION,new Date((long) 1548738000000f),"Quarterly"));
-        transactions.add(new Transaction(0f,50f,"Dad's Gift", TransactionCategories.GIFT,new Date((long) 1548738000000f),"Yearly"));
-        transactions.add(new Transaction(0f,1f,"Wikipedia Donation", TransactionCategories.GIFT,new Date((long) 1548738000000f),"Monthly"));
+        transactions.add(new RecurringTransaction(new Date((long) 1561953600000f),new Date(Long.MAX_VALUE),150f,false, TransactionCategories.TRANSPORTATION,new AbstractMap.SimpleEntry<Integer, Integer>(Calendar.MONTH,1),"CarPayment"));
+        transactions.add(new RecurringTransaction(new Date((long) 1561953600000f),new Date(Long.MAX_VALUE),50f,false, TransactionCategories.SUBSCRIPTION,new AbstractMap.SimpleEntry<Integer, Integer>(Calendar.MONTH,1),"Spotify"));
+        transactions.add(new RecurringTransaction(new Date((long) 1561953600000f),new Date(Long.MAX_VALUE),10f,false, TransactionCategories.SUBSCRIPTION,new AbstractMap.SimpleEntry<Integer, Integer>(Calendar.MONTH,3),"DollarShaveClub"));
+        transactions.add(new RecurringTransaction(new Date((long) 1561953600000f),new Date(Long.MAX_VALUE),50f,false, TransactionCategories.GIFT,new AbstractMap.SimpleEntry<Integer, Integer>(Calendar.YEAR,1),"Dad's Gift"));
+        transactions.add(new RecurringTransaction(new Date((long) 1561953600000f),new Date(Long.MAX_VALUE),1f,false, TransactionCategories.GIFT,new AbstractMap.SimpleEntry<Integer, Integer>(Calendar.MONTH,1),"Wikipedia Donation"));
         return transactions;
     }
     private static HashMap<TransactionCategories,Float> createIdealBreakdown(){

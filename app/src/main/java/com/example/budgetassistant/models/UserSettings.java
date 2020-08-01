@@ -19,7 +19,7 @@ public class UserSettings {
     public List<BankAccount> accounts;
     public Date joinDate;
     public Income income;
-    public List<Transaction> recurringTransactions;
+    public List<RecurringTransaction> recurringTransactions;
     public HashMap<TransactionCategories, Float> idealBreakdown;
 
 
