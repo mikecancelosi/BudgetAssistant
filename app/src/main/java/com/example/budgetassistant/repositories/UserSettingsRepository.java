@@ -58,7 +58,7 @@ public class UserSettingsRepository {
         transactions.add(new RecurringTransaction(new Date((long) 1561953600000f),new Date(Long.MAX_VALUE),150f,false, TransactionCategories.TRANSPORTATION,new AbstractMap.SimpleEntry<Integer, Integer>(Calendar.MONTH,1),"CarPayment"));
         transactions.add(new RecurringTransaction(new Date((long) 1561953600000f),new Date(Long.MAX_VALUE),50f,false, TransactionCategories.SUBSCRIPTION,new AbstractMap.SimpleEntry<Integer, Integer>(Calendar.MONTH,1),"Spotify"));
         transactions.add(new RecurringTransaction(new Date((long) 1561953600000f),new Date(Long.MAX_VALUE),10f,false, TransactionCategories.SUBSCRIPTION,new AbstractMap.SimpleEntry<Integer, Integer>(Calendar.MONTH,3),"DollarShaveClub"));
-        transactions.add(new RecurringTransaction(new Date((long) 1561953600000f),new Date(Long.MAX_VALUE),50f,false, TransactionCategories.GIFT,new AbstractMap.SimpleEntry<Integer, Integer>(Calendar.YEAR,1),"Dad's Gift"));
+        transactions.add(new RecurringTransaction(new Date((long) 1564632000000f),new Date(Long.MAX_VALUE),50f,true, TransactionCategories.GIFT,new AbstractMap.SimpleEntry<Integer, Integer>(Calendar.YEAR,1),"Dad's Gift"));
         transactions.add(new RecurringTransaction(new Date((long) 1561953600000f),new Date(Long.MAX_VALUE),1f,false, TransactionCategories.GIFT,new AbstractMap.SimpleEntry<Integer, Integer>(Calendar.MONTH,1),"Wikipedia Donation"));
         return transactions;
     }

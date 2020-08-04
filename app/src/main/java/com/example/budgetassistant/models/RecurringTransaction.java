@@ -3,12 +3,14 @@ package com.example.budgetassistant.models;
 import com.example.budgetassistant.DateExtensions;
 import com.example.budgetassistant.TransactionCategories;
 
+import java.io.Serializable;
 import java.util.AbstractMap;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Map;
+import java.util.UUID;
 
-public class RecurringTransaction {
+public class RecurringTransaction implements Serializable {
     public Date StartDate;
     public Date EndDate;
     public Float Amount;
@@ -16,6 +18,7 @@ public class RecurringTransaction {
     public TransactionCategories Category;
     public AbstractMap.SimpleEntry<Integer,Integer> Frequency;
     public String Description;
+    public UUID Id;
 
     public RecurringTransaction(Date startDate, Date endDate, Float amount, boolean varies, TransactionCategories category, AbstractMap.SimpleEntry<Integer,Integer> frequency, String description) {
         StartDate = startDate;

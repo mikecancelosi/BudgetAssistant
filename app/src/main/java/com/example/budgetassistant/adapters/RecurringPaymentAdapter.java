@@ -1,6 +1,7 @@
 package com.example.budgetassistant.adapters;
 
 import android.content.Context;
+import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -59,7 +60,7 @@ public class RecurringPaymentAdapter extends  RecyclerView.Adapter<RecurringPaym
     }
 
     @Override
-    public void onBindViewHolder(RecurringPaymentAdapter.MyViewHolder holder, int position) {
+    public void onBindViewHolder(RecurringPaymentAdapter.MyViewHolder holder, final int position) {
         RecurringTransaction transaction = mData.get(position);
 
         String desc = transaction.Description;
@@ -67,21 +68,23 @@ public class RecurringPaymentAdapter extends  RecyclerView.Adapter<RecurringPaym
         String occur = transaction.getFrequency();
 
         holder.descriptionTextView.setText(desc);
-        holder.amountTextView.setText(cost);
+        holder.amountTextView.setText(transaction.Varies ? "~$" + cost : "$"+cost);
         holder.occurrenceTextView.setText(occur);
         holder.countdownNumTextView.setText("" + transaction.GetDaysLeftUntilNextRecurrentCharge());
         holder.countdownUnitTextView.setText("Days");
         holder.layout.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View view){
-                openDialog();
+                openDialog(position);
             }
         });
 
     }
 
-    public void openDialog(){
+    public void openDialog(int position){
         RecurringPaymentDialog dialog = new RecurringPaymentDialog();
+        RecurringTransaction transaction = mData.get(position);
+        dialog.setTransaction(transaction);
         dialog.show(((FragmentActivity)view.getContext()).getSupportFragmentManager(),"Example");
     }
 
