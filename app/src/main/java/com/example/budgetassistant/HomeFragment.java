@@ -9,6 +9,7 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -106,8 +107,7 @@ public class HomeFragment extends Fragment {
     }
 
     private void setUpList(){
-        Resources res = getResources();
-        RecyclerView myRecView = (RecyclerView) view.findViewById(R.id.BillList);
+        RecyclerView myRecView = view.findViewById(R.id.BillList);
         myRecView.setHasFixedSize(true);
         myRecView.setLayoutManager(new LinearLayoutManager(getContext()));
         RecurringPaymentAdapter recurringPaymentAdapter = new RecurringPaymentAdapter(mViewModel.getSettings().getValue().recurringTransactions);

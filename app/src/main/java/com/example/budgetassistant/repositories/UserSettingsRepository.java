@@ -49,6 +49,7 @@ public class UserSettingsRepository {
         for(RecurringTransaction trans : dataSet.recurringTransactions){
             if(trans.Id == transaction.Id){
                 trans = transaction;
+                found = true;
                 break;
             }
         }

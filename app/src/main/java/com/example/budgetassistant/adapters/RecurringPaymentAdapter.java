@@ -27,6 +27,7 @@ public class RecurringPaymentAdapter extends  RecyclerView.Adapter<RecurringPaym
         public TextView occurrenceTextView;
         public TextView countdownNumTextView;
         public TextView countdownUnitTextView;
+        public TextView categoryTextView;
         public LinearLayout layout;
 
         public MyViewHolder(View itemView){
@@ -36,6 +37,7 @@ public class RecurringPaymentAdapter extends  RecyclerView.Adapter<RecurringPaym
             occurrenceTextView = (TextView) itemView.findViewById(R.id.Occurrence);
             countdownNumTextView = (TextView) itemView.findViewById(R.id.CountdownNum);
             countdownUnitTextView = (TextView) itemView.findViewById(R.id.CountdownUnit);
+            categoryTextView = (TextView) itemView.findViewById(R.id.Category);
             layout = (LinearLayout) itemView.findViewById(R.id.Alert);
         }
     }
@@ -76,6 +78,7 @@ public class RecurringPaymentAdapter extends  RecyclerView.Adapter<RecurringPaym
                 openDialog(position);
             }
         });
+        holder.categoryTextView.setText(transaction.Category.toString());
 
     }
 
