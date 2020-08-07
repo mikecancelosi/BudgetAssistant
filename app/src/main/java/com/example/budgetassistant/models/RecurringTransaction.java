@@ -28,9 +28,11 @@ public class RecurringTransaction implements Serializable {
         Category = category;
         Frequency = frequency;
         Description = description;
+        Id = UUID.randomUUID();
     }
 
-    public String getFrequency(){
+
+    public String getFrequencyDisplayText(){
         int key = Frequency.getKey();
         int value = Frequency.getValue();
         //TODO: Convert to switch statement

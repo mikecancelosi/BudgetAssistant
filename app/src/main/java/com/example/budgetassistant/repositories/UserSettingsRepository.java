@@ -33,15 +33,32 @@ public class UserSettingsRepository {
         return instance;
     }
 
-    private UserSettings dataSet = new UserSettings();
+    private UserSettings dataSet;
 
     public MutableLiveData<UserSettings> getSettings(){
-        setSettings();
+        if(dataSet == null) {
+            initSettings();
+        }
         MutableLiveData<UserSettings> data = new MutableLiveData<>();
         data.setValue(dataSet);
         return data;
     }
-    private void setSettings(){
+
+    public void postRecurringTransaction(RecurringTransaction transaction){
+        boolean found = false;
+        for(RecurringTransaction trans : dataSet.recurringTransactions){
+            if(trans.Id == transaction.Id){
+                trans = transaction;
+                break;
+            }
+        }
+        if(!found){
+            dataSet.recurringTransactions.add(transaction);
+        }
+    }
+
+
+    private void initSettings(){
         dataSet = new UserSettings();
         dataSet.name = "Mike Cancelosi";
         dataSet.profilePicture = R.mipmap.ic_cancelosi;
@@ -74,21 +91,9 @@ public class UserSettingsRepository {
         breakdown.put(TransactionCategories.OTHER,.10f);
         return breakdown;
     }
-    private static Float determineBudget(float userIncome, HashMap<TransactionCategories,Float> breakdown){
-        float allocatedAmount = 0f;
-        List<TransactionCategories> allocatedCategories = Arrays.asList(
-                TransactionCategories.INVESTMENT,
-                TransactionCategories.SAVINGS,
-                TransactionCategories.SUBSCRIPTION,
-                TransactionCategories.RENT);
 
-        for(TransactionCategories cat : allocatedCategories) {
-            if (breakdown.containsKey(cat)) {
-                allocatedAmount += breakdown.get(cat);
-            }
-        }
-       return userIncome - allocatedAmount;
-    }
+
+
 
 
 }

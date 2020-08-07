@@ -1,7 +1,5 @@
 package com.example.budgetassistant.adapters;
 
-import android.content.Context;
-import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,7 +12,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.budgetassistant.R;
 import com.example.budgetassistant.dialogs.RecurringPaymentDialog;
 import com.example.budgetassistant.models.RecurringTransaction;
-import com.example.budgetassistant.models.Transaction;
+import com.example.budgetassistant.repositories.UserSettingsRepository;
 
 import java.util.List;
 
@@ -65,7 +63,7 @@ public class RecurringPaymentAdapter extends  RecyclerView.Adapter<RecurringPaym
 
         String desc = transaction.Description;
         String cost = Float.toString(transaction.Amount);
-        String occur = transaction.getFrequency();
+        String occur = transaction.getFrequencyDisplayText();
 
         holder.descriptionTextView.setText(desc);
         holder.amountTextView.setText(transaction.Varies ? "~$" + cost : "$"+cost);
@@ -84,12 +82,18 @@ public class RecurringPaymentAdapter extends  RecyclerView.Adapter<RecurringPaym
     public void openDialog(int position){
         RecurringPaymentDialog dialog = new RecurringPaymentDialog();
         RecurringTransaction transaction = mData.get(position);
-        dialog.setTransaction(transaction);
+        dialog.setTransaction(transaction,position);
+        dialog.setDialogResult(new RecurringPaymentDialog.RecurringPaymentDialogListener() {
+            @Override
+            public void applyChanges(RecurringTransaction transaction) {
+                applyChangeToTransaction(transaction);
+            }
+        });
         dialog.show(((FragmentActivity)view.getContext()).getSupportFragmentManager(),"Example");
     }
 
-
-    public void addItem(RecurringTransaction transaction){
-        mData.add(transaction);
+    public static void applyChangeToTransaction(RecurringTransaction transaction) {
+        UserSettingsRepository.getInstance().postRecurringTransaction(transaction);
     }
+
 }
