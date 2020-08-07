@@ -52,7 +52,7 @@ public class TransactionRepository {
                     //We only want to add expenses here.
                     newTrans.Expense += (ThreadLocalRandom.current().nextFloat() * 125f);
                     newTrans.Category = category;
-                    newTrans.Description = "testicles";
+                    newTrans.Description = "Test Transaction";
                     dataSet.add(newTrans);
                 }
             }

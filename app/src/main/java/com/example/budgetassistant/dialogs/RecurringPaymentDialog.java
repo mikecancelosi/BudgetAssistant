@@ -61,6 +61,7 @@ public class RecurringPaymentDialog extends AppCompatDialogFragment {
                             e.printStackTrace();
                         }
 
+                        mTransaction.Description = descriptionText.getText().toString();
                         mTransaction.Frequency = getFrequency();
                         mTransaction.Amount = Float.parseFloat(amountText.getText().toString());
                         mTransaction.Category = TransactionCategories.values()[dialogCategory.getSelectedItemPosition()];
@@ -116,7 +117,7 @@ public class RecurringPaymentDialog extends AppCompatDialogFragment {
         ArrayAdapter<String> catAdapter = new ArrayAdapter<String>(getContext(), R.layout.support_simple_spinner_dropdown_item,categoryItems);
         catAdapter.setDropDownViewResource(R.layout.support_simple_spinner_dropdown_item);
         dialogCategory.setAdapter(catAdapter);
-        dialogCategory.setSelection(0);
+        dialogCategory.setSelection(mTransaction.Category.getValue());
 
         dateTextInput.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -144,6 +145,13 @@ public class RecurringPaymentDialog extends AppCompatDialogFragment {
         freqAdapter.setDropDownViewResource(R.layout.support_simple_spinner_dropdown_item);
         dialogFrequency.setAdapter(freqAdapter);
         dialogFrequency.setSelection(0);
+        for(int i = 0; i< frequencyKeys.size();i++){
+            if(frequencyKeys.get(i).getValue() == mTransaction.Frequency.getKey()){
+                dialogFrequency.setSelection(i);
+            }
+        }
+
+        dialogFrequencyValue.setText("" + mTransaction.Frequency.getValue());
 
     }
 
