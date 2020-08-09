@@ -7,10 +7,14 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 
+import android.service.autofill.Dataset;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.Spinner;
 
 import com.example.budgetassistant.models.BankAccount;
 import com.example.budgetassistant.models.Transaction;
@@ -38,6 +42,7 @@ import java.math.RoundingMode;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -82,28 +87,62 @@ public class StatsFragment extends Fragment {
     }
 
     private void setUpUI(){
-        setupCategoricalHorizontalBarChart();
         setupCategoryExpensePieChart();
+        setupCategoricalHorizontalBarChart();
         setupMonthlyTrendBarChart();
     }
 
     private void setupCategoryExpensePieChart(){
+        Spinner timeSpinner = view.findViewById(R.id.CategoryPieChartTimeSpinner);
+        String[] frequencyItems = new String[]{"Pay Period", "Month"," Year","All Time"};
+        ArrayAdapter<String> freqAdapter = new ArrayAdapter<>(getContext(), R.layout.support_simple_spinner_dropdown_item,frequencyItems);
+        timeSpinner.setAdapter(freqAdapter);
+        timeSpinner.setSelection(0);
+        timeSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+
+            @Override
+            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+                switch(i){
+                    case 0:
+                        updateCategoryExpensePieChart(mViewModel.getPayPeriodStartDate(),mViewModel.getPayPeriodEndDate());
+                        break;
+                    case 1:
+                        updateCategoryExpensePieChart(mViewModel.getMonthStartDate(),mViewModel.getMonthEndDate());
+                        break;
+                    case 2:
+                        updateCategoryExpensePieChart(mViewModel.getYearStartDate(),mViewModel.getYearEndDate());
+                        break;
+                    case 3:
+                        updateCategoryExpensePieChart(new Date(0L),new Date(Long.MAX_VALUE));
+                        break;
+                }
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> adapterView) {
+                adapterView.setSelection(0);
+            }
+        });
+
+    }
+
+    private void updateCategoryExpensePieChart(Date startDate, Date endDate){
         PieChart chart = view.findViewById(R.id.CategoricalPieChart);
-        List<PieEntry> pieEntries = new ArrayList<>();
-        for(Map.Entry<TransactionCategories,Float> t : mViewModel.getCategorizedExpensesForPayPeriod().entrySet()){
-            pieEntries.add(new PieEntry(t.getValue(), t.getKey().name()));
-        }
 
         float savings = mViewModel.getUnspentBudgetForPayPeriod();
         int colorId = savings > 0 ? R.color.colorPrimary : R.color.colorSecondary;
         int colorValue = ContextCompat.getColor(getContext(),colorId);
+
+        List<PieEntry> pieEntries = new ArrayList<>();
+        for(Map.Entry<TransactionCategories,Float> t : mViewModel.getCategorizedExpensesForTimeLine(startDate,endDate).entrySet()){
+            pieEntries.add(new PieEntry(t.getValue(), t.getKey().name()));
+        }
 
         PieDataSet dataSet = new PieDataSet(pieEntries,"");
         dataSet.setColors(colorValue);
         dataSet.setDrawValues(false);
         PieData data = new PieData(dataSet);
         chart.setData(data);
-
         //Remove legend.
         Legend legend = chart.getLegend();
         legend.setEnabled(false);
@@ -113,6 +152,8 @@ public class StatsFragment extends Fragment {
         dataSet.setSliceSpace(2f);
         chart.setHoleColor(00000000);
         chart.setTouchEnabled(false);
+
+        dataSet.setColors(colorValue);
         //Set center text
         BigDecimal savingsBigDecimal = new BigDecimal(Float.toString(savings));
         savingsBigDecimal = savingsBigDecimal.setScale(2, RoundingMode.FLOOR);

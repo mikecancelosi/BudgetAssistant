@@ -59,12 +59,9 @@ public class StatsViewModel extends ViewModel {
     }
 
 
-    public HashMap<TransactionCategories,Float> getCategorizedExpensesForPayPeriod(){
+    public HashMap<TransactionCategories,Float> getCategorizedExpensesForTimeLine(Date startDate, Date endDate){
        HashMap<TransactionCategories,Float> map = new HashMap<>();
        List<Transaction> source = getTransactions().getValue();
-       Income income = getSettings().getValue().income;
-       Date startDate = income.LastPaycheck;
-       Date endDate = income.GetNextPaycheckDate();
 
        for(Transaction t : TransactionHelper.getTransactionsInTimeFrame(source,startDate,endDate)){
             TransactionCategories category = t.Category;
@@ -140,7 +137,7 @@ public class StatsViewModel extends ViewModel {
 
 
     public Float getCurrentValueForCategory(TransactionCategories category){
-        HashMap<TransactionCategories,Float> map = getCategorizedExpensesForPayPeriod();
+        HashMap<TransactionCategories,Float> map = getCategorizedExpensesForTimeLine(getPayPeriodStartDate(),getPayPeriodEndDate());
         if(map.containsKey(category)){
             return map.get(category);
         }else{
@@ -150,5 +147,37 @@ public class StatsViewModel extends ViewModel {
 
     public int getTimePeriodInDays(){
         return mSettingsRepo.getSettings().getValue().income.PayPeriodInDays;
+    }
+
+    public Date getPayPeriodStartDate(){
+        return getSettings().getValue().income.LastPaycheck;
+    }
+
+    public Date getPayPeriodEndDate(){
+        return getSettings().getValue().income.GetNextPaycheckDate();
+    }
+
+    public Date getMonthStartDate(){
+        Calendar cal = Calendar.getInstance();
+        cal.set(cal.get(Calendar.YEAR),cal.get(Calendar.MONTH),1);
+        return cal.getTime();
+    }
+
+    public Date getMonthEndDate(){
+        Calendar cal = Calendar.getInstance();
+        cal.set(cal.get(Calendar.YEAR),cal.get(Calendar.MONTH),cal.getActualMaximum(Calendar.DATE));
+        return cal.getTime();
+    }
+
+    public Date getYearStartDate(){
+        Calendar cal = Calendar.getInstance();
+        cal.set(cal.get(Calendar.YEAR),1,1);
+        return cal.getTime();
+    }
+
+    public Date getYearEndDate(){
+        Calendar cal = Calendar.getInstance();
+        cal.set(cal.get(Calendar.YEAR),12,31);
+        return cal.getTime();
     }
 }

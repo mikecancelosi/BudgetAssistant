@@ -17,17 +17,30 @@
             android:layout_height="250dp"
             android:orientation="vertical">
 
-            <TextView
-                android:id="@+id/CategoricalPieChartHeader"
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_margin="10dp"
-                android:text="Category breakdown for this pay period"
-                android:textAlignment="center"
-                android:textAllCaps="false"
-                android:textColor="@color/colorOnBackground"
-                android:textSize="18sp"
-                android:textStyle="bold" />
+                android:layout_marginVertical="10dp"
+                android:orientation="horizontal"
+                android:padding="10dp">
+
+                <TextView
+                    android:id="@+id/CategoricalPieChartHeader"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="Category breakdown"
+                    android:textAlignment="viewStart"
+                    android:textAllCaps="false"
+                    android:textColor="@color/colorOnBackground"
+                    android:textSize="18sp"
+                    android:textStyle="bold" />
+
+                <Spinner
+                    android:id="@+id/CategoryPieChartTimeSpinner"
+                    android:layout_width="120dp"
+                    android:layout_height="match_parent" />
+            </LinearLayout>
 
             <com.github.mikephil.charting.charts.PieChart
                 android:id="@+id/CategoricalPieChart"
