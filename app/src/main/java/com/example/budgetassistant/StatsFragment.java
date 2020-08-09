@@ -41,6 +41,7 @@ import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
@@ -172,7 +173,6 @@ public class StatsFragment extends Fragment {
         HorizontalBarChart chart = (HorizontalBarChart) view.findViewById(R.id.CategoricalBreakdownSummaryBarChart);
         List<BarEntry> entries = new ArrayList<>();
 
-        int daysInPeriod = mViewModel.getTimePeriodInDays();
         final List<String> labels = new ArrayList<>();
         for(int i = 0 ; i < TransactionCategories.values().length;i++){
             TransactionCategories category = TransactionCategories.values()[i];
@@ -184,8 +184,12 @@ public class StatsFragment extends Fragment {
                 float current = mViewModel.getCurrentValueForCategory(category);
                 //Find Lifetime average value
                 float average = mViewModel.getLifetimeAverageValueForCategory(category);
+
+                Log.d("?", ideal + " | " + current + " | " + average);
+                float[] valueArray = new float[]{ideal,current,average};
+                Arrays.sort(valueArray);
                 //Set entry
-                BarEntry entry = new BarEntry(labels.size() - 1, new float[]{ideal, current, average});
+                BarEntry entry = new BarEntry(labels.size() - 1, valueArray);
                 entries.add(entry);
             }
         }
@@ -234,6 +238,8 @@ public class StatsFragment extends Fragment {
             }
         });
         chart.getXAxis().setLabelCount(labels.size());
+        chart.setFitBars(true);
+
 
         chart.invalidate();
 

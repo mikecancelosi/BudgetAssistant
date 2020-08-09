@@ -89,7 +89,16 @@ public class StatsViewModel extends ViewModel {
     public Float getIdealValueForCategory(TransactionCategories category){
         HashMap<TransactionCategories,Float> breakdown = getSettings().getValue().idealBreakdown;
         if(breakdown.containsKey(category)){
-            return breakdown.get(category);
+            return breakdown.get(category) * mSettings.getValue().income.Amount; //TODO: adjust for monthly view
+        }else{
+            return 0f;
+        }
+    }
+
+    public Float getCurrentValueForCategory(TransactionCategories category){
+        HashMap<TransactionCategories,Float> map = getCategorizedExpensesForTimeLine(getPayPeriodStartDate(),getPayPeriodEndDate());
+        if(map.containsKey(category)){
+            return map.get(category);
         }else{
             return 0f;
         }
@@ -115,7 +124,7 @@ public class StatsViewModel extends ViewModel {
         }
         int daysOfData = DateExtensions.GetDaysBetween(startCal.getTime(),endCal.getTime());
 
-        return catExpense / daysOfData;
+        return (catExpense / daysOfData) * mSettings.getValue().income.PayPeriodInDays;
     }
 
     public Float getExpensesInMonth(int monthsFromCurrent){
@@ -136,14 +145,7 @@ public class StatsViewModel extends ViewModel {
     }
 
 
-    public Float getCurrentValueForCategory(TransactionCategories category){
-        HashMap<TransactionCategories,Float> map = getCategorizedExpensesForTimeLine(getPayPeriodStartDate(),getPayPeriodEndDate());
-        if(map.containsKey(category)){
-            return map.get(category);
-        }else{
-            return 0f;
-        }
-    }
+
 
     public int getTimePeriodInDays(){
         return mSettingsRepo.getSettings().getValue().income.PayPeriodInDays;
