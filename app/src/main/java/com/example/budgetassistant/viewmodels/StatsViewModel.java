@@ -76,14 +76,12 @@ public class StatsViewModel extends ViewModel {
        return map;
     }
 
-    public Float getUnspentBudgetForPayPeriod(){
-        Income income = getSettings().getValue().income;
+    public Float getUnspentBudgetForPeriod(Date startDate, Date endDate){
         List<Transaction> sourceData = getTransactions().getValue();
-        Date startDate = income.LastPaycheck;
-        Date endDate = income.GetNextPaycheckDate();
         List<Transaction> transactionsInPayPeriod = TransactionHelper.getTransactionsInTimeFrame(sourceData,startDate,endDate);
         Float expenses = TransactionHelper.getExpenseTotal(transactionsInPayPeriod);
-        return income.Amount - expenses;
+        Float income = TransactionHelper.getIncomeTotal(transactionsInPayPeriod);
+        return income - expenses;
     }
 
     public Float getIdealValueForCategory(TransactionCategories category){

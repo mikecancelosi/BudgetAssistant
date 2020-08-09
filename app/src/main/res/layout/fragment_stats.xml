@@ -18,6 +18,7 @@
             android:orientation="vertical">
 
             <LinearLayout
+                android:id="@+id/CategoryBreakdownHeader"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginVertical="10dp"
@@ -45,31 +46,15 @@
             <com.github.mikephil.charting.charts.PieChart
                 android:id="@+id/CategoricalPieChart"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent" />
-        </LinearLayout>
+                android:layout_height="match_parent">
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="600dp"
-            android:orientation="vertical">
-
-            <TextView
-                android:id="@+id/CategoricalHistoricalBarGraphHeader"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_margin="10dp"
-                android:text="Category breakdown summary
-"
-                android:textAlignment="center"
-                android:textAllCaps="false"
-                android:textColor="@color/colorOnBackground"
-                android:textSize="18sp"
-                android:textStyle="bold" />
+            </com.github.mikephil.charting.charts.PieChart>
 
             <com.github.mikephil.charting.charts.HorizontalBarChart
                 android:id="@+id/CategoricalBreakdownSummaryBarChart"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent" />
+
         </LinearLayout>
 
         <com.github.mikephil.charting.charts.BarChart
