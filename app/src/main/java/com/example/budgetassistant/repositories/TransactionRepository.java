@@ -5,6 +5,7 @@ import android.util.Log;
 import androidx.lifecycle.MutableLiveData;
 
 import com.example.budgetassistant.TransactionCategories;
+import com.example.budgetassistant.models.Income;
 import com.example.budgetassistant.models.Transaction;
 
 import java.time.YearMonth;
@@ -36,6 +37,7 @@ public class TransactionRepository {
 
     private void setTransactions() {
         dataSet.clear();
+        Income income = UserSettingsRepository.getInstance().getSettings().getValue().income;
         for(int i = 0; i < 14;i++){
             //create 14 months of data; i is months before current
             Calendar transCal = Calendar.getInstance();

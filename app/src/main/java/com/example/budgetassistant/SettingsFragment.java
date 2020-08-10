@@ -101,7 +101,7 @@ public class SettingsFragment extends Fragment {
         TextView nextPayText = view.findViewById(R.id.IncomeNextPaycheck);
 
         paycheckAmount.setText("$" + settings.income.Amount);
-        frequencyText.setText("Every " + settings.income.PayPeriodInDays + " Days");
+        frequencyText.setText("Every " + settings.income.Period.getValue() + settings.income.Period.getKey());
         SimpleDateFormat sdf = new SimpleDateFormat("MM/dd/yy");
         nextPayText.setText("Next check on " + sdf.format(settings.income.GetNextPaycheckDate()));
     }

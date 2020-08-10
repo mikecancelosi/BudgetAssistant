@@ -35,6 +35,7 @@ import com.github.mikephil.charting.data.PieDataSet;
 import com.github.mikephil.charting.data.PieEntry;
 import com.github.mikephil.charting.formatter.IndexAxisValueFormatter;
 import com.github.mikephil.charting.formatter.ValueFormatter;
+import com.github.mikephil.charting.renderer.YAxisRenderer;
 import com.github.mikephil.charting.utils.ColorTemplate;
 
 import java.math.BigDecimal;
@@ -128,6 +129,9 @@ public class StatsFragment extends Fragment {
             }
         });
 
+        updateCategoryExpensePieChart(mViewModel.getPayPeriodStartDate(),mViewModel.getPayPeriodEndDate());
+        updateCategoricalHorizontalBarChart(mViewModel.getPayPeriodStartDate(),mViewModel.getPayPeriodEndDate());
+
     }
 
     private void updateCategoryExpensePieChart(Date startDate, Date endDate){
@@ -161,12 +165,11 @@ public class StatsFragment extends Fragment {
         //Set center text
         BigDecimal savingsBigDecimal = new BigDecimal(Float.toString(savings));
         savingsBigDecimal = savingsBigDecimal.setScale(2, RoundingMode.FLOOR);
-        chart.setCenterText( (savings > 0 ? "+" : "-") + "$" +savingsBigDecimal.toString());
+        chart.setCenterText( (savings > 0 ? "+" : "-") + "$" + savingsBigDecimal.toString());
         chart.setCenterTextSize(20f);
         int colorDarkId = savings > 0 ? R.color.colorPrimaryDark : R.color.colorSecondaryDark;
         int colorDarkValue = ContextCompat.getColor(getContext(),colorDarkId);
         chart.setCenterTextColor(colorDarkValue);
-
         chart.invalidate();
     }
 
@@ -176,17 +179,21 @@ public class StatsFragment extends Fragment {
         HorizontalBarChart chart = view.findViewById(R.id.CategoricalBreakdownSummaryBarChart);
         List<BarEntry> entries = new ArrayList<>();
 
+        int daysBetween = CalendarHelper.daysBetween(startDate,endDate);
+
         final List<String> labels = new ArrayList<>();
         for(int i = 0 ; i < TransactionCategories.values().length;i++){
             TransactionCategories category = TransactionCategories.values()[i];
             if(category != TransactionCategories.INCOME) {
                 labels.add(category.name());
                 //Find Ideal Value
-                float ideal = mViewModel.getIdealValueForCategory(category);
+                float ideal = mViewModel.getIdealValueForCategory(category,
+                                                                  startDate,endDate,
+                                                                  mViewModel.getSettings().getValue().income.Period);
                 //Find Current Pay Period Value
-                float current = mViewModel.getCurrentValueForCategory(category);
+                float current = mViewModel.getCurrentValueForCategory(category,startDate,endDate);
                 //Find Lifetime average value
-                float average = mViewModel.getLifetimeAverageValueForCategory(category);
+                float average = mViewModel.getLifetimeAverageValueForCategory(category,daysBetween);
                 float[] valueArray = new float[]{ideal,current,average};
                 Arrays.sort(valueArray);
                 //Set entry
@@ -239,8 +246,8 @@ public class StatsFragment extends Fragment {
             }
         });
         chart.getXAxis().setLabelCount(labels.size());
-        chart.setFitBars(true);
 
+        chart.setFitBars(true);
 
         chart.invalidate();
 

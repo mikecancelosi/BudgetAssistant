@@ -1,23 +1,20 @@
 package com.example.budgetassistant.viewmodels;
 
-import android.util.Log;
-
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModel;
 
+import com.example.budgetassistant.CalendarHelper;
 import com.example.budgetassistant.DateExtensions;
 import com.example.budgetassistant.TransactionCategories;
 import com.example.budgetassistant.TransactionHelper;
-import com.example.budgetassistant.models.Income;
 import com.example.budgetassistant.models.Transaction;
 import com.example.budgetassistant.models.UserSettings;
 import com.example.budgetassistant.repositories.TransactionRepository;
 import com.example.budgetassistant.repositories.UserSettingsRepository;
 
-import java.lang.reflect.Array;
-import java.util.ArrayList;
+import java.util.AbstractMap;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
@@ -84,17 +81,24 @@ public class StatsViewModel extends ViewModel {
         return income - expenses;
     }
 
-    public Float getIdealValueForCategory(TransactionCategories category){
+    public Float getIdealValueForCategory(TransactionCategories category,
+                                          Date startDate, Date endDate,
+                                          AbstractMap.SimpleEntry<Integer,Integer> period){
+
         HashMap<TransactionCategories,Float> breakdown = getSettings().getValue().idealBreakdown;
         if(breakdown.containsKey(category)){
-            return breakdown.get(category) * mSettings.getValue().income.Amount; //TODO: adjust for monthly view
+            Float idealPercentage = breakdown.get(category);
+            List<Transaction> transactions = TransactionHelper.getTransactionsInTimeFrame(mTransactions.getValue(),startDate,endDate);
+            Float incomeTotal = TransactionHelper.getIncomeTotal(transactions);
+            int periodIterations = CalendarHelper.countTimePeriodsBetweenDates(startDate,endDate,period);
+            return (idealPercentage * incomeTotal) / periodIterations;
         }else{
             return 0f;
         }
     }
 
-    public Float getCurrentValueForCategory(TransactionCategories category){
-        HashMap<TransactionCategories,Float> map = getCategorizedExpensesForTimeLine(getPayPeriodStartDate(),getPayPeriodEndDate());
+    public Float getCurrentValueForCategory(TransactionCategories category, Date startDate, Date endDate){
+        HashMap<TransactionCategories,Float> map = getCategorizedExpensesForTimeLine(startDate,endDate);
         if(map.containsKey(category)){
             return map.get(category);
         }else{
@@ -102,7 +106,7 @@ public class StatsViewModel extends ViewModel {
         }
     }
 
-    public Float getLifetimeAverageValueForCategory(TransactionCategories category){
+    public Float getLifetimeAverageValueForCategory(TransactionCategories category, int daysInComparison){
         //Get start and end dates of transactional history to accurately measure average
         Calendar startCal = Calendar.getInstance();
         startCal.setTime(new Date(Long.MAX_VALUE));
@@ -122,7 +126,7 @@ public class StatsViewModel extends ViewModel {
         }
         int daysOfData = DateExtensions.GetDaysBetween(startCal.getTime(),endCal.getTime());
 
-        return (catExpense / daysOfData) * mSettings.getValue().income.PayPeriodInDays;
+        return (catExpense / daysOfData) * daysInComparison;
     }
 
     public Float getExpensesInMonth(int monthsFromCurrent){
@@ -144,13 +148,8 @@ public class StatsViewModel extends ViewModel {
 
 
 
-
-    public int getTimePeriodInDays(){
-        return mSettingsRepo.getSettings().getValue().income.PayPeriodInDays;
-    }
-
     public Date getPayPeriodStartDate(){
-        return getSettings().getValue().income.LastPaycheck;
+        return getSettings().getValue().income.GetLastPaycheckDate();
     }
 
     public Date getPayPeriodEndDate(){

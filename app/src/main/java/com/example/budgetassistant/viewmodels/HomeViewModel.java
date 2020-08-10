@@ -77,7 +77,7 @@ public class HomeViewModel extends ViewModel {
     private List<Transaction> getTransactionsForPayPeriod(){
         List<Transaction> source = getTransactions().getValue();
         Income income = getSettings().getValue().income;
-        Date startDate = income.LastPaycheck;
+        Date startDate = income.GetLastPaycheckDate();
         Date endDate = income.GetNextPaycheckDate();
 
         return TransactionHelper.getTransactionsInTimeFrame(source,startDate,endDate);
