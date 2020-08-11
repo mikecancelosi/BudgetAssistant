@@ -6,6 +6,7 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -73,6 +74,7 @@ public class HistoryFragment extends Fragment {
             for(Transaction trans : set.getValue()){
                 mTransactionAdapter.addItem(trans);
             }
+
         }
 
         mListView.setAdapter(mTransactionAdapter);

@@ -15,6 +15,7 @@ public class Transaction {
     public TransactionCategories Category;
     public Date DateOfTransaction;
 
+
     public Transaction(Date date){
         Income = 0f;
         Expense = 0f;

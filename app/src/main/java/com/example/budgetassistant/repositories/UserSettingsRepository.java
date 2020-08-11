@@ -66,7 +66,7 @@ public class UserSettingsRepository {
         dataSet.profilePicture = R.mipmap.ic_cancelosi;
         dataSet.income = new Income(1000f,
                                     new AbstractMap.SimpleEntry<Integer, Integer>(Calendar.DATE, 14),
-                                    new Date((long) 1594915200000f)); // This number represents 07/16/2020 ( ms since 01/01/1970 )
+                                    new Date((long) 1561953600000f));
         dataSet.recurringTransactions = createRecurringTransactionPayments();
         dataSet.idealBreakdown = createIdealBreakdown();
         dataSet.accounts.add(new BankAccount("15202593282",

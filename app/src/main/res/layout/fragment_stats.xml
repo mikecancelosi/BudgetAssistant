@@ -60,15 +60,33 @@
 
         </LinearLayout>
 
-        <com.github.mikephil.charting.charts.BarChart
-            android:id="@+id/MonthlyTrendChart"
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="300dp"
-            android:layout_marginHorizontal="10dp"
-            android:layout_marginVertical="20dp"
-            android:layout_weight="1">
+            android:layout_height="match_parent"
+            android:layout_marginVertical="10dp"
+            android:orientation="vertical"
+            android:padding="10dp">
 
-        </com.github.mikephil.charting.charts.BarChart>
+            <TextView
+                android:id="@+id/ExpenseSummaryHeader"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Expense Summary"
+                android:textColor="@color/colorOnBackground"
+                android:textSize="18sp"
+                android:textStyle="bold" />
+
+            <com.github.mikephil.charting.charts.BarChart
+                android:id="@+id/MonthlyTrendChart"
+                android:layout_width="match_parent"
+                android:layout_height="300dp"
+                android:layout_marginHorizontal="10dp"
+                android:layout_marginVertical="20dp"
+                android:layout_weight="1">
+
+            </com.github.mikephil.charting.charts.BarChart>
+        </LinearLayout>
 
     </LinearLayout>
 

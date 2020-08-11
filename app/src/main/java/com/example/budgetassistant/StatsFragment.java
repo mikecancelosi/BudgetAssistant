@@ -165,7 +165,7 @@ public class StatsFragment extends Fragment {
         //Set center text
         BigDecimal savingsBigDecimal = new BigDecimal(Float.toString(savings));
         savingsBigDecimal = savingsBigDecimal.setScale(2, RoundingMode.FLOOR);
-        chart.setCenterText( (savings > 0 ? "+" : "-") + "$" + savingsBigDecimal.toString());
+        chart.setCenterText("$" + savingsBigDecimal.toString());
         chart.setCenterTextSize(20f);
         int colorDarkId = savings > 0 ? R.color.colorPrimaryDark : R.color.colorSecondaryDark;
         int colorDarkValue = ContextCompat.getColor(getContext(),colorDarkId);
@@ -174,7 +174,6 @@ public class StatsFragment extends Fragment {
     }
 
     // TODO: Adjust for percentage / Actual $
-    // TODO: Adjust for month view.
     private void updateCategoricalHorizontalBarChart(Date startDate, Date endDate){
         HorizontalBarChart chart = view.findViewById(R.id.CategoricalBreakdownSummaryBarChart);
         List<BarEntry> entries = new ArrayList<>();
