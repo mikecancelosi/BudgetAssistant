@@ -53,7 +53,7 @@ public class TransactionRepository {
                 TransactionCategories category = TransactionCategories.values()[randInt];
                 if(category != TransactionCategories.INCOME){
                     //We only want to add expenses here.
-                    newTrans.Expense += (ThreadLocalRandom.current().nextFloat() * 125f);
+                    newTrans.Amount += (ThreadLocalRandom.current().nextFloat() * -125f);
                     newTrans.Category = category;
                     newTrans.Description = "Test Transaction";
                     dataSet.add(newTrans);
@@ -72,7 +72,7 @@ public class TransactionRepository {
         iterCal.setTime(startIncome);
         Calendar nowCal = Calendar.getInstance();
         while(iterCal.before(nowCal)){
-            output.add(new Transaction(income.Amount,0f,"Income",TransactionCategories.INCOME,iterCal.getTime()));
+            output.add(new Transaction(income.Amount,"Income",TransactionCategories.INCOME,iterCal.getTime()));
             iterCal.add(income.Period.getKey(),income.Period.getValue());
         }
 

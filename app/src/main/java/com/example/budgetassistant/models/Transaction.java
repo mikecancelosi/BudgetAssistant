@@ -9,46 +9,40 @@ import java.util.Calendar;
 import java.util.Date;
 
 public class Transaction {
-    public float Income;
-    public float Expense;
+   public Float Amount;
     public String Description;
     public TransactionCategories Category;
     public Date DateOfTransaction;
 
 
     public Transaction(Date date){
-        Income = 0f;
-        Expense = 0f;
+        Amount = 0f;
         Description = "Not Available";
         Category = TransactionCategories.OTHER;
         DateOfTransaction = date;
     }
 
     public Transaction(TransactionCategories category){
-        Income = 0f;
-        Expense = 0f;
+        Amount = 0f;
         Description = "Not Available";
         Category = category;
         DateOfTransaction = Calendar.getInstance().getTime();
     }
 
-    public Transaction(float income, float expense, String description, TransactionCategories category, Date date) {
-        Income = income;
-        Expense = expense;
+    public Transaction(float amount, String description, TransactionCategories category, Date date) {
+        Amount = amount;
         Description = description;
         Category = category;
         DateOfTransaction = date;
     }
 
-    public Transaction(float income, float expense, TransactionCategories category) {
-        Income = income;
-        Expense = expense;
+    public Transaction(float amount, TransactionCategories category) {
+        Amount = amount;
         Category = category;
     }
 
-    public Transaction(Date date, float income, float expense){
+    public Transaction(Date date, float amount){
         DateOfTransaction = date;
-        Income = income;
-        Expense = expense;
+        Amount = amount;
     }
 }

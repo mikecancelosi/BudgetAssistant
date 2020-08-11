@@ -18,6 +18,7 @@ import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import java.util.TreeSet;
 
 public class TransactionHistoryAdapter  extends BaseAdapter {
@@ -25,8 +26,8 @@ public class TransactionHistoryAdapter  extends BaseAdapter {
     private static final int TYPE_ITEM = 0;
     private static final int TYPE_HEADER = 1;
 
-    private ArrayList<Transaction> mData = new ArrayList<Transaction>();
-    private TreeSet<Integer> mHeaderIndices = new TreeSet<Integer>();
+    private ArrayList<Transaction> mData = new ArrayList<>();
+    private List<Integer> mHeaderIndices = new ArrayList<>();
     private LayoutInflater mInflater;
 
     private static DecimalFormat df = new DecimalFormat("0.00");
@@ -82,7 +83,7 @@ public class TransactionHistoryAdapter  extends BaseAdapter {
 
         Transaction transaction = getItem(index);
         descriptionText.setText(transaction.Description);
-        float amount = transaction.Income != 0f ? transaction.Income : transaction.Expense;
+        float amount = transaction.Amount;
         String displayAmount = "$" + df.format(amount);
         costText.setText(displayAmount);
 
@@ -97,17 +98,36 @@ public class TransactionHistoryAdapter  extends BaseAdapter {
         TextView incText = view.findViewById(R.id.DateIncomeTotal);
         TextView expText = view.findViewById(R.id.DateExpenseTotal);
 
-
+        //Find next header index
+        int transEndIndex = mData.size();
+        int indexInArray = mHeaderIndices.indexOf(index);
+        if(mHeaderIndices.size() > indexInArray +1) {
+            transEndIndex = mHeaderIndices.get(indexInArray + 1);
+        }
+        //get list of transactions under this header.
+        List<Transaction> dateList = mData.subList(index, transEndIndex);
+        //add income/expenses.
+        float income = 0f;
+        float expense =0f;
+        for(Transaction t :dateList){
+            if(t.Amount > 0f){
+                income += t.Amount;
+            }else{
+                expense += t.Amount;
+            }
+        }
+        //Display
         Transaction transaction = getItem(index);
         dateText.setText(sdf.format(transaction.DateOfTransaction));
-        if(transaction.Income > 0) {
-            incText.setText("$" + df.format(transaction.Income));
+
+        if(income > 0) {
+            incText.setText("$" + df.format(income));
         }else{
             incText.setVisibility(View.INVISIBLE);
         }
 
-        if(transaction.Expense > 0){
-            expText.setText("$" + df.format(transaction.Expense));
+        if(expense < 0){
+            expText.setText("$" + df.format(expense));
         }else{
             expText.setVisibility(View.INVISIBLE);
         }
@@ -118,8 +138,8 @@ public class TransactionHistoryAdapter  extends BaseAdapter {
         notifyDataSetChanged();
     }
 
-    public void addHeader(Date date, Float income, Float expenses){
-        mData.add(new Transaction(date,income,expenses));
+    public void addHeader(Date date){
+        mData.add(new Transaction(date));
         mHeaderIndices.add(mData.size()-1);
         notifyDataSetChanged();
     }

@@ -64,9 +64,9 @@ public class StatsViewModel extends ViewModel {
             TransactionCategories category = t.Category;
             if(map.containsKey(category)){
                 float existingValue = map.get(category);
-                map.put(category, existingValue + t.Expense);
+                map.put(category, existingValue + t.Amount);
             }else{
-                map.put(category, t.Expense);
+                map.put(category, t.Amount);
             }
        }
 
@@ -121,7 +121,7 @@ public class StatsViewModel extends ViewModel {
             }
             if(t.Category == category)
             {
-                catExpense += t.Expense;
+                catExpense += t.Amount;
             }
         }
         int daysOfData = DateExtensions.GetDaysBetween(startCal.getTime(),endCal.getTime());

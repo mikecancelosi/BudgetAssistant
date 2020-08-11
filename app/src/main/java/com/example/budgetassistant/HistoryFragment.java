@@ -69,7 +69,7 @@ public class HistoryFragment extends Fragment {
         for(Map.Entry<Date,List<Transaction>> set : map.entrySet()){
             float totalExpenses = TransactionHelper.getExpenseTotal(set.getValue());
             float totalIncome = TransactionHelper.getIncomeTotal(set.getValue());
-            mTransactionAdapter.addHeader(set.getKey(),totalIncome,totalExpenses);
+            mTransactionAdapter.addHeader(set.getKey());
 
             for(Transaction trans : set.getValue()){
                 mTransactionAdapter.addItem(trans);

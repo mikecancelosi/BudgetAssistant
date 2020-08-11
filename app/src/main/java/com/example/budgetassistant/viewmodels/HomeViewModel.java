@@ -88,7 +88,9 @@ public class HomeViewModel extends ViewModel {
         float expenses = 0f;
         List<Transaction> transactionsInPayPeriod = getTransactionsForPayPeriod();
         for(Transaction t : transactionsInPayPeriod){
-            expenses += t.Expense;
+            if(t.Amount < 0f) {
+                expenses += t.Amount;
+            }
         }
 
         return expenses/budget;
