@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/colorSurface"
+    android:elevation="10dp"
+    android:orientation="vertical">
+
+    <TextView
+        android:id="@+id/transactionDialogHeader"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginVertical="5dp"
+        android:text="Edit Transaction"
+        android:textSize="18sp" />
+
+    <EditText
+        android:id="@+id/TransactionDialogDescription"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginVertical="5dp"
+        android:ems="10"
+        android:inputType="textPersonName"
+        android:text="Transaction Description" />
+
+    <EditText
+        android:id="@+id/transactionDialogAmount"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginVertical="5dp"
+        android:ems="10"
+        android:inputType="numberDecimal"
+        android:text="$0"
+        android:textAlignment="center" />
+
+    <Spinner
+        android:id="@+id/TransactionDialogCategory"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginVertical="5dp" />
+
+    <EditText
+        android:id="@+id/transactionDialogDate"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginVertical="5dp"
+        android:ems="10"
+        android:inputType="date"
+        android:text="09/27/20"
+        android:textAlignment="center" />
+</LinearLayout>

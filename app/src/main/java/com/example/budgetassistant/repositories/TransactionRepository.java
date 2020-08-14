@@ -6,6 +6,7 @@ import androidx.lifecycle.MutableLiveData;
 
 import com.example.budgetassistant.TransactionCategories;
 import com.example.budgetassistant.models.Income;
+import com.example.budgetassistant.models.RecurringTransaction;
 import com.example.budgetassistant.models.Transaction;
 import com.example.budgetassistant.models.UserSettings;
 
@@ -77,5 +78,19 @@ public class TransactionRepository {
         }
 
         return output;
+    }
+
+    public void postTransaction(Transaction t){
+        boolean found = false;
+        for (Transaction trans : dataSet) {
+            if (trans.Id == t.Id) {
+                trans = t;
+                found = true;
+                break;
+            }
+        }
+        if (!found) {
+            dataSet.add(t);
+        }
     }
 }

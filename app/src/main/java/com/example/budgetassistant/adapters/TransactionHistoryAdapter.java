@@ -4,14 +4,17 @@ import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.BaseAdapter;
 import android.widget.Spinner;
 import android.widget.TextView;
 
+import com.example.budgetassistant.HistoryFragment;
 import com.example.budgetassistant.R;
 import com.example.budgetassistant.TransactionCategories;
 import com.example.budgetassistant.models.Transaction;
+import com.example.budgetassistant.repositories.TransactionRepository;
 
 import java.lang.reflect.Array;
 import java.text.DecimalFormat;
@@ -32,10 +35,12 @@ public class TransactionHistoryAdapter  extends BaseAdapter {
 
     private static DecimalFormat df = new DecimalFormat("0.00");
     private static SimpleDateFormat sdf = new SimpleDateFormat("MM-dd-yyyy");
-    private Context con;
+    private Context mContext;
+    private HistoryFragment mFragment;
 
-    public TransactionHistoryAdapter(Context context){
-        con = context;
+    public TransactionHistoryAdapter(Context context, HistoryFragment fragment){
+        mContext = context;
+        mFragment = fragment;
         mInflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
     }
 
@@ -76,7 +81,7 @@ public class TransactionHistoryAdapter  extends BaseAdapter {
         return view;
     }
 
-    private void initItem(View view, int index){
+    private void initItem(View view, final int index){
         TextView descriptionText = view.findViewById(R.id.DescriptionTextView);
         TextView costText = view.findViewById(R.id.AmountTextView);
         Spinner catSpinner = view.findViewById(R.id.CategorySpinner);
@@ -87,10 +92,29 @@ public class TransactionHistoryAdapter  extends BaseAdapter {
         String displayAmount = "$" + df.format(amount);
         costText.setText(displayAmount);
 
-        catSpinner.setAdapter(new ArrayAdapter<TransactionCategories>(con,android.R.layout.simple_spinner_item,TransactionCategories.values()));
-        TransactionCategories category = transaction.Category;
+        catSpinner.setAdapter(new ArrayAdapter<>(mContext,android.R.layout.simple_spinner_item,TransactionCategories.values()));
         int catIndex = transaction.Category.getValue();
         catSpinner.setSelection(catIndex);
+        catSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+
+            @Override
+            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+                mData.get(index).Category = TransactionCategories.values()[i];
+                TransactionRepository.getInstance().postTransaction(mData.get(index));
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> adapterView) {
+
+            }
+        });
+
+        view.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                mFragment.openEditDialog(index);
+            }
+        });
     }
 
     private void initHeader(View view,int index){
