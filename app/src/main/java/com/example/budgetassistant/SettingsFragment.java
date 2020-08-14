@@ -1,8 +1,10 @@
 package com.example.budgetassistant;
 
+import android.media.Image;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentActivity;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -16,6 +18,9 @@ import android.widget.TextView;
 
 import com.example.budgetassistant.adapters.RecurringPaymentAdapter;
 import com.example.budgetassistant.adapters.BankAccountAdapter;
+import com.example.budgetassistant.dialogs.ProfilePictureDialog;
+import com.example.budgetassistant.dialogs.RecurringPaymentDialog;
+import com.example.budgetassistant.models.RecurringTransaction;
 import com.example.budgetassistant.models.UserSettings;
 import com.example.budgetassistant.viewmodels.SettingsViewModel;
 import com.github.mikephil.charting.charts.PieChart;
@@ -82,9 +87,26 @@ public class SettingsFragment extends Fragment {
         TextView joinLabel = view.findViewById(R.id.memberSinceLabel);
 
         userProfilePic.setImageResource(settings.profilePicture);
+        userProfilePic.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                openPictureDialog();
+            }
+        });
+
         userHeading.setText(settings.name);
         SimpleDateFormat sdf = new SimpleDateFormat("MMMM yyyy");
         joinLabel.setText("Member since " + sdf.format(settings.joinDate));
+    }
+
+    public void openPictureDialog(){
+        ProfilePictureDialog dialog = new ProfilePictureDialog();
+        dialog.setDialogResult(new ProfilePictureDialog.ProfilePictureDialogListener() {
+            @Override
+            public void applyChanges(String imagePath) {
+            }
+        });
+        dialog.show(((FragmentActivity)view.getContext()).getSupportFragmentManager(), "Example");
     }
 
     private void setupAccountsList(UserSettings settings){
