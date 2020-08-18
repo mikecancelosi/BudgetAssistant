@@ -2,6 +2,7 @@ package com.example.budgetassistant.repositories;
 
 import androidx.lifecycle.MutableLiveData;
 
+import com.example.budgetassistant.Bank;
 import com.example.budgetassistant.models.BankAccount;
 
 public class BankRepository {
@@ -23,6 +24,6 @@ public class BankRepository {
 
     }
     public void setAccount(){
-        mAccount = new BankAccount("x5554",13850.84f,"TD Bank","Spending Account");
+        mAccount = new BankAccount("x5554", "Main", Bank.CHASE, "Spending Account");
     }
 }

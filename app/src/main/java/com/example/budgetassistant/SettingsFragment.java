@@ -13,13 +13,16 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.example.budgetassistant.adapters.RecurringPaymentAdapter;
 import com.example.budgetassistant.adapters.BankAccountAdapter;
+import com.example.budgetassistant.dialogs.AccountDialog;
 import com.example.budgetassistant.dialogs.ProfilePictureDialog;
 import com.example.budgetassistant.dialogs.RecurringPaymentDialog;
+import com.example.budgetassistant.models.Account;
 import com.example.budgetassistant.models.RecurringTransaction;
 import com.example.budgetassistant.models.UserSettings;
 import com.example.budgetassistant.viewmodels.SettingsViewModel;
@@ -111,10 +114,29 @@ public class SettingsFragment extends Fragment {
 
     private void setupAccountsList(UserSettings settings){
         RecyclerView accountListView = view.findViewById(R.id.AccountListView);
+        Button addAccountBtn = view.findViewById(R.id.AddAccountBtn);
         accountListView.setLayoutManager(new LinearLayoutManager(getContext()));
 
         BankAccountAdapter bankAdapter = new BankAccountAdapter(settings.accounts);
         accountListView.setAdapter(bankAdapter);
+
+        addAccountBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                openAccountDialog();
+            }
+        });
+    }
+
+    private void openAccountDialog(){
+        AccountDialog dialog = new AccountDialog();
+        dialog.setDialogResult(new AccountDialog.AccountDialogListener() {
+            @Override
+            public void applyChanges(Account account) {
+
+            }
+        });
+        dialog.show(((FragmentActivity)view.getContext()).getSupportFragmentManager(), "Example");
     }
 
     private void setupIncome(UserSettings settings){

@@ -7,6 +7,7 @@ import android.media.Image;
 import androidx.core.content.res.ResourcesCompat;
 import androidx.lifecycle.MutableLiveData;
 
+import com.example.budgetassistant.Bank;
 import com.example.budgetassistant.R;
 import com.example.budgetassistant.TransactionCategories;
 import com.example.budgetassistant.models.BankAccount;
@@ -70,12 +71,12 @@ public class UserSettingsRepository {
         dataSet.recurringTransactions = createRecurringTransactionPayments();
         dataSet.idealBreakdown = createIdealBreakdown();
         dataSet.accounts.add(new BankAccount("15202593282",
-                                             13322,
-                                             "Visa",
+                                             "Main",
+                                             Bank.CHASE,
                                              "Main Account"));
         dataSet.accounts.add(new BankAccount("84641112479",
-                                             3000,
-                                             "Mastercard",
+                                             "Savings",
+                                             Bank.USBANK,
                                              "Savings Account"));
         dataSet.joinDate = Calendar.getInstance().getTime();
     }

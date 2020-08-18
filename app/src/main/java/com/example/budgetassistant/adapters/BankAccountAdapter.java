@@ -58,9 +58,9 @@ public class BankAccountAdapter extends RecyclerView.Adapter<BankAccountAdapter.
     public void onBindViewHolder(MyViewHolder holder, int position) {
         BankAccount account = mData.get(position);
 
-        holder.accountIconView.setImageResource(BankAccount.getBankIcon(account.BankName));
+        holder.accountIconView.setImageResource(BankAccount.getBankIcon(account.Bank.name()));
         holder.accountLabelView.setText(account.DisplayName);
-        holder.accountNumLabelView.setText(account.AccountDisplay);
+        holder.accountNumLabelView.setText(account.getAccountDisplay());
     }
 
     public void addItem(BankAccount account){mData.add(account);}

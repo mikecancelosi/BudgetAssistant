@@ -16,7 +16,7 @@ public class UserSettings {
 
     public String name;
     public int profilePicture;
-    public List<BankAccount> accounts;
+    public List<Account> accounts;
     public Date joinDate;
     public Income income;
     public List<RecurringTransaction> recurringTransactions;
