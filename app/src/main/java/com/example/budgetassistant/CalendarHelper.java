@@ -42,4 +42,23 @@ public class CalendarHelper {
                 return "";
         }
     }
+
+    public static int calendarValueFromDisplay(String input){
+        switch(input){
+            case "Days":
+            case "Day":
+                return Calendar.DATE;
+            case "Years":
+            case "Year":
+                return Calendar.YEAR;
+            case "Months":
+            case "Month":
+                return Calendar.MONTH;
+            case "Weeks":
+            case "Week":
+                return Calendar.WEEK_OF_YEAR;
+            default:
+                return -1;
+        }
+    }
 }

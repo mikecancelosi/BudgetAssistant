@@ -66,7 +66,7 @@ public class UserSettingsRepository {
         dataSet.name = "Mike Cancelosi";
         dataSet.profilePicture = R.mipmap.ic_cancelosi;
         dataSet.income = new Income(1000f,
-                                    new AbstractMap.SimpleEntry<Integer, Integer>(Calendar.WEEK_OF_YEAR, 2),
+                                    new AbstractMap.SimpleEntry<>(Calendar.WEEK_OF_YEAR, 2),
                                     new Date((long) 1561953600000f));
         dataSet.recurringTransactions = createRecurringTransactionPayments();
         dataSet.idealBreakdown = createIdealBreakdown();
@@ -83,7 +83,6 @@ public class UserSettingsRepository {
 
     private static List<RecurringTransaction> createRecurringTransactionPayments() {
         List<RecurringTransaction> transactions = new ArrayList<RecurringTransaction>();
-        Calendar calInstance = Calendar.getInstance();
 
         transactions.add(new RecurringTransaction(new Date((long) 1561953600000f),
                                                   new Date(Long.MAX_VALUE),
@@ -133,6 +132,7 @@ public class UserSettingsRepository {
     public void postAccount(Account account){
         dataSet.accounts.add(account);
     }
+    public void updateIncome(Income income) {dataSet.income = income;}
 
 
 }

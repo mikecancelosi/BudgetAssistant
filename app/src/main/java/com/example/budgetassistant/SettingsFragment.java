@@ -14,13 +14,16 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.example.budgetassistant.adapters.RecurringPaymentAdapter;
 import com.example.budgetassistant.adapters.AccountAdapter;
 import com.example.budgetassistant.dialogs.AccountDialog;
+import com.example.budgetassistant.dialogs.IncomeDialog;
 import com.example.budgetassistant.dialogs.ProfilePictureDialog;
 import com.example.budgetassistant.models.Account;
+import com.example.budgetassistant.models.Income;
 import com.example.budgetassistant.models.UserSettings;
 import com.example.budgetassistant.viewmodels.SettingsViewModel;
 import com.github.mikephil.charting.charts.PieChart;
@@ -145,6 +148,7 @@ public class SettingsFragment extends Fragment {
         TextView paycheckAmount = view.findViewById(R.id.IncomeDollarAmount);
         TextView frequencyText = view.findViewById(R.id.IncomeFrequency);
         TextView nextPayText = view.findViewById(R.id.IncomeNextPaycheck);
+        LinearLayout incomeItem = view.findViewById(R.id.IncomeItem);
 
         paycheckAmount.setText("$" + settings.income.Amount);
         String periodKeyDisplay = CalendarHelper.calendarValueDisplay(settings.income.Period.getKey());
@@ -155,6 +159,26 @@ public class SettingsFragment extends Fragment {
         frequencyText.setText("Every " + periodValue + " " + periodKeyDisplay);
         SimpleDateFormat sdf = new SimpleDateFormat("MM/dd/yy");
         nextPayText.setText("Next check on " + sdf.format(settings.income.GetNextPaycheckDate()));
+
+        incomeItem.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                openIncomeDialog();
+            }
+        });
+    }
+
+    private void openIncomeDialog(){
+        IncomeDialog dialog = new IncomeDialog();
+        dialog.setIncome(mViewModel.getSettings().getValue().income);
+        dialog.setDialogResult(new IncomeDialog.IncomeDialogListener() {
+            @Override
+            public void applyChanges(Income income) {
+                mViewModel.updateIncome(income);
+            }
+        });
+        dialog.show(((FragmentActivity)view.getContext()).getSupportFragmentManager(), "Example");
+
     }
 
     private void setupRecurringPayments(UserSettings settings){

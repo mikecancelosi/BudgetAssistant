@@ -6,6 +6,7 @@ import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModel;
 
 import com.example.budgetassistant.models.Account;
+import com.example.budgetassistant.models.Income;
 import com.example.budgetassistant.models.UserSettings;
 import com.example.budgetassistant.repositories.UserSettingsRepository;
 
@@ -31,5 +32,9 @@ public class SettingsViewModel extends ViewModel {
 
     public void postAccount(Account account){
         mSettingsRepo.postAccount(account);
+    }
+
+    public void updateIncome(Income income){
+        mSettingsRepo.updateIncome(income);
     }
 }
