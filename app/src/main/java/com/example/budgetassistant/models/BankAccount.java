@@ -3,11 +3,11 @@ package com.example.budgetassistant.models;
 import com.example.budgetassistant.Bank;
 
 public class BankAccount extends Account {
-    public int AccountNumber;
-    public int RoutingNumber;
+    public long AccountNumber;
+    public long RoutingNumber;
     public Bank Bank;
 
-    public BankAccount(int accountNumber, String displayName, Bank bank, int routingNumber) {
+    public BankAccount(long accountNumber, String displayName, Bank bank, long routingNumber) {
         AccountNumber = accountNumber;
         DisplayName = displayName;
         String numberDisplay = AccountNumber + "";

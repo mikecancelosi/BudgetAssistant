@@ -47,13 +47,13 @@
         <LinearLayout
             android:id="@+id/CreditCardLayout"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:visibility="invisible"
+            android:visibility="visible"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="@+id/BankAccountLayout">
+            app:layout_constraintTop_toTopOf="parent">
 
             <TextView
                 android:id="@+id/CardHeader"
@@ -67,76 +67,14 @@
 
             <ScrollView
                 android:layout_width="match_parent"
-                android:layout_height="200dp">
+                android:layout_height="wrap_content">
 
                 <TableLayout
                     android:id="@+id/CardOptionsTable"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_horizontal"
-                    android:layout_marginVertical="10dp">
-
-                    <TableRow
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent">
-
-                        <Button
-                            android:id="@+id/CardOption_Visa"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_margin="10dp"
-                            android:background="@color/colorSurface"
-                            android:padding="10dp"
-                            android:text="Visa"
-                            android:textColor="@color/colorOnSurface"
-                            android:textSize="18sp"
-                            android:textStyle="bold" />
-
-                        <Button
-                            android:id="@+id/CardOption_master"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_margin="10dp"
-                            android:background="@color/colorSurface"
-                            android:padding="10dp"
-                            android:text="Mastercard"
-                            android:textColor="@color/colorOnSurface"
-                            android:textSize="18sp"
-                            android:textStyle="bold" />
-
-                    </TableRow>
-
-                    <TableRow
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent">
-
-                        <Button
-                            android:id="@+id/cardOption_amex"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_margin="10dp"
-                            android:background="@color/colorSurface"
-                            android:padding="10dp"
-                            android:text="American Express"
-                            android:textColor="@color/colorOnSurface"
-                            android:textSize="18sp"
-                            android:textStyle="bold" />
-
-                        <Button
-                            android:id="@+id/cardOption_Discover"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_margin="10dp"
-                            android:background="@color/colorSurface"
-                            android:padding="10dp"
-                            android:text="Discover"
-                            android:textColor="@color/colorOnSurface"
-                            android:textSize="18sp"
-                            android:textStyle="bold" />
-
-                    </TableRow>
-
-                </TableLayout>
+                    android:layout_marginVertical="10dp" />
             </ScrollView>
 
             <LinearLayout
@@ -222,7 +160,7 @@
                         android:orientation="vertical">
 
                         <EditText
-                            android:id="@+id/editTextNumber2"
+                            android:id="@+id/CCCSVInput"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:ems="10"
@@ -248,14 +186,14 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:visibility="visible"
+            android:visibility="invisible"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent">
 
             <TextView
-                android:id="@+id/textView8"
+                android:id="@+id/BankHeader"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="Choose your bank"

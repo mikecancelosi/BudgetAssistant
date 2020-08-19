@@ -21,6 +21,7 @@ import androidx.appcompat.app.AppCompatDialogFragment;
 import androidx.core.content.ContextCompat;
 
 import com.example.budgetassistant.Bank;
+import com.example.budgetassistant.CardCarrier;
 import com.example.budgetassistant.R;
 import com.example.budgetassistant.TransactionCategories;
 import com.example.budgetassistant.models.Account;
@@ -28,8 +29,12 @@ import com.example.budgetassistant.models.BankAccount;
 import com.example.budgetassistant.models.CreditCardAccount;
 import com.example.budgetassistant.models.RecurringTransaction;
 
+import java.lang.reflect.Array;
+import java.lang.reflect.Method;
 import java.text.ParseException;
 import java.util.AbstractMap;
+import java.util.ArrayList;
+import java.util.List;
 
 public class AccountDialog extends AppCompatDialogFragment {
    
@@ -71,7 +76,26 @@ public class AccountDialog extends AppCompatDialogFragment {
                             int accountNumber = Integer.parseInt(accountNumberInput.getText().toString());
                             account = new BankAccount(accountNumber,displayName,bank,routingNumber);
                         }else{
-                            account = new CreditCardAccount();
+                            EditText cardNumberInput = mView.findViewById(R.id.cardNumberInput);
+                            EditText monthExpInput = mView.findViewById(R.id.CCExpirationMonth);
+                            EditText yearExpInput = mView.findViewById(R.id.CCExpirationYear);
+                            EditText csvInput = mView.findViewById(R.id.CCCSVInput);
+
+                            Integer cardNumber = Integer.parseInt(cardNumberInput.getText().toString());
+                            Integer monthExp = Integer.parseInt(monthExpInput.getText().toString());
+                            Integer yearExp = Integer.parseInt(yearExpInput.getText().toString());
+                            AbstractMap.SimpleEntry<Integer,Integer> expiration = new AbstractMap.SimpleEntry<>(monthExp,yearExp);
+                            Integer csv = Integer.parseInt(csvInput.getText().toString());
+                            String cardDisplay = currentlySelectedCardBtn.getText().toString();
+                            CardCarrier card = CardCarrier.VISA;
+                            CardCarrier[] cardVals = CardCarrier.values();
+                            for(int j = 0 ; j<cardVals.length;j++){
+                                if(cardVals[j].toString() == cardDisplay){
+                                    card = cardVals[j];
+                                    break;
+                                }
+                            }
+                            account = new CreditCardAccount(cardNumber,csv,card,expiration,displayName);
                         }
 
                         mListener.applyChanges(account);
@@ -92,6 +116,8 @@ public class AccountDialog extends AppCompatDialogFragment {
         Button creditCardBtn = mView.findViewById(R.id.CardAccountBtn);
         mCreditCardBlock = mView.findViewById(R.id.CreditCardLayout);
         mBankBlock = mView.findViewById(R.id.BankAccountLayout);
+        TableLayout bankTable = mView.findViewById(R.id.BankOptionsTable);
+        TableLayout cardTable = mView.findViewById(R.id.CardOptionsTable);
 
         bankBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -106,8 +132,31 @@ public class AccountDialog extends AppCompatDialogFragment {
             }
         });
 
-        setupBankBlock();
-        setupCardBlock();
+
+
+        List<Button> bankBtns = setupBlock(bankTable,Bank.values());
+        for(int i =0; i<bankBtns.size();i++){
+            Button btn = bankBtns.get(i);
+            final int finalI = i;
+            btn.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    onBankSelected(finalI);
+                }
+            });
+        }
+
+        List<Button> cardBtns = setupBlock(cardTable,CardCarrier.values());
+        for(int i =0; i<cardBtns.size();i++){
+            Button btn = cardBtns.get(i);
+            final int finalI = i;
+            btn.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    onCardSelected(finalI);
+                }
+            });
+        }
 
         showBlock(true);
     }
@@ -128,10 +177,9 @@ public class AccountDialog extends AppCompatDialogFragment {
 
     //region BankBlock
 
-    private void setupBankBlock(){
-        TableLayout table = mView.findViewById(R.id.BankOptionsTable);
+    private List<Button> setupBlock(TableLayout table, Enum[] enumVals){
 
-        Bank[] enumVals = Bank.values();
+       List<Button> buttons = new ArrayList<>();
 
         //Create rows
         int rowCount = ((int)Math.ceil(enumVals.length/2f));
@@ -158,23 +206,16 @@ public class AccountDialog extends AppCompatDialogFragment {
             btnInstance.setPadding(20,20,20,20);
             btnInstance.setTextSize(TypedValue.COMPLEX_UNIT_DIP,18);
             btnInstance.setTypeface(Typeface.DEFAULT_BOLD);
-
-            final int finalI = i;
-            btnInstance.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    onBankSelected(finalI);
-                }
-            });
+            buttons.add(btnInstance);
 
             row.addView(btnInstance);
         }
+        return buttons;
     }
 
     private Button currentlySelectedBankBtn;
 
     private void onBankSelected(int index){
-
 
         if(currentlySelectedBankBtn != null){
             currentlySelectedBankBtn.setBackgroundColor(unselectedColor);
@@ -190,8 +231,18 @@ public class AccountDialog extends AppCompatDialogFragment {
 
 
     //region CreditCardBlock
-    private void setupCardBlock(){
 
+    private Button currentlySelectedCardBtn;
+
+    private void onCardSelected(int index){
+        if(currentlySelectedCardBtn != null){
+            currentlySelectedCardBtn.setBackgroundColor(unselectedColor);
+        }
+
+        TableLayout table = mView.findViewById(R.id.CardOptionsTable);
+        TableRow row = (TableRow) table.getChildAt(index /2);
+        currentlySelectedCardBtn = (Button) row.getChildAt(index%2);
+        currentlySelectedCardBtn.setBackgroundColor(selectedColor);
     }
 
     //endregion

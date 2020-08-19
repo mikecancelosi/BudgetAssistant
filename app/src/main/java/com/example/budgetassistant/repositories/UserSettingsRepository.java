@@ -70,14 +70,14 @@ public class UserSettingsRepository {
                                     new Date((long) 1561953600000f));
         dataSet.recurringTransactions = createRecurringTransactionPayments();
         dataSet.idealBreakdown = createIdealBreakdown();
-        dataSet.accounts.add(new BankAccount("15202593282",
+        dataSet.accounts.add(new BankAccount((long)15202593282f,
                                              "Main",
                                              Bank.CHASE,
-                                             "Main Account"));
-        dataSet.accounts.add(new BankAccount("84641112479",
+                                             (long)15223f));
+        dataSet.accounts.add(new BankAccount((long)84641112479f,
                                              "Savings",
                                              Bank.USBANK,
-                                             "Savings Account"));
+                                             (long)151082f));
         dataSet.joinDate = Calendar.getInstance().getTime();
     }
 
