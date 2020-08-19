@@ -10,6 +10,7 @@ import androidx.lifecycle.MutableLiveData;
 import com.example.budgetassistant.Bank;
 import com.example.budgetassistant.R;
 import com.example.budgetassistant.TransactionCategories;
+import com.example.budgetassistant.models.Account;
 import com.example.budgetassistant.models.BankAccount;
 import com.example.budgetassistant.models.Income;
 import com.example.budgetassistant.models.RecurringTransaction;
@@ -50,7 +51,6 @@ public class UserSettingsRepository {
         boolean found = false;
         for (RecurringTransaction trans : dataSet.recurringTransactions) {
             if (trans.Id == transaction.Id) {
-                trans = transaction;
                 found = true;
                 break;
             }
@@ -128,6 +128,10 @@ public class UserSettingsRepository {
         breakdown.put(TransactionCategories.SUBSCRIPTION, .05f);
         breakdown.put(TransactionCategories.OTHER, .10f);
         return breakdown;
+    }
+
+    public void postAccount(Account account){
+        dataSet.accounts.add(account);
     }
 
 

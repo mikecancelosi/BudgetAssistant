@@ -130,7 +130,7 @@ public class SettingsFragment extends Fragment {
         dialog.setDialogResult(new AccountDialog.AccountDialogListener() {
             @Override
             public void applyChanges(Account account) {
-
+                mViewModel.postAccount(account);
             }
         });
         dialog.show(((FragmentActivity)view.getContext()).getSupportFragmentManager(), "Example");
