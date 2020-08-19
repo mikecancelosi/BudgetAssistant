@@ -66,7 +66,7 @@ public class UserSettingsRepository {
         dataSet.name = "Mike Cancelosi";
         dataSet.profilePicture = R.mipmap.ic_cancelosi;
         dataSet.income = new Income(1000f,
-                                    new AbstractMap.SimpleEntry<Integer, Integer>(Calendar.DATE, 14),
+                                    new AbstractMap.SimpleEntry<Integer, Integer>(Calendar.WEEK_OF_YEAR, 2),
                                     new Date((long) 1561953600000f));
         dataSet.recurringTransactions = createRecurringTransactionPayments();
         dataSet.idealBreakdown = createIdealBreakdown();

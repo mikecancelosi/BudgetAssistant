@@ -4,15 +4,14 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.budgetassistant.R;
 import com.example.budgetassistant.models.Account;
-import com.example.budgetassistant.models.BankAccount;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class AccountAdapter extends RecyclerView.Adapter<AccountAdapter.MyViewHolder> {
@@ -23,11 +22,13 @@ public class AccountAdapter extends RecyclerView.Adapter<AccountAdapter.MyViewHo
         public ImageView accountIconView;
         public TextView accountLabelView;
         public TextView accountNumLabelView;
+        public LinearLayout accountParentView;
         public MyViewHolder(View itemView){
             super(itemView);
             accountIconView = itemView.findViewById(R.id.AccountTypePic);;
             accountLabelView = itemView.findViewById(R.id.AccountNameLabel);
             accountNumLabelView = itemView.findViewById(R.id.AccountNumberLabel);
+            accountParentView = itemView.findViewById(R.id.AccountElement);
         }
     }
 
@@ -42,7 +43,7 @@ public class AccountAdapter extends RecyclerView.Adapter<AccountAdapter.MyViewHo
 
     @Override
     public AccountAdapter.MyViewHolder onCreateViewHolder(ViewGroup parent, int viewType){
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.bank_account, parent, false);
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.account, parent, false);
         MyViewHolder vh = new MyViewHolder(view);
         return vh;
     }
@@ -54,5 +55,12 @@ public class AccountAdapter extends RecyclerView.Adapter<AccountAdapter.MyViewHo
         holder.accountIconView.setImageResource(account.getIcon());
         holder.accountLabelView.setText(account.DisplayName);
         holder.accountNumLabelView.setText(account.DisplayAccountNumber);
+        holder.accountParentView.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View view) {
+                //TODO:Allow for deletion of account
+                return false;
+            }
+        });
     }
 }

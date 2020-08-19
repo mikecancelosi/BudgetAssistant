@@ -27,4 +27,19 @@ public class CalendarHelper {
     public static int daysBetween(Date d1, Date d2){
         return (int)( (d2.getTime() - d1.getTime()) / (1000 * 60 * 60 * 24));
     }
+
+    public static String calendarValueDisplay(Integer input){
+        switch(input){
+            case Calendar.DATE:
+                return "Days";
+            case Calendar.YEAR:
+                return "Years";
+            case Calendar.MONTH:
+                return "Months";
+            case Calendar.WEEK_OF_YEAR:
+                return "Weeks";
+            default:
+                return "";
+        }
+    }
 }

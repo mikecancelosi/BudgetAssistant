@@ -33,6 +33,7 @@ import com.github.mikephil.charting.utils.ColorTemplate;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -81,6 +82,7 @@ public class SettingsFragment extends Fragment {
 
     }
 
+    //region Header
     private void setupHeader(UserSettings settings){
         ImageView userProfilePic = view.findViewById(R.id.UserProfilePicture);
         TextView userHeading = view.findViewById(R.id.UsernameDisplay);
@@ -108,7 +110,9 @@ public class SettingsFragment extends Fragment {
         });
         dialog.show(((FragmentActivity)view.getContext()).getSupportFragmentManager(), "Example");
     }
+    //endregion
 
+    //region Accounts
     private void setupAccountsList(UserSettings settings){
         RecyclerView accountListView = view.findViewById(R.id.AccountListView);
         Button addAccountBtn = view.findViewById(R.id.AddAccountBtn);
@@ -135,6 +139,7 @@ public class SettingsFragment extends Fragment {
         });
         dialog.show(((FragmentActivity)view.getContext()).getSupportFragmentManager(), "Example");
     }
+    //endregion
 
     private void setupIncome(UserSettings settings){
         TextView paycheckAmount = view.findViewById(R.id.IncomeDollarAmount);
@@ -142,7 +147,12 @@ public class SettingsFragment extends Fragment {
         TextView nextPayText = view.findViewById(R.id.IncomeNextPaycheck);
 
         paycheckAmount.setText("$" + settings.income.Amount);
-        frequencyText.setText("Every " + settings.income.Period.getValue() + settings.income.Period.getKey());
+        String periodKeyDisplay = CalendarHelper.calendarValueDisplay(settings.income.Period.getKey());
+        Integer periodValue = settings.income.Period.getValue();
+        if(periodValue == 1){
+            periodKeyDisplay = periodKeyDisplay.substring(0,periodKeyDisplay.length()-1);
+        }
+        frequencyText.setText("Every " + periodValue + " " + periodKeyDisplay);
         SimpleDateFormat sdf = new SimpleDateFormat("MM/dd/yy");
         nextPayText.setText("Next check on " + sdf.format(settings.income.GetNextPaycheckDate()));
     }
