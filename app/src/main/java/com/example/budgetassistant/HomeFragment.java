@@ -67,13 +67,6 @@ public class HomeFragment extends Fragment {
             }
         });
 
-        mViewModel.getAccount().observe(getViewLifecycleOwner(), new Observer<BankAccount>() {
-            @Override
-            public void onChanged(BankAccount account) {
-                setUpUI();
-            }
-        });
-
         setUpUI();
 
         return view;
@@ -128,7 +121,6 @@ public class HomeFragment extends Fragment {
         }
 
         PieDataSet dataSet = new PieDataSet(pieEntries,"");
-        dataSet.setColors(ColorTemplate.LIBERTY_COLORS); //
         dataSet.setDrawValues(false);
         mChart.setDrawEntryLabels(false);
 

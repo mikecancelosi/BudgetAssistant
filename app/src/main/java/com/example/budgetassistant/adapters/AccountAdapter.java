@@ -1,30 +1,23 @@
 package com.example.budgetassistant.adapters;
 
-import android.content.Context;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.budgetassistant.R;
+import com.example.budgetassistant.models.Account;
 import com.example.budgetassistant.models.BankAccount;
-import com.example.budgetassistant.models.Transaction;
-
-import org.w3c.dom.Text;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.TreeSet;
 
-public class BankAccountAdapter extends RecyclerView.Adapter<BankAccountAdapter.MyViewHolder> {
+public class AccountAdapter extends RecyclerView.Adapter<AccountAdapter.MyViewHolder> {
 
-    private List<BankAccount> mData = new ArrayList<BankAccount>();
-    private LayoutInflater mInflater;
+    private List<Account> mData;
 
     public static class MyViewHolder extends RecyclerView.ViewHolder{
         public ImageView accountIconView;
@@ -38,7 +31,7 @@ public class BankAccountAdapter extends RecyclerView.Adapter<BankAccountAdapter.
         }
     }
 
-    public BankAccountAdapter(List<BankAccount> accounts) {
+    public AccountAdapter(List<Account> accounts) {
         mData = accounts;
     }
 
@@ -48,7 +41,7 @@ public class BankAccountAdapter extends RecyclerView.Adapter<BankAccountAdapter.
     }
 
     @Override
-    public BankAccountAdapter.MyViewHolder onCreateViewHolder(ViewGroup parent, int viewType){
+    public AccountAdapter.MyViewHolder onCreateViewHolder(ViewGroup parent, int viewType){
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.bank_account, parent, false);
         MyViewHolder vh = new MyViewHolder(view);
         return vh;
@@ -56,12 +49,10 @@ public class BankAccountAdapter extends RecyclerView.Adapter<BankAccountAdapter.
 
     @Override
     public void onBindViewHolder(MyViewHolder holder, int position) {
-        BankAccount account = mData.get(position);
+        Account account = mData.get(position);
 
-        holder.accountIconView.setImageResource(BankAccount.getBankIcon(account.Bank.name()));
+        holder.accountIconView.setImageResource(account.getIcon());
         holder.accountLabelView.setText(account.DisplayName);
-        holder.accountNumLabelView.setText(account.getAccountDisplay());
+        holder.accountNumLabelView.setText(account.DisplayAccountNumber);
     }
-
-    public void addItem(BankAccount account){mData.add(account);}
 }

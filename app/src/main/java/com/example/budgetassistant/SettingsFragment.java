@@ -1,6 +1,5 @@
 package com.example.budgetassistant;
 
-import android.media.Image;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
@@ -18,12 +17,10 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.example.budgetassistant.adapters.RecurringPaymentAdapter;
-import com.example.budgetassistant.adapters.BankAccountAdapter;
+import com.example.budgetassistant.adapters.AccountAdapter;
 import com.example.budgetassistant.dialogs.AccountDialog;
 import com.example.budgetassistant.dialogs.ProfilePictureDialog;
-import com.example.budgetassistant.dialogs.RecurringPaymentDialog;
 import com.example.budgetassistant.models.Account;
-import com.example.budgetassistant.models.RecurringTransaction;
 import com.example.budgetassistant.models.UserSettings;
 import com.example.budgetassistant.viewmodels.SettingsViewModel;
 import com.github.mikephil.charting.charts.PieChart;
@@ -117,7 +114,7 @@ public class SettingsFragment extends Fragment {
         Button addAccountBtn = view.findViewById(R.id.AddAccountBtn);
         accountListView.setLayoutManager(new LinearLayoutManager(getContext()));
 
-        BankAccountAdapter bankAdapter = new BankAccountAdapter(settings.accounts);
+        AccountAdapter bankAdapter = new AccountAdapter(settings.accounts);
         accountListView.setAdapter(bankAdapter);
 
         addAccountBtn.setOnClickListener(new View.OnClickListener() {

@@ -32,6 +32,14 @@
 
     </LinearLayout>
 
+    <EditText
+        android:id="@+id/AccountDisplayNameInput"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:ems="10"
+        android:hint="Display Name"
+        android:inputType="textPersonName" />
+
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
@@ -263,29 +271,29 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_horizontal"
-                    android:layout_marginVertical="10dp"/>
+                    android:layout_marginVertical="10dp" />
             </ScrollView>
 
             <EditText
-                android:id="@+id/editTextTextPersonName"
+                android:id="@+id/BankRoutingNumberInput"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginHorizontal="10dp"
                 android:layout_marginTop="20dp"
                 android:layout_marginBottom="10dp"
                 android:ems="10"
-                android:inputType="number"
-                android:text="Routing Number" />
+                android:hint="RoutingNumber"
+                android:inputType="number" />
 
             <EditText
-                android:id="@+id/editTextTextPersonName2"
+                android:id="@+id/BankAccountNumberInput"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginHorizontal="10dp"
                 android:layout_marginBottom="20dp"
                 android:ems="10"
-                android:inputType="number"
-                android:text="Account Number" />
+                android:hint="Account Number"
+                android:inputType="number" />
         </LinearLayout>
     </androidx.constraintlayout.widget.ConstraintLayout>
 </LinearLayout>

@@ -11,11 +11,9 @@ import com.example.budgetassistant.models.BankAccount;
 import com.example.budgetassistant.models.Income;
 import com.example.budgetassistant.models.Transaction;
 import com.example.budgetassistant.models.UserSettings;
-import com.example.budgetassistant.repositories.BankRepository;
 import com.example.budgetassistant.repositories.TransactionRepository;
 import com.example.budgetassistant.repositories.UserSettingsRepository;
 
-import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
@@ -29,9 +27,8 @@ public class HomeViewModel extends ViewModel {
     public LiveData<List<Transaction>> getTransactions(){return mTransactions;}
     private TransactionRepository mTransactionRepo;
 
-    private MutableLiveData<BankAccount> mAccount;
-    public LiveData<BankAccount> getAccount(){return mAccount;}
-    private BankRepository mBankRepo;
+    private BankAccount mAccount;
+
 
 
     public void init(){
@@ -40,10 +37,10 @@ public class HomeViewModel extends ViewModel {
         }
         mTransactionRepo = TransactionRepository.getInstance();
         mSettingsRepo = UserSettingsRepository.getInstance();
-        mBankRepo = BankRepository.getInstance();
         mTransactions = mTransactionRepo.getTransactions();
-        mAccount = mBankRepo.getAccount();
+
         mSettings = mSettingsRepo.getSettings();
+        mAccount = (BankAccount) mSettings.getValue().accounts.get(0);
 
 
         mTransactionRepo.getTransactions().observeForever(new Observer<List<Transaction>>() {
@@ -56,12 +53,6 @@ public class HomeViewModel extends ViewModel {
             @Override
             public void onChanged(UserSettings settings) {
                 mSettings.setValue(settings);
-            }
-        });
-        mBankRepo.getAccount().observeForever(new Observer<BankAccount>() {
-            @Override
-            public void onChanged(BankAccount account) {
-                mAccount.setValue(account);
             }
         });
 

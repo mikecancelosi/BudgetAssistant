@@ -1,23 +1,19 @@
 package com.example.budgetassistant.models;
 
 import com.example.budgetassistant.Bank;
-import com.example.budgetassistant.R;
 
 public class BankAccount extends Account {
-    public String AccountNumber;
-    public String RoutingNumber;
+    public int AccountNumber;
+    public int RoutingNumber;
     public Bank Bank;
-    public String DisplayName;
 
-    public BankAccount(String accountNumber, String displayName, Bank bank, String routingNumber) {
+    public BankAccount(int accountNumber, String displayName, Bank bank, int routingNumber) {
         AccountNumber = accountNumber;
         DisplayName = displayName;
+        String numberDisplay = AccountNumber + "";
+        DisplayAccountNumber = "x" + numberDisplay.substring(numberDisplay.length()-4);
         RoutingNumber = routingNumber;
         Bank = bank;
     }
 
-    public String getAccountDisplay(){ return "x" + AccountNumber.substring(AccountNumber.length()-4);}
-    public static int getBankIcon(String BankName){
-        return R.mipmap.ic_visa;
-    }
 }

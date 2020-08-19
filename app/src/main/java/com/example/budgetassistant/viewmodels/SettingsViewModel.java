@@ -5,14 +5,8 @@ import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModel;
 
-import com.example.budgetassistant.models.BankAccount;
-import com.example.budgetassistant.models.Transaction;
 import com.example.budgetassistant.models.UserSettings;
-import com.example.budgetassistant.repositories.BankRepository;
-import com.example.budgetassistant.repositories.TransactionRepository;
 import com.example.budgetassistant.repositories.UserSettingsRepository;
-
-import java.util.List;
 
 public class SettingsViewModel extends ViewModel {
     private MutableLiveData<UserSettings> mSettings;
