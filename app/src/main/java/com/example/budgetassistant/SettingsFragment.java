@@ -20,6 +20,7 @@ import android.widget.TextView;
 import com.example.budgetassistant.adapters.RecurringPaymentAdapter;
 import com.example.budgetassistant.adapters.AccountAdapter;
 import com.example.budgetassistant.dialogs.AccountDialog;
+import com.example.budgetassistant.dialogs.BreakdownDialog;
 import com.example.budgetassistant.dialogs.IncomeDialog;
 import com.example.budgetassistant.dialogs.ProfilePictureDialog;
 import com.example.budgetassistant.dialogs.RecurringPaymentDialog;
@@ -29,6 +30,7 @@ import com.example.budgetassistant.models.RecurringTransaction;
 import com.example.budgetassistant.models.Transaction;
 import com.example.budgetassistant.models.UserSettings;
 import com.example.budgetassistant.viewmodels.SettingsViewModel;
+import com.github.mikephil.charting.charts.BarChart;
 import com.github.mikephil.charting.charts.PieChart;
 import com.github.mikephil.charting.components.Description;
 import com.github.mikephil.charting.components.Legend;
@@ -219,50 +221,52 @@ public class SettingsFragment extends Fragment {
     //endregion
 
     private void setupBreakdown(UserSettings settings){
-        TextView investText = view.findViewById(R.id.settingsBreakdownInvestValue);
-        TextView savingsText = view.findViewById(R.id.settingsBreakdownSavingsValue);
-        PieChart chart = view.findViewById(R.id.settingsBreakdownChart);
+        Button editBreakdownBtn =view.findViewById(R.id.EditBreakdownBtn);
+        PieChart pieChart = view.findViewById(R.id.settingsBreakdownPieChart);
+        BarChart barChart = view.findViewById(R.id.settingsBreakdownBarChart);
 
-        HashMap<TransactionCategories,Float> breakdown = settings.idealBreakdown;
-        if(breakdown.containsKey(TransactionCategories.INVESTMENT)) {
-            Float percentageInvest = breakdown.get(TransactionCategories.INVESTMENT);
-            investText.setText("$" + (settings.income.Amount * percentageInvest));
-        }else{
-            investText.setText("$0");
-        }
+        editBreakdownBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                openBreakdownDialog();
+            }
+        });
 
-        if(breakdown.containsKey(TransactionCategories.SAVINGS)){
-            Float percentageSavings = breakdown.get(TransactionCategories.SAVINGS);
-            savingsText.setText("$" + (settings.income.Amount * percentageSavings));
-        } else{
-            savingsText.setText("$0");
-        }
-
-        //Setup chart
+        //region PieChart
         List<PieEntry> pieEntries = new ArrayList<>();
         for(Map.Entry<TransactionCategories,Float> t : settings.idealBreakdown.entrySet()){
             pieEntries.add(new PieEntry(t.getValue(), t.getKey().name()));
         }
 
-
         PieDataSet dataSet = new PieDataSet(pieEntries,"");
-        dataSet.setColors(ColorTemplate.LIBERTY_COLORS);
+        dataSet.setColors(ColorTemplate.LIBERTY_COLORS); //TODO: Replace with gradient reds
         dataSet.setDrawValues(false);
         PieData data = new PieData(dataSet);
-        chart.setData(data);
+        pieChart.setData(data);
 
         //Remove legend.
-        Legend legend = chart.getLegend();
+        Legend legend = pieChart.getLegend();
         legend.setEnabled(false);
         //Remove description
-        Description des = chart.getDescription();
+        Description des = pieChart.getDescription();
         des.setEnabled(false);
         dataSet.setSliceSpace(2f);
-        chart.setHoleColor(00000000);
-        chart.setTouchEnabled(false);
+        pieChart.setHoleColor(00000000);
+        pieChart.setTouchEnabled(false);
 
-        chart.invalidate();
+        pieChart.invalidate();
+        //endregion
+    }
 
-
+    private void openBreakdownDialog(){
+        BreakdownDialog dialog = new BreakdownDialog();
+        dialog.setBreakdown(mViewModel.getSettings().getValue().idealBreakdown);
+        dialog.setDialogResult(new BreakdownDialog.BreakdownDialogListener() {
+            @Override
+            public void applyChanges( HashMap<TransactionCategories,Float> breakdown) {
+                mViewModel.postBreakdown(breakdown);
+            }
+        });
+        dialog.show(((FragmentActivity)view.getContext()).getSupportFragmentManager(), "Example");
     }
 }

@@ -45,8 +45,6 @@ public class RecurringPaymentDialog extends AppCompatDialogFragment {
     private EditText dateTextInput;
 
 
-
-
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState){
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());

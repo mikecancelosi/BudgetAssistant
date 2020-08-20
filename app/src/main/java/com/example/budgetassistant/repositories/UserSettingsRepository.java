@@ -134,5 +134,7 @@ public class UserSettingsRepository {
     }
     public void updateIncome(Income income) {dataSet.income = income;}
 
+    public void postBreakdown( HashMap<TransactionCategories,Float> breakdown){dataSet.idealBreakdown = breakdown;}
+
 
 }

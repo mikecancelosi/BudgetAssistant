@@ -5,12 +5,15 @@ import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModel;
 
+import com.example.budgetassistant.TransactionCategories;
 import com.example.budgetassistant.models.Account;
 import com.example.budgetassistant.models.Income;
 import com.example.budgetassistant.models.RecurringTransaction;
 import com.example.budgetassistant.models.Transaction;
 import com.example.budgetassistant.models.UserSettings;
 import com.example.budgetassistant.repositories.UserSettingsRepository;
+
+import java.util.HashMap;
 
 public class SettingsViewModel extends ViewModel {
     private MutableLiveData<UserSettings> mSettings;
@@ -43,5 +46,9 @@ public class SettingsViewModel extends ViewModel {
 
     public void postRecurringTransaction(RecurringTransaction transaction){
         mSettingsRepo.postRecurringTransaction(transaction);
+    }
+
+    public void postBreakdown(HashMap<TransactionCategories,Float> breakdown){
+        mSettingsRepo.postBreakdown(breakdown);
     }
 }
