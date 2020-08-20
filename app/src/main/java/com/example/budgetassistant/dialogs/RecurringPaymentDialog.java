@@ -3,7 +3,6 @@ package com.example.budgetassistant.dialogs;
 import android.app.AlertDialog;
 import android.app.DatePickerDialog;
 import android.app.Dialog;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.view.View;
@@ -12,16 +11,12 @@ import android.widget.ArrayAdapter;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.Spinner;
-import android.widget.TextView;
 
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatDialogFragment;
 
 import com.example.budgetassistant.R;
-import com.example.budgetassistant.TransactionCategories;
+import com.example.budgetassistant.Enums.TransactionCategories;
 import com.example.budgetassistant.models.RecurringTransaction;
-import com.example.budgetassistant.models.Transaction;
-import com.google.android.material.textfield.TextInputLayout;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;

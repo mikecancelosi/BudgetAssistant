@@ -6,13 +6,12 @@ import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.Spinner;
-import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.budgetassistant.R;
-import com.example.budgetassistant.TransactionCategories;
+import com.example.budgetassistant.Enums.TransactionCategories;
 
 import java.util.AbstractMap;
 import java.util.List;
@@ -51,7 +50,9 @@ public class BreakdownInputAdapter extends RecyclerView.Adapter<BreakdownInputAd
         TransactionCategories[] categories = TransactionCategories.values();
         String[] categoryItems = new String[categories.length];
         for(int i = 0; i<categories.length; i++){
-            categoryItems[i] = categories[i].name();
+            if(categories[i] != TransactionCategories.INCOME) {
+                categoryItems[i] = categories[i].name();
+            }
         }
         ArrayAdapter<String> catAdapter = new ArrayAdapter<String>(parent.getContext(), R.layout.support_simple_spinner_dropdown_item, categoryItems);
         catAdapter.setDropDownViewResource(R.layout.support_simple_spinner_dropdown_item);

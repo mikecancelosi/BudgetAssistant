@@ -11,16 +11,11 @@ import android.widget.Button;
 import androidx.appcompat.app.AppCompatDialogFragment;
 
 import com.example.budgetassistant.R;
-import com.example.budgetassistant.TransactionCategories;
-import com.example.budgetassistant.models.RecurringTransaction;
+import com.example.budgetassistant.Enums.TransactionCategories;
 import com.github.mikephil.charting.charts.BarChart;
 import com.github.mikephil.charting.charts.PieChart;
 
-import java.text.ParseException;
-import java.util.AbstractMap;
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 
 public class BreakdownDialog extends AppCompatDialogFragment {
 

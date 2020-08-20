@@ -2,13 +2,11 @@ package com.example.budgetassistant.dialogs;
 
 import android.app.AlertDialog;
 import android.app.Dialog;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
-import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
@@ -17,13 +15,7 @@ import android.widget.ImageView;
 import androidx.appcompat.app.AppCompatDialogFragment;
 
 import com.example.budgetassistant.R;
-import com.example.budgetassistant.TransactionCategories;
-import com.example.budgetassistant.models.RecurringTransaction;
-import com.example.budgetassistant.models.UserSettings;
 import com.example.budgetassistant.repositories.UserSettingsRepository;
-
-import java.text.ParseException;
-import java.util.AbstractMap;
 
 import static android.app.Activity.RESULT_OK;
 

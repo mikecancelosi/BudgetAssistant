@@ -1,9 +1,6 @@
 package com.example.budgetassistant.models;
 
-import android.util.Log;
-
-import com.example.budgetassistant.DateExtensions;
-import com.example.budgetassistant.TransactionCategories;
+import com.example.budgetassistant.Enums.TransactionCategories;
 
 import java.util.Calendar;
 import java.util.Date;

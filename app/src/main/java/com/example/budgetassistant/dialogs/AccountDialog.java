@@ -20,8 +20,8 @@ import android.widget.TextView;
 import androidx.appcompat.app.AppCompatDialogFragment;
 import androidx.core.content.ContextCompat;
 
-import com.example.budgetassistant.Bank;
-import com.example.budgetassistant.CardCarrier;
+import com.example.budgetassistant.Enums.Bank;
+import com.example.budgetassistant.Enums.CardCarrier;
 import com.example.budgetassistant.R;
 import com.example.budgetassistant.models.Account;
 import com.example.budgetassistant.models.BankAccount;

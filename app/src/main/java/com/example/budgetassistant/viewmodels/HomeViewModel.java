@@ -6,7 +6,7 @@ import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModel;
 
 import com.example.budgetassistant.DateExtensions;
-import com.example.budgetassistant.TransactionHelper;
+import com.example.budgetassistant.Helpers.TransactionHelper;
 import com.example.budgetassistant.models.BankAccount;
 import com.example.budgetassistant.models.Income;
 import com.example.budgetassistant.models.Transaction;

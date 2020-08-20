@@ -1,6 +1,6 @@
 package com.example.budgetassistant.models;
 
-import com.example.budgetassistant.CardCarrier;
+import com.example.budgetassistant.Enums.CardCarrier;
 
 import java.util.AbstractMap;
 

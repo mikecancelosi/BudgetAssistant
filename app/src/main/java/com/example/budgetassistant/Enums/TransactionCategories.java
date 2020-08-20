@@ -1,4 +1,4 @@
-package com.example.budgetassistant;
+package com.example.budgetassistant.Enums;
 
 import androidx.annotation.NonNull;
 

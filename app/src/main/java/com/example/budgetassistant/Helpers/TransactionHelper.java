@@ -1,4 +1,4 @@
-package com.example.budgetassistant;
+package com.example.budgetassistant.Helpers;
 
 import com.example.budgetassistant.models.Income;
 import com.example.budgetassistant.models.Transaction;

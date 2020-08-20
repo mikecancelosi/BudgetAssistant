@@ -1,12 +1,9 @@
 package com.example.budgetassistant.models;
 
-import android.media.Image;
-
 import com.example.budgetassistant.R;
-import com.example.budgetassistant.TransactionCategories;
+import com.example.budgetassistant.Enums.TransactionCategories;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;

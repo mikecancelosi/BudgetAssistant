@@ -12,17 +12,15 @@ import android.widget.TextView;
 
 import com.example.budgetassistant.HistoryFragment;
 import com.example.budgetassistant.R;
-import com.example.budgetassistant.TransactionCategories;
+import com.example.budgetassistant.Enums.TransactionCategories;
 import com.example.budgetassistant.models.Transaction;
 import com.example.budgetassistant.repositories.TransactionRepository;
 
-import java.lang.reflect.Array;
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.TreeSet;
 
 public class TransactionHistoryAdapter  extends BaseAdapter {
 

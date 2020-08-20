@@ -7,8 +7,6 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 
-import android.service.autofill.Dataset;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,10 +14,10 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Spinner;
 
-import com.example.budgetassistant.models.BankAccount;
+import com.example.budgetassistant.Enums.TransactionCategories;
+import com.example.budgetassistant.Helpers.CalendarHelper;
 import com.example.budgetassistant.models.Transaction;
 import com.example.budgetassistant.models.UserSettings;
-import com.example.budgetassistant.viewmodels.HomeViewModel;
 import com.example.budgetassistant.viewmodels.StatsViewModel;
 import com.github.mikephil.charting.charts.BarChart;
 import com.github.mikephil.charting.charts.HorizontalBarChart;
@@ -35,8 +33,6 @@ import com.github.mikephil.charting.data.PieDataSet;
 import com.github.mikephil.charting.data.PieEntry;
 import com.github.mikephil.charting.formatter.IndexAxisValueFormatter;
 import com.github.mikephil.charting.formatter.ValueFormatter;
-import com.github.mikephil.charting.renderer.YAxisRenderer;
-import com.github.mikephil.charting.utils.ColorTemplate;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
@@ -142,7 +138,7 @@ public class StatsFragment extends Fragment {
         int colorValue = ContextCompat.getColor(getContext(),colorId);
 
         List<PieEntry> pieEntries = new ArrayList<>();
-        for(Map.Entry<TransactionCategories,Float> t : mViewModel.getCategorizedExpensesForTimeLine(startDate,endDate).entrySet()){
+        for(Map.Entry<TransactionCategories,Float> t : mViewModel.getCategorizedExpensesForTimeLine(startDate, endDate).entrySet()){
             pieEntries.add(new PieEntry(t.getValue(), t.getKey().name()));
         }
 
@@ -178,7 +174,7 @@ public class StatsFragment extends Fragment {
         HorizontalBarChart chart = view.findViewById(R.id.CategoricalBreakdownSummaryBarChart);
         List<BarEntry> entries = new ArrayList<>();
 
-        int daysBetween = CalendarHelper.daysBetween(startDate,endDate);
+        int daysBetween = CalendarHelper.daysBetween(startDate, endDate);
 
         final List<String> labels = new ArrayList<>();
         for(int i = 0 ; i < TransactionCategories.values().length;i++){

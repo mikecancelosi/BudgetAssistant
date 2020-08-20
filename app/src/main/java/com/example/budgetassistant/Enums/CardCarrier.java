@@ -1,4 +1,4 @@
-package com.example.budgetassistant;
+package com.example.budgetassistant.Enums;
 
 public enum CardCarrier {
     VISA("Visa"),

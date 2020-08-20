@@ -1,6 +1,6 @@
 package com.example.budgetassistant.models;
 
-import com.example.budgetassistant.Bank;
+import com.example.budgetassistant.Enums.Bank;
 
 public class BankAccount extends Account {
     public long AccountNumber;

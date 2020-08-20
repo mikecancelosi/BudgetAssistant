@@ -1,13 +1,11 @@
 package com.example.budgetassistant.models;
 
-import com.example.budgetassistant.DateExtensions;
-import com.example.budgetassistant.TransactionCategories;
+import com.example.budgetassistant.Enums.TransactionCategories;
 
 import java.io.Serializable;
 import java.util.AbstractMap;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.Map;
 import java.util.UUID;
 
 public class RecurringTransaction implements Serializable {

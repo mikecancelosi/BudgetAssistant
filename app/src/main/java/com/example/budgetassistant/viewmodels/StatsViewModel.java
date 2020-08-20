@@ -5,10 +5,10 @@ import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModel;
 
-import com.example.budgetassistant.CalendarHelper;
+import com.example.budgetassistant.Helpers.CalendarHelper;
 import com.example.budgetassistant.DateExtensions;
-import com.example.budgetassistant.TransactionCategories;
-import com.example.budgetassistant.TransactionHelper;
+import com.example.budgetassistant.Enums.TransactionCategories;
+import com.example.budgetassistant.Helpers.TransactionHelper;
 import com.example.budgetassistant.models.Transaction;
 import com.example.budgetassistant.models.UserSettings;
 import com.example.budgetassistant.repositories.TransactionRepository;

@@ -5,11 +5,10 @@ import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModel;
 
-import com.example.budgetassistant.TransactionCategories;
+import com.example.budgetassistant.Enums.TransactionCategories;
 import com.example.budgetassistant.models.Account;
 import com.example.budgetassistant.models.Income;
 import com.example.budgetassistant.models.RecurringTransaction;
-import com.example.budgetassistant.models.Transaction;
 import com.example.budgetassistant.models.UserSettings;
 import com.example.budgetassistant.repositories.UserSettingsRepository;
 

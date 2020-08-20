@@ -1,8 +1,5 @@
 package com.example.budgetassistant.models;
 
-import android.media.Image;
-
-import com.example.budgetassistant.Bank;
 import com.example.budgetassistant.R;
 
 public abstract class Account {

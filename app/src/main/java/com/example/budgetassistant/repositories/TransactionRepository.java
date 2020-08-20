@@ -1,16 +1,12 @@
 package com.example.budgetassistant.repositories;
 
-import android.util.Log;
-
 import androidx.lifecycle.MutableLiveData;
 
-import com.example.budgetassistant.TransactionCategories;
+import com.example.budgetassistant.Enums.TransactionCategories;
 import com.example.budgetassistant.models.Income;
-import com.example.budgetassistant.models.RecurringTransaction;
 import com.example.budgetassistant.models.Transaction;
 import com.example.budgetassistant.models.UserSettings;
 
-import java.lang.reflect.Array;
 import java.time.YearMonth;
 import java.util.ArrayList;
 import java.util.Calendar;

@@ -1,30 +1,22 @@
 package com.example.budgetassistant.repositories;
 
-import android.content.res.Resources;
-import android.graphics.Picture;
-import android.media.Image;
-
-import androidx.core.content.res.ResourcesCompat;
 import androidx.lifecycle.MutableLiveData;
 
-import com.example.budgetassistant.Bank;
+import com.example.budgetassistant.Enums.Bank;
 import com.example.budgetassistant.R;
-import com.example.budgetassistant.TransactionCategories;
+import com.example.budgetassistant.Enums.TransactionCategories;
 import com.example.budgetassistant.models.Account;
 import com.example.budgetassistant.models.BankAccount;
 import com.example.budgetassistant.models.Income;
 import com.example.budgetassistant.models.RecurringTransaction;
-import com.example.budgetassistant.models.Transaction;
 import com.example.budgetassistant.models.UserSettings;
 
 import java.util.AbstractMap;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 public class UserSettingsRepository {
     private static UserSettingsRepository instance;
