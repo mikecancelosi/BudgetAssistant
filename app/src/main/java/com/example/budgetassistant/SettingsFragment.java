@@ -22,8 +22,11 @@ import com.example.budgetassistant.adapters.AccountAdapter;
 import com.example.budgetassistant.dialogs.AccountDialog;
 import com.example.budgetassistant.dialogs.IncomeDialog;
 import com.example.budgetassistant.dialogs.ProfilePictureDialog;
+import com.example.budgetassistant.dialogs.RecurringPaymentDialog;
 import com.example.budgetassistant.models.Account;
 import com.example.budgetassistant.models.Income;
+import com.example.budgetassistant.models.RecurringTransaction;
+import com.example.budgetassistant.models.Transaction;
 import com.example.budgetassistant.models.UserSettings;
 import com.example.budgetassistant.viewmodels.SettingsViewModel;
 import com.github.mikephil.charting.charts.PieChart;
@@ -144,6 +147,7 @@ public class SettingsFragment extends Fragment {
     }
     //endregion
 
+    //region Income
     private void setupIncome(UserSettings settings){
         TextView paycheckAmount = view.findViewById(R.id.IncomeDollarAmount);
         TextView frequencyText = view.findViewById(R.id.IncomeFrequency);
@@ -181,12 +185,38 @@ public class SettingsFragment extends Fragment {
 
     }
 
+    //endregion
+
+    //region RecurringPayments
+
     private void setupRecurringPayments(UserSettings settings){
         RecyclerView recurList = view.findViewById(R.id.RecurPaymentList);
+        Button addPaymentBtn = view.findViewById(R.id.AddRecurPaymentBtn);
+
         recurList.setLayoutManager(new LinearLayoutManager(getContext()));
         RecurringPaymentAdapter recurringPaymentAdapter = new RecurringPaymentAdapter( settings.recurringTransactions);
         recurList.setAdapter(recurringPaymentAdapter);
+
+        addPaymentBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                openRecurringPaymentDialog();
+            }
+        });
     }
+
+    private void openRecurringPaymentDialog(){
+        RecurringPaymentDialog dialog = new RecurringPaymentDialog();
+        dialog.setDialogResult(new RecurringPaymentDialog.RecurringPaymentDialogListener() {
+            @Override
+            public void applyChanges(RecurringTransaction transaction) {
+                mViewModel.postRecurringTransaction(transaction);
+            }
+        });
+        dialog.show(((FragmentActivity)view.getContext()).getSupportFragmentManager(), "Example");
+    }
+
+    //endregion
 
     private void setupBreakdown(UserSettings settings){
         TextView investText = view.findViewById(R.id.settingsBreakdownInvestValue);

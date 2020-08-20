@@ -31,6 +31,18 @@ public class RecurringTransaction implements Serializable {
         Id = UUID.randomUUID();
     }
 
+    public RecurringTransaction() {
+        StartDate = Calendar.getInstance().getTime();
+        EndDate = new Date(Long.MAX_VALUE);
+        Amount = 0f;
+        Varies = false;
+        Category = TransactionCategories.OTHER;
+        Frequency = new AbstractMap.SimpleEntry<>(Calendar.WEEK_OF_YEAR,2);
+        Description = "New Transaction";
+        Id = UUID.randomUUID();
+
+    }
+
 
     public String getFrequencyDisplayText(){
         int key = Frequency.getKey();

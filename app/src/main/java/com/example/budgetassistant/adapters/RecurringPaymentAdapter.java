@@ -85,7 +85,7 @@ public class RecurringPaymentAdapter extends  RecyclerView.Adapter<RecurringPaym
     public void openDialog(int position){
         RecurringPaymentDialog dialog = new RecurringPaymentDialog();
         RecurringTransaction transaction = mData.get(position);
-        dialog.setTransaction(transaction,position);
+        dialog.setTransaction(transaction);
         dialog.setDialogResult(new RecurringPaymentDialog.RecurringPaymentDialogListener() {
             @Override
             public void applyChanges(RecurringTransaction transaction) {

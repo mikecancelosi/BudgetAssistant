@@ -20,6 +20,7 @@ import androidx.appcompat.app.AppCompatDialogFragment;
 import com.example.budgetassistant.R;
 import com.example.budgetassistant.TransactionCategories;
 import com.example.budgetassistant.models.RecurringTransaction;
+import com.example.budgetassistant.models.Transaction;
 import com.google.android.material.textfield.TextInputLayout;
 
 import java.text.ParseException;
@@ -35,7 +36,6 @@ public class RecurringPaymentDialog extends AppCompatDialogFragment {
     private View view;
     private final SimpleDateFormat sdf = new SimpleDateFormat("MM/dd/yyyy");
     private RecurringPaymentDialogListener mListener;
-    private int mIndex;
     private EditText descriptionText;
     private Spinner dialogFrequency;
     private EditText dialogFrequencyValue;
@@ -78,13 +78,15 @@ public class RecurringPaymentDialog extends AppCompatDialogFragment {
 
         Dialog dialog =  builder.create();
         dialog.getWindow().setLayout(ViewGroup.LayoutParams.WRAP_CONTENT,ViewGroup.LayoutParams.WRAP_CONTENT);
+        if(mTransaction == null){
+            mTransaction = new RecurringTransaction();
+        }
         setupDialogView();
         return dialog;
     }
 
-    public void setTransaction(RecurringTransaction recurringTransaction,int index){
+    public void setTransaction(RecurringTransaction recurringTransaction){
         mTransaction = recurringTransaction;
-        mIndex = index;
     }
 
     final DatePickerDialog.OnDateSetListener date =  new DatePickerDialog.OnDateSetListener() {
