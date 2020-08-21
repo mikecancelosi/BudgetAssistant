@@ -110,14 +110,15 @@ public class UserSettingsRepository {
 
     private static HashMap<TransactionCategories, Float> createIdealBreakdown() {
         HashMap<TransactionCategories, Float> breakdown = new HashMap<>();
-        breakdown.put(TransactionCategories.RENT, .35f);
-        breakdown.put(TransactionCategories.TRANSPORTATION, .15f);
-        breakdown.put(TransactionCategories.FOOD, .15f);
+        breakdown.put(TransactionCategories.RENT, .30f);
+        breakdown.put(TransactionCategories.TRANSPORTATION, .10f);
+        breakdown.put(TransactionCategories.FOOD, .10f);
         breakdown.put(TransactionCategories.INVESTMENT, .10f);
         breakdown.put(TransactionCategories.BEAUTY, .05f);
         breakdown.put(TransactionCategories.PARTYING, .05f);
         breakdown.put(TransactionCategories.SUBSCRIPTION, .05f);
-        breakdown.put(TransactionCategories.OTHER, .10f);
+        breakdown.put(TransactionCategories.OTHER, .05f);
+        breakdown.put(TransactionCategories.SAVINGS, .20f);
         return breakdown;
     }
 

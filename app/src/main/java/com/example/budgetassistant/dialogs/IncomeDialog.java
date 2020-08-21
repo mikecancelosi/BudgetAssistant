@@ -14,7 +14,7 @@ import android.widget.Spinner;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatDialogFragment;
 
-import com.example.budgetassistant.Helpers.CalendarHelper;
+import com.example.budgetassistant.Utils.CalendarUtil;
 import com.example.budgetassistant.R;
 import com.example.budgetassistant.models.Income;
 
@@ -55,7 +55,7 @@ public class IncomeDialog extends AppCompatDialogFragment {
                         float amount = Float.parseFloat(incomeAmountInput.getText().toString());
                         int freqValue = Integer.parseInt(incomefreqValue.getText().toString());
                         String selectedString = incomeFreqKey.getSelectedItem().toString();
-                        int freqKey = CalendarHelper.calendarValueFromDisplay(selectedString);
+                        int freqKey = CalendarUtil.calendarValueFromDisplay(selectedString);
                         Income income = new Income(amount,
                                                    new AbstractMap.SimpleEntry<>(freqKey,
                                                                                  freqValue),

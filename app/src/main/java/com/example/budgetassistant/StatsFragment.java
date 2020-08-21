@@ -15,7 +15,7 @@ import android.widget.ArrayAdapter;
 import android.widget.Spinner;
 
 import com.example.budgetassistant.Enums.TransactionCategories;
-import com.example.budgetassistant.Helpers.CalendarHelper;
+import com.example.budgetassistant.Utils.CalendarUtil;
 import com.example.budgetassistant.models.Transaction;
 import com.example.budgetassistant.models.UserSettings;
 import com.example.budgetassistant.viewmodels.StatsViewModel;
@@ -174,7 +174,7 @@ public class StatsFragment extends Fragment {
         HorizontalBarChart chart = view.findViewById(R.id.CategoricalBreakdownSummaryBarChart);
         List<BarEntry> entries = new ArrayList<>();
 
-        int daysBetween = CalendarHelper.daysBetween(startDate, endDate);
+        int daysBetween = CalendarUtil.daysBetween(startDate, endDate);
 
         final List<String> labels = new ArrayList<>();
         for(int i = 0 ; i < TransactionCategories.values().length;i++){

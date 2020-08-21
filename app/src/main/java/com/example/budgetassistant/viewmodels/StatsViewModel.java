@@ -5,10 +5,10 @@ import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModel;
 
-import com.example.budgetassistant.Helpers.CalendarHelper;
+import com.example.budgetassistant.Utils.CalendarUtil;
 import com.example.budgetassistant.DateExtensions;
 import com.example.budgetassistant.Enums.TransactionCategories;
-import com.example.budgetassistant.Helpers.TransactionHelper;
+import com.example.budgetassistant.Utils.TransactionUtil;
 import com.example.budgetassistant.models.Transaction;
 import com.example.budgetassistant.models.UserSettings;
 import com.example.budgetassistant.repositories.TransactionRepository;
@@ -60,7 +60,7 @@ public class StatsViewModel extends ViewModel {
        HashMap<TransactionCategories,Float> map = new HashMap<>();
        List<Transaction> source = getTransactions().getValue();
 
-       for(Transaction t : TransactionHelper.getTransactionsInTimeFrame(source,startDate,endDate)){
+       for(Transaction t : TransactionUtil.getTransactionsInTimeFrame(source, startDate, endDate)){
             TransactionCategories category = t.Category;
             if(map.containsKey(category)){
                 float existingValue = map.get(category);
@@ -75,9 +75,9 @@ public class StatsViewModel extends ViewModel {
 
     public Float getUnspentBudgetForPeriod(Date startDate, Date endDate){
         List<Transaction> sourceData = getTransactions().getValue();
-        List<Transaction> transactionsInPayPeriod = TransactionHelper.getTransactionsInTimeFrame(sourceData,startDate,endDate);
-        Float expenses = TransactionHelper.getExpenseTotal(transactionsInPayPeriod);
-        Float income = TransactionHelper.getIncomeTotal(transactionsInPayPeriod);
+        List<Transaction> transactionsInPayPeriod = TransactionUtil.getTransactionsInTimeFrame(sourceData, startDate, endDate);
+        Float expenses = TransactionUtil.getExpenseTotal(transactionsInPayPeriod);
+        Float income = TransactionUtil.getIncomeTotal(transactionsInPayPeriod);
         return income - expenses;
     }
 
@@ -88,9 +88,9 @@ public class StatsViewModel extends ViewModel {
         HashMap<TransactionCategories,Float> breakdown = getSettings().getValue().idealBreakdown;
         if(breakdown.containsKey(category)){
             Float idealPercentage = breakdown.get(category);
-            List<Transaction> transactions = TransactionHelper.getTransactionsInTimeFrame(mTransactions.getValue(),startDate,endDate);
-            Float incomeTotal = TransactionHelper.getIncomeTotal(transactions);
-            int periodIterations = CalendarHelper.countTimePeriodsBetweenDates(startDate,endDate,period);
+            List<Transaction> transactions = TransactionUtil.getTransactionsInTimeFrame(mTransactions.getValue(), startDate, endDate);
+            Float incomeTotal = TransactionUtil.getIncomeTotal(transactions);
+            int periodIterations = CalendarUtil.countTimePeriodsBetweenDates(startDate, endDate, period);
             return (idealPercentage * incomeTotal) / periodIterations;
         }else{
             return 0f;
@@ -142,8 +142,8 @@ public class StatsViewModel extends ViewModel {
         endCal.add(Calendar.DATE,-1); // TODO: Set to start/end of day.
 
        List<Transaction> transactionSourceData = getTransactions().getValue();
-       List<Transaction> transactionInMonth = TransactionHelper.getTransactionsInTimeFrame(transactionSourceData,startCal.getTime(),endCal.getTime());
-       return TransactionHelper.getExpenseTotal(transactionInMonth);
+       List<Transaction> transactionInMonth = TransactionUtil.getTransactionsInTimeFrame(transactionSourceData, startCal.getTime(), endCal.getTime());
+       return TransactionUtil.getExpenseTotal(transactionInMonth);
     }
 
 

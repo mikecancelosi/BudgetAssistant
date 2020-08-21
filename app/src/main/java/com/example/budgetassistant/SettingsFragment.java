@@ -1,7 +1,6 @@
 package com.example.budgetassistant;
 
 import android.content.Context;
-import android.graphics.Color;
 import android.os.Bundle;
 
 import androidx.core.content.ContextCompat;
@@ -12,7 +11,6 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -22,8 +20,8 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.example.budgetassistant.Enums.TransactionCategories;
-import com.example.budgetassistant.Helpers.CalendarHelper;
-import com.example.budgetassistant.Helpers.ColorHelper;
+import com.example.budgetassistant.Utils.CalendarUtil;
+import com.example.budgetassistant.Utils.ColorUtil;
 import com.example.budgetassistant.adapters.RecurringPaymentAdapter;
 import com.example.budgetassistant.adapters.AccountAdapter;
 import com.example.budgetassistant.dialogs.AccountDialog;
@@ -36,21 +34,13 @@ import com.example.budgetassistant.models.Income;
 import com.example.budgetassistant.models.RecurringTransaction;
 import com.example.budgetassistant.models.UserSettings;
 import com.example.budgetassistant.viewmodels.SettingsViewModel;
-import com.github.mikephil.charting.charts.BarChart;
 import com.github.mikephil.charting.charts.PieChart;
-import com.github.mikephil.charting.components.AxisBase;
 import com.github.mikephil.charting.components.Description;
 import com.github.mikephil.charting.components.Legend;
-import com.github.mikephil.charting.data.BarData;
-import com.github.mikephil.charting.data.BarDataSet;
-import com.github.mikephil.charting.data.BarEntry;
 import com.github.mikephil.charting.data.PieData;
 import com.github.mikephil.charting.data.PieDataSet;
 import com.github.mikephil.charting.data.PieEntry;
-import com.github.mikephil.charting.formatter.ValueFormatter;
-import com.github.mikephil.charting.utils.ColorTemplate;
 
-import java.lang.reflect.Array;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -168,7 +158,7 @@ public class SettingsFragment extends Fragment {
         LinearLayout incomeItem = view.findViewById(R.id.IncomeItem);
 
         paycheckAmount.setText("$" + settings.income.Amount);
-        String periodKeyDisplay = CalendarHelper.calendarValueDisplay(settings.income.Period.getKey());
+        String periodKeyDisplay = CalendarUtil.calendarValueDisplay(settings.income.Period.getKey());
         Integer periodValue = settings.income.Period.getValue();
         if (periodValue == 1) {
             periodKeyDisplay = periodKeyDisplay.substring(0, periodKeyDisplay.length() - 1);
@@ -234,7 +224,6 @@ public class SettingsFragment extends Fragment {
     private void setupBreakdown(UserSettings settings) {
         Button editBreakdownBtn = view.findViewById(R.id.EditBreakdownBtn);
         PieChart pieChart = view.findViewById(R.id.settingsBreakdownPieChart);
-        BarChart barChart = view.findViewById(R.id.settingsBreakdownBarChart);
 
         editBreakdownBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -243,87 +232,55 @@ public class SettingsFragment extends Fragment {
             }
         });
 
-        setupBreakdownPieChart(pieChart, settings.idealBreakdown);
-        setupBreakdownBarChart(barChart, settings.idealBreakdown, getContext());
+        setupBreakdownPieChart(pieChart, settings.idealBreakdown,getContext());
 
     }
 
-    public static void setupBreakdownBarChart(BarChart chart,
+    public static void setupBreakdownPieChart(PieChart chart,
                                               HashMap<TransactionCategories, Float> breakdown,
                                               Context context) {
-        final List<BarEntry> barEntries = new ArrayList<>();
+        final List<PieEntry> entries = new ArrayList<>();
 
-        List<Float> positiveValues = new ArrayList<>();
-        List<Float> negativeValues = new ArrayList<>();
-        Float totalValue = 0f;
+        int positiveValues =0;
+        int negativeValues =0;
+
+        if(breakdown.containsKey(TransactionCategories.INVESTMENT)){
+            entries.add(new PieEntry(breakdown.get(TransactionCategories.INVESTMENT),"Investment"));
+            positiveValues++;
+        }
+        if(breakdown.containsKey(TransactionCategories.SAVINGS)){
+            entries.add(new PieEntry(breakdown.get(TransactionCategories.SAVINGS),"Savings"));
+            positiveValues++;
+        }
 
         for (Map.Entry<TransactionCategories, Float> entry : breakdown.entrySet()) {
-            float value = entry.getValue();
-            totalValue += value;
             if (entry.getKey() != TransactionCategories.INVESTMENT &&
                 entry.getKey() != TransactionCategories.SAVINGS) {
-                negativeValues.add(value);
-            } else {
-                positiveValues.add(value);
+                entries.add(new PieEntry(entry.getValue(),entry.getKey().toString()));
+                negativeValues++;
             }
         }
-        for (Float f : negativeValues) {
-            barEntries.add(new BarEntry(0, totalValue));
-            totalValue -= f;
-        }
-
-        for(Float f : positiveValues){
-            barEntries.add(new BarEntry(0,totalValue));
-            totalValue -=f;
-        }
 
 
-        BarDataSet dataSet = new BarDataSet(barEntries, "");
+        PieDataSet dataSet = new PieDataSet(entries, "");
         // set colors
         List<Integer> colors = new ArrayList<>();
-        int[] positiveColors = ColorHelper.createColorValueGradient(ContextCompat.getColor(context,
-                                                                                           R.color.colorPrimary),
-                                                                    positiveValues.size());
-        int[] negativeColors = ColorHelper.createColorValueGradient(ContextCompat.getColor(context,
-                                                                                           R.color.colorSecondary),
-                                                                    negativeValues.size());
-
-        for (int color : negativeColors) {
-            colors.add(color);
-        }
+        int[] positiveColors = ColorUtil.createColorValueGradient(ContextCompat.getColor(context,
+                                                                                         R.color.colorPrimary),
+                                                                  positiveValues, .2f, 1f);
+        int[] negativeColors = ColorUtil.createColorValueGradient(ContextCompat.getColor(context,
+                                                                                         R.color.colorSecondary),
+                                                                  negativeValues, .2f, 1f);
 
         for (int color : positiveColors) {
             colors.add(color);
         }
 
-        dataSet.setColors(colors);
-        BarData data = new BarData(dataSet);
-        data.setDrawValues(false);
-        chart.setData(data);
-        chart.getLegend().setEnabled(false);
-        chart.getDescription().setEnabled(false);
-        chart.setTouchEnabled(false);
-        chart.getXAxis().setEnabled(false);
-        chart.getAxisLeft().setEnabled(false);
-        chart.getAxisRight().setEnabled(false);
-        chart.setDrawGridBackground(false);
-        chart.setDrawBorders(false);
-        chart.setDrawMarkers(false);
-        chart.setFitBars(true);
-        chart.invalidate();
-
-    }
-
-    public static void setupBreakdownPieChart(PieChart chart,
-                                              HashMap<TransactionCategories, Float> breakdown) {
-
-        List<PieEntry> pieEntries = new ArrayList<>();
-        for (Map.Entry<TransactionCategories, Float> t : breakdown.entrySet()) {
-            pieEntries.add(new PieEntry(t.getValue(), t.getKey().name()));
+        for (int color : negativeColors) {
+            colors.add(color);
         }
 
-        PieDataSet dataSet = new PieDataSet(pieEntries, "");
-        dataSet.setColors(ColorTemplate.LIBERTY_COLORS); //TODO: Replace with gradient reds
+        dataSet.setColors(colors);
         dataSet.setDrawValues(false);
         PieData data = new PieData(dataSet);
         chart.setData(data);
@@ -339,11 +296,13 @@ public class SettingsFragment extends Fragment {
         chart.setTouchEnabled(false);
 
         chart.invalidate();
+
     }
 
     private void openBreakdownDialog() {
         BreakdownDialog dialog = new BreakdownDialog();
-        dialog.setBreakdown(mViewModel.getSettings().getValue().idealBreakdown);
+        UserSettings settings = mViewModel.getSettings().getValue();
+        dialog.setBreakdown(settings.idealBreakdown,settings.income.Amount);
         dialog.setDialogResult(new BreakdownDialog.BreakdownDialogListener() {
             @Override
             public void applyChanges(HashMap<TransactionCategories, Float> breakdown) {

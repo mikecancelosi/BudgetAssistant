@@ -79,7 +79,7 @@ public class HomeFragment extends Fragment {
     }
 
     private void setUpHeader(){
-        //Set account balance
+        //Set item_account balance
         TextView AccountBalance = (TextView) view.findViewById(R.id.BankAccountBalance);
         AccountBalance.setText("N/A"); //TODO:Integrate View model to fetch bank balance.
 

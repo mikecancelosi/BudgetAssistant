@@ -43,7 +43,7 @@ public class AccountAdapter extends RecyclerView.Adapter<AccountAdapter.MyViewHo
 
     @Override
     public AccountAdapter.MyViewHolder onCreateViewHolder(ViewGroup parent, int viewType){
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.account, parent, false);
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_account, parent, false);
         MyViewHolder vh = new MyViewHolder(view);
         return vh;
     }
@@ -58,7 +58,7 @@ public class AccountAdapter extends RecyclerView.Adapter<AccountAdapter.MyViewHo
         holder.accountParentView.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
             public boolean onLongClick(View view) {
-                //TODO:Allow for deletion of account
+                //TODO:Allow for deletion of item_account
                 return false;
             }
         });

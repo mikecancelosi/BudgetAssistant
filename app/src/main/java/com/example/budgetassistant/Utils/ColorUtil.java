@@ -1,11 +1,10 @@
-package com.example.budgetassistant.Helpers;
+package com.example.budgetassistant.Utils;
 
 import android.graphics.Color;
-import android.util.Log;
 
-public class ColorHelper {
+public class ColorUtil {
 
-    public static int[] createColorValueGradient(int originalColor, int numberOfValues) {
+    public static int[] createColorValueGradient(int originalColor, int numberOfValues, float valueMin, float valueMax) {
         int[] colors = new int[numberOfValues];
 
         int[] baseRGB = new int[]{
@@ -19,7 +18,7 @@ public class ColorHelper {
 
         for(int i=1;i<=numberOfValues;i++){
             float[] hsv = new float[3];
-            float value = (1f/numberOfValues) * i;
+            float value = (((valueMax-valueMin)/numberOfValues) * i) + valueMin - (1f-valueMax);
             hsv[0] = baseHSV[0];
             hsv[1] = baseHSV[1];
             hsv[2] = value;

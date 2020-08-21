@@ -6,7 +6,7 @@ import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModel;
 
 import com.example.budgetassistant.DateExtensions;
-import com.example.budgetassistant.Helpers.TransactionHelper;
+import com.example.budgetassistant.Utils.TransactionUtil;
 import com.example.budgetassistant.models.BankAccount;
 import com.example.budgetassistant.models.Income;
 import com.example.budgetassistant.models.Transaction;
@@ -71,7 +71,7 @@ public class HomeViewModel extends ViewModel {
         Date startDate = income.GetLastPaycheckDate();
         Date endDate = income.GetNextPaycheckDate();
 
-        return TransactionHelper.getTransactionsInTimeFrame(source,startDate,endDate);
+        return TransactionUtil.getTransactionsInTimeFrame(source, startDate, endDate);
     }
 
     public Float getExpenseAsPercentage(){

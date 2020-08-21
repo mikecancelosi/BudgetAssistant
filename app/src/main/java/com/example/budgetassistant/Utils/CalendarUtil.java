@@ -1,10 +1,10 @@
-package com.example.budgetassistant.Helpers;
+package com.example.budgetassistant.Utils;
 
 import java.util.AbstractMap;
 import java.util.Calendar;
 import java.util.Date;
 
-public class CalendarHelper {
+public class CalendarUtil {
 
     public static int countTimePeriodsBetweenDates(Date StartDate, Date EndDate,
                                                    AbstractMap.SimpleEntry<Integer,Integer> period){

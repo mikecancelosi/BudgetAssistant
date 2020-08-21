@@ -1,6 +1,5 @@
-package com.example.budgetassistant.Helpers;
+package com.example.budgetassistant.Utils;
 
-import com.example.budgetassistant.models.Income;
 import com.example.budgetassistant.models.Transaction;
 
 import java.util.ArrayList;
@@ -8,7 +7,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
-public class TransactionHelper {
+public class TransactionUtil {
     public static List<Transaction> getTransactionsInTimeFrame(List<Transaction> sourceTransactions,
                                                                Date start,
                                                                Date end)

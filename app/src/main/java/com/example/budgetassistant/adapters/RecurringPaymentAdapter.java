@@ -54,7 +54,7 @@ public class RecurringPaymentAdapter extends  RecyclerView.Adapter<RecurringPaym
 
     @Override
     public RecurringPaymentAdapter.MyViewHolder onCreateViewHolder(ViewGroup parent, int viewType){
-        view = LayoutInflater.from(parent.getContext()).inflate(R.layout.recurring_payment, parent, false);
+        view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_recurring_payment, parent, false);
         RecurringPaymentAdapter.MyViewHolder vh = new RecurringPaymentAdapter.MyViewHolder(view);
         return vh;
     }
