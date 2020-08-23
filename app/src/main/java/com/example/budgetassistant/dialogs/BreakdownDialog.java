@@ -90,7 +90,7 @@ public class BreakdownDialog extends AppCompatDialogFragment {
 
         mRecycler.setHasFixedSize(true);
         mRecycler.setLayoutManager(new LinearLayoutManager(getContext()));
-        BreakdownInputAdapter adapter = new BreakdownInputAdapter(mBreakdown, mIncomeAmount);
+        final BreakdownInputAdapter adapter = new BreakdownInputAdapter(mBreakdown, mIncomeAmount);
         adapter.setListener(new BreakdownInputAdapter.BreakdownInputAdapterListener() {
             @Override
             public void applyChanges(HashMap<TransactionCategories, Float> breakdown) {

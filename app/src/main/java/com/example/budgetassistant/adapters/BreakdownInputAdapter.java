@@ -11,6 +11,7 @@ import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.Spinner;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
@@ -43,11 +44,21 @@ public class BreakdownInputAdapter extends RecyclerView.Adapter<BreakdownInputAd
     public static class MyViewHolder extends RecyclerView.ViewHolder {
         public Spinner categorySpinner;
         public EditText valueInput;
+        public TextView unitView;
+
+        private AbstractMap.SimpleEntry<TransactionCategories,Float> mItem;
 
         public MyViewHolder(View itemView) {
             super(itemView);
             categorySpinner = itemView.findViewById(R.id.breakdownCategoryInputSpinner);
             valueInput = itemView.findViewById(R.id.breakdownCategoryValueInput);
+            unitView = itemView.findViewById(R.id.breakdownCategoryUnit);
+        }
+
+        public void setItem(AbstractMap.SimpleEntry<TransactionCategories,Float> item){
+            mItem = item;
+
+
         }
     }
 
@@ -99,7 +110,9 @@ public class BreakdownInputAdapter extends RecyclerView.Adapter<BreakdownInputAd
 
             @Override
             public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-                updateItem(i,Float.parseFloat(charSequence.toString()));
+                Float rawValue = Float.parseFloat(charSequence.toString());
+                updateItem(i,rawValue);
+
             }
 
             @Override
@@ -116,16 +129,24 @@ public class BreakdownInputAdapter extends RecyclerView.Adapter<BreakdownInputAd
         //Create spinner
         Spinner catSpinner = holder.categorySpinner;
         EditText catValue = holder.valueInput;
+        TextView unitView = holder.unitView;
 
         AbstractMap.SimpleEntry<TransactionCategories,Float> item = getItem(position);
 
         catSpinner.setSelection(item.getKey().getValue());
 
         if(mPercentView){
-            catValue.setText(item.getValue() + "");
+            String convertedValue = String.format("%.2f", (item.getValue() * 100));
+            Log.d(item.getKey() + " | ", convertedValue);
+            catValue.setText(convertedValue);
+            unitView.setText("%");
+
         } else{
             Float dollarValue = mIncomeAmount * item.getValue();
-            catValue.setText(dollarValue +"");
+            String dollarText = String.format("%.2f", dollarValue);
+            Log.d(item.getKey() + " | ", dollarText);
+            catValue.setText(dollarText);
+            unitView.setText("$");
         }
     }
 
@@ -137,13 +158,17 @@ public class BreakdownInputAdapter extends RecyclerView.Adapter<BreakdownInputAd
     }
 
     private void updateItem(int index, Float newValue){
-        if(!mPercentView){
-            //Convert to percentage.
-            Float value = newValue / mIncomeAmount;
-            mBreakdown.get(index).setValue(value);
-        } else {
-            mBreakdown.get(index).setValue(newValue);
+        Float decimalValue;
+
+        if(mPercentView) {
+            decimalValue = (newValue / 100f);
+        } else{
+            decimalValue = newValue / mIncomeAmount;
         }
+
+        Log.d("!!", mBreakdown.get(index).getKey() + " | " + newValue);
+        mBreakdown.get(index).setValue(decimalValue);
+        mListener.applyChanges(getBreakdownAsHash());
     }
 
     public void changeView(boolean percent){
