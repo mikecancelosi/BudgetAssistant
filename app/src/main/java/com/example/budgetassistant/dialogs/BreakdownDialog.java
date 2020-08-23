@@ -57,9 +57,7 @@ public class BreakdownDialog extends AppCompatDialogFragment {
                 });
 
         Dialog dialog = builder.create();
-        dialog.getWindow().setLayout(ViewGroup.LayoutParams.WRAP_CONTENT,
-                                     ViewGroup.LayoutParams.WRAP_CONTENT);
-        dialog.getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE | WindowManager.LayoutParams.FLAG_ALT_FOCUSABLE_IM);
+
         Button percentViewBtn = mView.findViewById(R.id.dialogBreakdownPercentView);
         Button dollarViewBtn = mView.findViewById(R.id.dialogBreakdownDollarView);
         percentViewBtn.setOnClickListener(new View.OnClickListener() {
@@ -79,6 +77,10 @@ public class BreakdownDialog extends AppCompatDialogFragment {
             mBreakdown = new HashMap<>();
         }
         setupDialogView();
+        dialog.show();
+        dialog.getWindow().setLayout(ViewGroup.LayoutParams.WRAP_CONTENT,
+                                     ViewGroup.LayoutParams.WRAP_CONTENT);
+        dialog.getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE | WindowManager.LayoutParams.FLAG_ALT_FOCUSABLE_IM);
         return dialog;
     }
 
