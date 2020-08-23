@@ -40,6 +40,7 @@ public class BreakdownInputAdapter extends RecyclerView.Adapter<BreakdownInputAd
         private Float mIncomeAmount;
         private BreakdownViewHolderListener mListener;
         private List<TransactionCategories> mPrexistingCategories;
+        private boolean mBinding;
 
         public interface BreakdownViewHolderListener {
             void onItemChanged(int index,
@@ -51,6 +52,7 @@ public class BreakdownInputAdapter extends RecyclerView.Adapter<BreakdownInputAd
                             List<TransactionCategories> prexistingCategories,
                             final BreakdownViewHolderListener listener) {
             super(itemView);
+            mBinding = true;
             categorySpinner = itemView.findViewById(R.id.breakdownCategoryInputSpinner);
             categoryValue = itemView.findViewById(R.id.breakdownCategoryValueInput);
             unitView = itemView.findViewById(R.id.breakdownCategoryUnit);
@@ -99,7 +101,9 @@ public class BreakdownInputAdapter extends RecyclerView.Adapter<BreakdownInputAd
                     TransactionCategories newCategory = TransactionCategories.getCategoryFromFriendlyName(
                             selection);
                     mItem = new AbstractMap.SimpleEntry<>(newCategory, mItem.getValue());
-                    listener.onItemChanged(mIndex, mItem);
+                    if(!mBinding) {
+                        listener.onItemChanged(mIndex, mItem);
+                    }
                 }
 
                 @Override
@@ -120,7 +124,9 @@ public class BreakdownInputAdapter extends RecyclerView.Adapter<BreakdownInputAd
                                                      mPercentView,
                                                      mIncomeAmount);
                     mItem.setValue(decimalValue);
-                    listener.onItemChanged(mIndex, mItem);
+                    if(!mBinding) {
+                        listener.onItemChanged(mIndex, mItem);
+                    }
 
                 }
 
@@ -128,13 +134,14 @@ public class BreakdownInputAdapter extends RecyclerView.Adapter<BreakdownInputAd
                 public void afterTextChanged(Editable editable) {
                 }
             });
-
+         mBinding = false;
         }
 
         public void setItem(int index, AbstractMap.SimpleEntry<TransactionCategories, Float> item,
                             List<TransactionCategories> prexistingCategories,
                             boolean percentView,
                             Float incomeAmount) {
+            mBinding = true;
             mIndex = index;
             mItem = item;
             mPercentView = percentView;
@@ -144,11 +151,10 @@ public class BreakdownInputAdapter extends RecyclerView.Adapter<BreakdownInputAd
 
             SpinnerAdapter adapter = categorySpinner.getAdapter();
 
-
             int adapterValueCount = adapter.getCount();
             for (int i = 0; i < adapterValueCount; i++) {
                 String adapterStringAtIndex = adapter.getItem(i).toString();
-                if (adapterStringAtIndex == item.getKey().toString()) {
+                if (adapterStringAtIndex.equals(item.getKey().toString())) {
                     selectionValue = i;
                 }
             }
@@ -156,12 +162,12 @@ public class BreakdownInputAdapter extends RecyclerView.Adapter<BreakdownInputAd
 
             categoryValue.setText(encodeValue(item.getValue(), mPercentView, mIncomeAmount));
             unitView.setText(percentView ? "%" : "$");
+            mBinding = false;
         }
 
         private static Float decodeValue(String input, boolean percentView, Float incomeAmount) {
             if (percentView) {
-                Float decimalValue = Float.parseFloat(input) / 100;
-                return decimalValue;
+                return Float.parseFloat(input) / 100;
             } else {
                 Float decimalValue = Float.parseFloat(input) / incomeAmount;
                 return decimalValue;
@@ -170,12 +176,10 @@ public class BreakdownInputAdapter extends RecyclerView.Adapter<BreakdownInputAd
 
         private static String encodeValue(Float input, boolean percentView, Float incomeAmount) {
             if (percentView) {
-                String convertedValue = String.format("%.2f", (input * 100));
-                return convertedValue;
+                return String.format("%.2f", (input * 100));
             } else {
                 Float dollarValue = incomeAmount * input;
-                String dollarText = String.format("%.2f", dollarValue);
-                return dollarText;
+                return String.format("%.2f", dollarValue);
             }
         }
     }
@@ -245,6 +249,7 @@ public class BreakdownInputAdapter extends RecyclerView.Adapter<BreakdownInputAd
     public void changeView(boolean percent) {
         if (mPercentView != percent) {
             mPercentView = percent;
+            notifyDataSetChanged();
         }
     }
 

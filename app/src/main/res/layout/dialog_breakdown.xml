@@ -15,7 +15,9 @@
         android:layout_height="wrap_content"
         android:layout_gravity="right"
         android:orientation="horizontal"
-        android:padding="10dp">
+        android:paddingLeft="10dp"
+        android:paddingTop="10dp"
+        android:paddingRight="10dp">
 
         <TextView
             android:id="@+id/textView5"
@@ -28,13 +30,14 @@
 
         <TextView
             android:id="@+id/DialogBreakdownTotalValue"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_marginHorizontal="10dp"
             android:layout_weight="1"
             android:gravity="center_vertical"
-            android:text="0%"
-            android:textSize="24sp"
+            android:text="$1000.00"
+            android:textAlignment="textEnd"
+            android:textSize="18sp"
             android:textStyle="italic" />
 
         <Button
@@ -51,6 +54,15 @@
             android:text="$"
             android:textStyle="bold" />
     </LinearLayout>
+
+    <TextView
+        android:id="@+id/dialogbreakdownIncomeAmount"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="70dp"
+        android:layout_marginRight="195dp"
+        android:text="/$1000"
+        android:textAlignment="textEnd" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/BreakdownDialogRecycler"

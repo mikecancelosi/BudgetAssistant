@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -58,6 +59,7 @@ public class BreakdownDialog extends AppCompatDialogFragment {
         Dialog dialog = builder.create();
         dialog.getWindow().setLayout(ViewGroup.LayoutParams.WRAP_CONTENT,
                                      ViewGroup.LayoutParams.WRAP_CONTENT);
+        dialog.getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE | WindowManager.LayoutParams.FLAG_ALT_FOCUSABLE_IM);
         Button percentViewBtn = mView.findViewById(R.id.dialogBreakdownPercentView);
         Button dollarViewBtn = mView.findViewById(R.id.dialogBreakdownDollarView);
         percentViewBtn.setOnClickListener(new View.OnClickListener() {
@@ -118,8 +120,17 @@ public class BreakdownDialog extends AppCompatDialogFragment {
     }
 
     private void updateView() {
-        SettingsFragment.setupBreakdownPieChart(mChart, mBreakdown, getContext());
+        Button percentButton = mView.findViewById(R.id.dialogBreakdownPercentView);
+        Button dollarButton = mView.findViewById(R.id.dialogBreakdownDollarView);
+        TextView incomeAmountText = mView.findViewById(R.id.dialogbreakdownIncomeAmount);
         TextView totalValueText = mView.findViewById(R.id.DialogBreakdownTotalValue);
+
+        percentButton.setBackgroundColor(mPercentView ? selectedColor : surfaceColor);
+        dollarButton.setBackgroundColor(!mPercentView ? selectedColor : surfaceColor);
+        SettingsFragment.setupBreakdownPieChart(mChart, mBreakdown, getContext());
+        incomeAmountText.setVisibility(mPercentView ? View.INVISIBLE : View.VISIBLE);
+        incomeAmountText.setText("/$" +mIncomeAmount);
+
         Float total = 0f;
         for (Float value : mBreakdown.values()) {
             total += value;
@@ -131,8 +142,7 @@ public class BreakdownDialog extends AppCompatDialogFragment {
             String format = "%.2f";
             Float dollarAmount = mIncomeAmount * total;
             String dollarAmountFormatted = "$"  + String.format(format,dollarAmount);
-            String incomeFormatted = "$" + String.format(format,mIncomeAmount);
-            totalValueText.setText(dollarAmountFormatted + " / " + incomeFormatted);
+            totalValueText.setText(dollarAmountFormatted);
         }
 
     }
@@ -140,15 +150,10 @@ public class BreakdownDialog extends AppCompatDialogFragment {
     private void changeView(boolean percent) {
         if(mPercentView != percent) {
             mPercentView = percent;
-            Button percentButton = mView.findViewById(R.id.dialogBreakdownPercentView);
-            Button dollarButton = mView.findViewById(R.id.dialogBreakdownDollarView);
 
-            percentButton.setBackgroundColor(percent ? selectedColor : surfaceColor);
-            dollarButton.setBackgroundColor(!percent ? selectedColor : surfaceColor);
-
+            updateView();
             BreakdownInputAdapter adapter = (BreakdownInputAdapter) mRecycler.getAdapter();
-            adapter.changeView(percent);
-            adapter.notifyDataSetChanged();
+            adapter.changeView(mPercentView);
         }
 
     }
