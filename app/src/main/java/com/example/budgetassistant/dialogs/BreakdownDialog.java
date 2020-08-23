@@ -50,7 +50,6 @@ public class BreakdownDialog extends AppCompatDialogFragment {
                 .setPositiveButton("Save", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
-
                         mListener.applyChanges(mBreakdown);
                     }
                 });
@@ -128,8 +127,11 @@ public class BreakdownDialog extends AppCompatDialogFragment {
             total *= 100;
             totalValueText.setText(String.format("%.1f", total) + "%");
         } else {
+            String format = "%.2f";
             Float dollarAmount = mIncomeAmount * total;
-            totalValueText.setText(dollarAmount + " / " + mIncomeAmount);
+            String dollarAmountFormatted = "$"  + String.format(format,dollarAmount);
+            String incomeFormatted = "$" + String.format(format,mIncomeAmount);
+            totalValueText.setText(dollarAmountFormatted + " / " + incomeFormatted);
         }
     }
 

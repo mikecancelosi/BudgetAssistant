@@ -34,5 +34,15 @@ public enum TransactionCategories {
     public String toString() {
         return friendlyName;
     }
+
+    public static TransactionCategories getCategoryFromFriendlyName(String friendlyName){
+        for(TransactionCategories category : TransactionCategories.values()){
+            if(category.toString() == friendlyName){
+                return category;
+            }
+        }
+
+        return null;
+    }
 }
 
