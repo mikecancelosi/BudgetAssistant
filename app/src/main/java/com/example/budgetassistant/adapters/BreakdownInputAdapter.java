@@ -1,5 +1,6 @@
 package com.example.budgetassistant.adapters;
 
+import android.graphics.Color;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
@@ -14,10 +15,12 @@ import android.widget.SpinnerAdapter;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.budgetassistant.R;
 import com.example.budgetassistant.Enums.TransactionCategories;
+import com.example.budgetassistant.models.Transaction;
 
 import java.util.AbstractMap;
 import java.util.ArrayList;
@@ -36,6 +39,7 @@ public class BreakdownInputAdapter extends RecyclerView.Adapter<BreakdownInputAd
         private boolean mPercentView;
         private Float mIncomeAmount;
         private BreakdownViewHolderListener mListener;
+        private List<TransactionCategories> mPrexistingCategories;
 
         public interface BreakdownViewHolderListener {
             void onItemChanged(int index,
@@ -43,25 +47,48 @@ public class BreakdownInputAdapter extends RecyclerView.Adapter<BreakdownInputAd
         }
 
 
-        public MyViewHolder(View itemView, final BreakdownViewHolderListener listener) {
+        public MyViewHolder(View itemView,
+                            List<TransactionCategories> prexistingCategories,
+                            final BreakdownViewHolderListener listener) {
             super(itemView);
             categorySpinner = itemView.findViewById(R.id.breakdownCategoryInputSpinner);
             categoryValue = itemView.findViewById(R.id.breakdownCategoryValueInput);
             unitView = itemView.findViewById(R.id.breakdownCategoryUnit);
             mListener = listener;
+            mPrexistingCategories = prexistingCategories;
 
 
             TransactionCategories[] categories = TransactionCategories.values();
-            List<String> categoryItems = new ArrayList<>();
+            final List<String> categoryItems = new ArrayList<>();
             for (int i = 0; i < categories.length; i++) {
                 if (categories[i] != TransactionCategories.INCOME) {
                     categoryItems.add(categories[i].toString());
                 }
             }
 
-            ArrayAdapter<String> catAdapter = new ArrayAdapter<>(categorySpinner.getContext(),
-                                                                 R.layout.support_simple_spinner_dropdown_item,
-                                                                 categoryItems);
+            final ArrayAdapter<String> catAdapter = new ArrayAdapter<String>(categorySpinner.getContext(),
+                                                                       R.layout.support_simple_spinner_dropdown_item,
+                                                                       categoryItems){
+                @Override
+                public View getDropDownView(int position,
+                                            @Nullable View convertView,
+                                            @NonNull ViewGroup parent) {
+                    View mView = super.getDropDownView(position,convertView,parent);
+                    TextView mTextView = (TextView)mView;
+                    String valueAtPosition = categoryItems.get(position);
+                    TransactionCategories category = TransactionCategories.getCategoryFromFriendlyName(valueAtPosition);
+                    boolean enabled = !mPrexistingCategories.contains(category);
+                    mTextView.setTextColor(enabled ? Color.BLACK : Color.GRAY);
+                    return mView;
+                }
+
+                @Override
+                public boolean isEnabled(int position) {
+                    String valueAtPosition = categoryItems.get(position);
+                    TransactionCategories category = TransactionCategories.getCategoryFromFriendlyName(valueAtPosition);
+                    return !mPrexistingCategories.contains(category);
+                }
+            };
             catAdapter.setDropDownViewResource(R.layout.support_simple_spinner_dropdown_item);
             categorySpinner.setAdapter(catAdapter);
 
@@ -69,7 +96,8 @@ public class BreakdownInputAdapter extends RecyclerView.Adapter<BreakdownInputAd
                 @Override
                 public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
                     String selection = categorySpinner.getItemAtPosition(i).toString();
-                    TransactionCategories newCategory = TransactionCategories.getCategoryFromFriendlyName(selection);
+                    TransactionCategories newCategory = TransactionCategories.getCategoryFromFriendlyName(
+                            selection);
                     mItem = new AbstractMap.SimpleEntry<>(newCategory, mItem.getValue());
                     listener.onItemChanged(mIndex, mItem);
                 }
@@ -88,7 +116,9 @@ public class BreakdownInputAdapter extends RecyclerView.Adapter<BreakdownInputAd
 
                 @Override
                 public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-                    Float decimalValue  = decodeValue(charSequence.toString(),mPercentView,mIncomeAmount);
+                    Float decimalValue = decodeValue(charSequence.toString(),
+                                                     mPercentView,
+                                                     mIncomeAmount);
                     mItem.setValue(decimalValue);
                     listener.onItemChanged(mIndex, mItem);
 
@@ -102,19 +132,23 @@ public class BreakdownInputAdapter extends RecyclerView.Adapter<BreakdownInputAd
         }
 
         public void setItem(int index, AbstractMap.SimpleEntry<TransactionCategories, Float> item,
+                            List<TransactionCategories> prexistingCategories,
                             boolean percentView,
                             Float incomeAmount) {
             mIndex = index;
             mItem = item;
             mPercentView = percentView;
             mIncomeAmount = incomeAmount;
+            mPrexistingCategories = prexistingCategories;
             int selectionValue = 0;
 
-           SpinnerAdapter adapter = categorySpinner.getAdapter();
+            SpinnerAdapter adapter = categorySpinner.getAdapter();
+
+
             int adapterValueCount = adapter.getCount();
-            for(int i = 0; i< adapterValueCount; i++){
+            for (int i = 0; i < adapterValueCount; i++) {
                 String adapterStringAtIndex = adapter.getItem(i).toString();
-                if(adapterStringAtIndex == item.getKey().toString()){
+                if (adapterStringAtIndex == item.getKey().toString()) {
                     selectionValue = i;
                 }
             }
@@ -146,10 +180,13 @@ public class BreakdownInputAdapter extends RecyclerView.Adapter<BreakdownInputAd
         }
     }
 
-    //Value is in percentages.
+    //Value is in percentage decimal (.10)
     private Float mIncomeAmount;
     private List<AbstractMap.SimpleEntry<TransactionCategories, Float>> mBreakdown;
     private boolean mPercentView;
+    private BreakdownInputAdapterListener mListener;
+    private boolean mBinding = false;
+    private List<TransactionCategories> mExistingCategories;
 
     public BreakdownInputAdapter(HashMap<TransactionCategories, Float> breakdown,
                                  Float incomeAmount) {
@@ -158,6 +195,7 @@ public class BreakdownInputAdapter extends RecyclerView.Adapter<BreakdownInputAd
             mBreakdown.add(new AbstractMap.SimpleEntry<>(category, breakdown.get(category)));
         }
         mIncomeAmount = incomeAmount;
+        mExistingCategories = getExistingCategories();
     }
 
     @NonNull
@@ -171,22 +209,33 @@ public class BreakdownInputAdapter extends RecyclerView.Adapter<BreakdownInputAd
             @Override
             public void onItemChanged(int index,
                                       AbstractMap.SimpleEntry<TransactionCategories, Float> item) {
-                updateItem(index,item);
+                updateItem(index, item);
             }
         };
 
-        return new MyViewHolder(view,
+        return new MyViewHolder(view, mExistingCategories,
                                 listener);
     }
 
     @Override
     public void onBindViewHolder(@NonNull MyViewHolder holder, int position) {
-        holder.setItem(position, mBreakdown.get(position), mPercentView, mIncomeAmount);
+        mBinding = true;
+        holder.setItem(position, mBreakdown.get(position),mExistingCategories, mPercentView, mIncomeAmount);
+        mBinding = false;
     }
 
-    private void updateItem(int index, AbstractMap.SimpleEntry<TransactionCategories, Float> item){
-        mBreakdown.set(index,item);
+    @Override
+    public int getItemCount() {
+        return mBreakdown.size();
+    }
+
+    private void updateItem(int index, AbstractMap.SimpleEntry<TransactionCategories, Float> item) {
+        mBreakdown.set(index, item);
+        mExistingCategories = getExistingCategories();
         mListener.applyChanges(getBreakdownAsHash());
+        if(!mBinding) {
+            notifyDataSetChanged();
+        }
     }
 
     public void changeView(boolean percent) {
@@ -195,9 +244,21 @@ public class BreakdownInputAdapter extends RecyclerView.Adapter<BreakdownInputAd
         }
     }
 
-    @Override
-    public int getItemCount() {
-        return mBreakdown.size();
+    private List<TransactionCategories> getExistingCategories() {
+        List<TransactionCategories> categories = new ArrayList<>();
+        for (AbstractMap.SimpleEntry<TransactionCategories, Float> entry : mBreakdown) {
+            categories.add(entry.getKey());
+        }
+        return categories;
+    }
+
+
+    public void setListener(BreakdownInputAdapterListener listener) {
+        mListener = listener;
+    }
+
+    public interface BreakdownInputAdapterListener {
+        void applyChanges(HashMap<TransactionCategories, Float> breakdown);
     }
 
     private HashMap<TransactionCategories, Float> getBreakdownAsHash() {
@@ -208,17 +269,6 @@ public class BreakdownInputAdapter extends RecyclerView.Adapter<BreakdownInputAd
         }
 
         return map;
-    }
-
-
-    private BreakdownInputAdapterListener mListener;
-
-    public void setListener(BreakdownInputAdapterListener listener) {
-        mListener = listener;
-    }
-
-    public interface BreakdownInputAdapterListener {
-        void applyChanges(HashMap<TransactionCategories, Float> breakdown);
     }
 
 }

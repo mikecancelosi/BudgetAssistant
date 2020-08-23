@@ -35,6 +35,7 @@ public class BreakdownDialog extends AppCompatDialogFragment {
     private int selectedColor;
     private int surfaceColor;
     private boolean mPercentView = false;
+    private BreakdownInputAdapter mAdapter;
 
     public void setBreakdown(HashMap<TransactionCategories, Float> newBreakdown,
                              Float incomeAmount) {
@@ -89,15 +90,15 @@ public class BreakdownDialog extends AppCompatDialogFragment {
 
         mRecycler.setHasFixedSize(true);
         mRecycler.setLayoutManager(new LinearLayoutManager(getContext()));
-        final BreakdownInputAdapter adapter = new BreakdownInputAdapter(mBreakdown, mIncomeAmount);
-        adapter.setListener(new BreakdownInputAdapter.BreakdownInputAdapterListener() {
+        mAdapter = new BreakdownInputAdapter(mBreakdown, mIncomeAmount);
+        mAdapter.setListener(new BreakdownInputAdapter.BreakdownInputAdapterListener() {
             @Override
             public void applyChanges(HashMap<TransactionCategories, Float> breakdown) {
                 mBreakdown = breakdown;
                 updateView();
             }
         });
-        mRecycler.setAdapter(adapter);
+        mRecycler.setAdapter(mAdapter);
 
         percentButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -133,6 +134,7 @@ public class BreakdownDialog extends AppCompatDialogFragment {
             String incomeFormatted = "$" + String.format(format,mIncomeAmount);
             totalValueText.setText(dollarAmountFormatted + " / " + incomeFormatted);
         }
+
     }
 
     private void changeView(boolean percent) {
