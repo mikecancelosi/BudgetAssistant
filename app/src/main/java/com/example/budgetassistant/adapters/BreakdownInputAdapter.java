@@ -230,11 +230,15 @@ public class BreakdownInputAdapter extends RecyclerView.Adapter<BreakdownInputAd
     }
 
     private void updateItem(int index, AbstractMap.SimpleEntry<TransactionCategories, Float> item) {
-        mBreakdown.set(index, item);
-        mExistingCategories = getExistingCategories();
-        mListener.applyChanges(getBreakdownAsHash());
-        if(!mBinding) {
-            notifyDataSetChanged();
+        AbstractMap.SimpleEntry<TransactionCategories, Float> itemBefore = mBreakdown.get(index);
+        if(itemBefore.getKey() != item.getKey() ||
+           !itemBefore.getValue().equals(item.getValue())) {
+            mBreakdown.set(index, item);
+            mExistingCategories = getExistingCategories();
+            mListener.applyChanges(getBreakdownAsHash());
+            if (!mBinding) {
+                notifyDataSetChanged();
+            }
         }
     }
 
