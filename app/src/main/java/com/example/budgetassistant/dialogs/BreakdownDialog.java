@@ -21,9 +21,11 @@ import com.example.budgetassistant.R;
 import com.example.budgetassistant.Enums.TransactionCategories;
 import com.example.budgetassistant.SettingsFragment;
 import com.example.budgetassistant.adapters.BreakdownInputAdapter;
+import com.example.budgetassistant.models.Transaction;
 import com.github.mikephil.charting.charts.PieChart;
 
 import java.util.HashMap;
+import java.util.Map;
 
 public class BreakdownDialog extends AppCompatDialogFragment {
 
@@ -35,8 +37,8 @@ public class BreakdownDialog extends AppCompatDialogFragment {
     private Float mIncomeAmount;
     private int selectedColor;
     private int surfaceColor;
+    private int errorColor;
     private boolean mPercentView = false;
-    private BreakdownInputAdapter mAdapter;
 
     public void setBreakdown(HashMap<TransactionCategories, Float> newBreakdown,
                              Float incomeAmount) {
@@ -48,28 +50,31 @@ public class BreakdownDialog extends AppCompatDialogFragment {
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         mView = View.inflate(getContext(), R.layout.dialog_breakdown, null);
-        builder.setView(mView)
-                .setPositiveButton("Save", new DialogInterface.OnClickListener() {
+        final AlertDialog dialog = builder.setView(mView)
+                .setPositiveButton("Save", null)
+                .setNegativeButton("Cancel", null)
+                .create();
+        dialog.setOnShowListener(new DialogInterface.OnShowListener() {
+            @Override
+            public void onShow(DialogInterface dialogInterface) {
+                Button posBtn = dialog.getButton(AlertDialog.BUTTON_POSITIVE);
+                posBtn.setOnClickListener(new View.OnClickListener() {
                     @Override
-                    public void onClick(DialogInterface dialogInterface, int i) {
-                        mListener.applyChanges(mBreakdown);
+                    public void onClick(View view) {
+                        Float total = 0f;
+                        for (Float value : mBreakdown.values()) {
+                            total += value;
+                        }
+                        if (total.equals(1f)) {
+                            mListener.applyChanges(mBreakdown);
+                            dialog.dismiss();
+                        } else {
+                            TextView totalView = mView.findViewById(R.id.DialogBreakdownTotalValue);
+                            totalView.setBackgroundColor(errorColor);
+                            dialog.show();
+                        }
                     }
                 });
-
-        Dialog dialog = builder.create();
-
-        Button percentViewBtn = mView.findViewById(R.id.dialogBreakdownPercentView);
-        Button dollarViewBtn = mView.findViewById(R.id.dialogBreakdownDollarView);
-        percentViewBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                changeView(true);
-            }
-        });
-        dollarViewBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                changeView(false);
             }
         });
 
@@ -87,14 +92,16 @@ public class BreakdownDialog extends AppCompatDialogFragment {
     private void setupDialogView() {
         selectedColor = ContextCompat.getColor(getContext(), R.color.colorPrimary);
         surfaceColor = ContextCompat.getColor(getContext(), R.color.colorSurface);
+        errorColor = ContextCompat.getColor(getContext(),R.color.colorError);
         mChart = mView.findViewById(R.id.dialogBreakdownPieChart);
         mRecycler = mView.findViewById(R.id.BreakdownDialogRecycler);
         Button percentButton = mView.findViewById(R.id.dialogBreakdownPercentView);
         Button dollarButton = mView.findViewById(R.id.dialogBreakdownDollarView);
+        Button addCategoryButton = mView.findViewById(R.id.BreakdownDialogAddCategoryBtn);
 
-        mRecycler.setHasFixedSize(true);
+        mRecycler.setHasFixedSize(false);
         mRecycler.setLayoutManager(new LinearLayoutManager(getContext()));
-        mAdapter = new BreakdownInputAdapter(mBreakdown, mIncomeAmount);
+        final BreakdownInputAdapter mAdapter = new BreakdownInputAdapter(mBreakdown, mIncomeAmount);
         mAdapter.setListener(new BreakdownInputAdapter.BreakdownInputAdapterListener() {
             @Override
             public void applyChanges(HashMap<TransactionCategories, Float> breakdown) {
@@ -116,12 +123,20 @@ public class BreakdownDialog extends AppCompatDialogFragment {
                 changeView(false);
             }
         });
+        addCategoryButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                mAdapter.addCategory();
+            }
+        });
 
         updateView();
         changeView(true);
     }
 
     private void updateView() {
+
+        Log.d(":", "updating the graph!");
         Button percentButton = mView.findViewById(R.id.dialogBreakdownPercentView);
         Button dollarButton = mView.findViewById(R.id.dialogBreakdownDollarView);
         TextView incomeAmountText = mView.findViewById(R.id.dialogbreakdownIncomeAmount);
@@ -131,31 +146,35 @@ public class BreakdownDialog extends AppCompatDialogFragment {
         dollarButton.setBackgroundColor(!mPercentView ? selectedColor : surfaceColor);
         SettingsFragment.setupBreakdownPieChart(mChart, mBreakdown, getContext());
         incomeAmountText.setVisibility(mPercentView ? View.INVISIBLE : View.VISIBLE);
-        incomeAmountText.setText("/$" +mIncomeAmount);
+        incomeAmountText.setText("/$" + mIncomeAmount);
 
         Float total = 0f;
+
+
         for (Float value : mBreakdown.values()) {
             total += value;
         }
-        if(mPercentView) {
+        if (mPercentView) {
             total *= 100;
             totalValueText.setText(String.format("%.1f", total) + "%");
         } else {
             String format = "%.2f";
             Float dollarAmount = mIncomeAmount * total;
-            String dollarAmountFormatted = "$"  + String.format(format,dollarAmount);
+            String dollarAmountFormatted = "$" + String.format(format, dollarAmount);
             totalValueText.setText(dollarAmountFormatted);
         }
 
     }
 
     private void changeView(boolean percent) {
-        if(mPercentView != percent) {
+        if (mPercentView != percent) {
             mPercentView = percent;
 
             updateView();
             BreakdownInputAdapter adapter = (BreakdownInputAdapter) mRecycler.getAdapter();
+            assert adapter != null;
             adapter.changeView(mPercentView);
+            adapter.notifyDataSetChanged();
         }
 
     }

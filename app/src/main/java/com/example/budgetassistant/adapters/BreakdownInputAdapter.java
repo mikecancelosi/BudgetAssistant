@@ -1,6 +1,5 @@
 package com.example.budgetassistant.adapters;
 
-import android.content.Context;
 import android.graphics.Color;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -8,8 +7,6 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.WindowManager;
-import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
@@ -21,8 +18,8 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.budgetassistant.R;
 import com.example.budgetassistant.Enums.TransactionCategories;
+import com.example.budgetassistant.R;
 import com.example.budgetassistant.models.Transaction;
 
 import java.util.AbstractMap;
@@ -38,16 +35,20 @@ public class BreakdownInputAdapter extends RecyclerView.Adapter<BreakdownInputAd
         public TextView unitView;
 
         private AbstractMap.SimpleEntry<TransactionCategories, Float> mItem;
-        private int mIndex;
+        private int mIndex = -1;
         private boolean mPercentView;
         private Float mIncomeAmount;
         private BreakdownViewHolderListener mListener;
         private List<TransactionCategories> mPrexistingCategories;
-        private boolean mBinding;
+        private boolean mHasFocus = false;
+
 
         public interface BreakdownViewHolderListener {
             void onItemChanged(int index,
                                AbstractMap.SimpleEntry<TransactionCategories, Float> item);
+
+            void onItemChanging(int index,
+                                AbstractMap.SimpleEntry<TransactionCategories, Float> item);
         }
 
 
@@ -55,7 +56,6 @@ public class BreakdownInputAdapter extends RecyclerView.Adapter<BreakdownInputAd
                             List<TransactionCategories> prexistingCategories,
                             final BreakdownViewHolderListener listener) {
             super(itemView);
-            mBinding = true;
             categorySpinner = itemView.findViewById(R.id.breakdownCategoryInputSpinner);
             categoryValue = itemView.findViewById(R.id.breakdownCategoryValueInput);
             unitView = itemView.findViewById(R.id.breakdownCategoryUnit);
@@ -65,9 +65,9 @@ public class BreakdownInputAdapter extends RecyclerView.Adapter<BreakdownInputAd
 
             TransactionCategories[] categories = TransactionCategories.values();
             final List<String> categoryItems = new ArrayList<>();
-            for (int i = 0; i < categories.length; i++) {
-                if (categories[i] != TransactionCategories.INCOME) {
-                    categoryItems.add(categories[i].toString());
+            for (TransactionCategories category : categories) {
+                if (category != TransactionCategories.INCOME) {
+                    categoryItems.add(category.toString());
                 }
             }
 
@@ -106,9 +106,8 @@ public class BreakdownInputAdapter extends RecyclerView.Adapter<BreakdownInputAd
                     TransactionCategories newCategory = TransactionCategories.getCategoryFromFriendlyName(
                             selection);
                     mItem = new AbstractMap.SimpleEntry<>(newCategory, mItem.getValue());
-                    if (!mBinding) {
-                        listener.onItemChanged(mIndex, mItem);
-                    }
+
+                    mListener.onItemChanged(mIndex, mItem);
                 }
 
                 @Override
@@ -117,33 +116,66 @@ public class BreakdownInputAdapter extends RecyclerView.Adapter<BreakdownInputAd
                 }
             });
 
+            categoryValue.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    categoryValue.requestFocus();
+                }
+            });
+
             categoryValue.setOnFocusChangeListener(new View.OnFocusChangeListener() {
                 @Override
                 public void onFocusChange(View view, boolean hasFocus) {
-                    if(!hasFocus) {
-                        String valueString = categoryValue.getText().toString();
+                    if(mHasFocus != hasFocus) {
+                        mHasFocus = hasFocus;
+                        if (!mHasFocus) {
+                            String valueString = categoryValue.getText().toString();
 
-                        Float decimalValue = decodeValue(valueString,
-                                                         mPercentView,
-                                                         mIncomeAmount);
-                        if (decimalValue != null) {
-                            mItem.setValue(decimalValue);
-                            if (!mBinding && !categoryValue.hasFocus()) {
-                                listener.onItemChanged(mIndex, mItem);
+                            Float decimalValue = decodeValue(valueString,
+                                                             mPercentView,
+                                                             mIncomeAmount);
+                            if (decimalValue != null) {
+                                if (!mItem.getValue().equals(decimalValue)) {
+                                    mItem.setValue(decimalValue);
+                                    mListener.onItemChanged(mIndex, mItem);
+                                }
                             }
                         }
                     }
                 }
             });
 
-            mBinding = false;
+            categoryValue.addTextChangedListener(new TextWatcher() {
+                @Override
+                public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+                }
+
+                @Override
+                public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+                    String valueString = categoryValue.getText().toString();
+
+                    Float decimalValue = decodeValue(valueString,
+                                                     mPercentView,
+                                                     mIncomeAmount);
+                    if (decimalValue != null) {
+                        mListener.onItemChanging(mIndex, new AbstractMap.SimpleEntry<>(mItem.getKey(),decimalValue));
+
+                    }
+                }
+
+                @Override
+                public void afterTextChanged(Editable editable) {
+
+                }
+            });
+
         }
 
         public void setItem(int index, AbstractMap.SimpleEntry<TransactionCategories, Float> item,
                             List<TransactionCategories> prexistingCategories,
                             boolean percentView,
                             Float incomeAmount) {
-            mBinding = true;
             mIndex = index;
             mItem = item;
             mPercentView = percentView;
@@ -164,19 +196,17 @@ public class BreakdownInputAdapter extends RecyclerView.Adapter<BreakdownInputAd
 
             categoryValue.setText(encodeValue(item.getValue(), mPercentView, mIncomeAmount));
             unitView.setText(percentView ? "%" : "$");
-            mBinding = false;
         }
 
         private static Float decodeValue(String input, boolean percentView, Float incomeAmount) {
-            if(!input.isEmpty()) {
-                Float parsedInput = Float.parseFloat(input);
+            if (!input.isEmpty()) {
+                float parsedInput = Float.parseFloat(input);
                 if (parsedInput > 0f) {
                     if (percentView) {
                         return parsedInput / 100;
 
                     } else {
-                        Float decimalValue = parsedInput / incomeAmount;
-                        return decimalValue;
+                        return parsedInput / incomeAmount;
 
                     }
                 }
@@ -200,7 +230,6 @@ public class BreakdownInputAdapter extends RecyclerView.Adapter<BreakdownInputAd
     private List<AbstractMap.SimpleEntry<TransactionCategories, Float>> mBreakdown;
     private boolean mPercentView;
     private BreakdownInputAdapterListener mListener;
-    private boolean mBinding = false;
     private List<TransactionCategories> mExistingCategories;
 
     public BreakdownInputAdapter(HashMap<TransactionCategories, Float> breakdown,
@@ -220,11 +249,17 @@ public class BreakdownInputAdapter extends RecyclerView.Adapter<BreakdownInputAd
                                                                      parent,
                                                                      false);
         MyViewHolder.BreakdownViewHolderListener listener = new MyViewHolder.BreakdownViewHolderListener() {
-
             @Override
             public void onItemChanged(int index,
                                       AbstractMap.SimpleEntry<TransactionCategories, Float> item) {
-                updateItem(index, item);
+                updateItem(index, item, true);
+            }
+
+            @Override
+            public void onItemChanging(int index,
+                                       AbstractMap.SimpleEntry<TransactionCategories, Float> item) {
+                updateItem(index, item, false);
+
             }
         };
 
@@ -234,13 +269,14 @@ public class BreakdownInputAdapter extends RecyclerView.Adapter<BreakdownInputAd
 
     @Override
     public void onBindViewHolder(@NonNull MyViewHolder holder, int position) {
-        mBinding = true;
-        holder.setItem(position,
-                       mBreakdown.get(position),
-                       mExistingCategories,
-                       mPercentView,
-                       mIncomeAmount);
-        mBinding = false;
+        if(holder.mIndex == -1 || holder.mIndex != position) {
+            AbstractMap.SimpleEntry<TransactionCategories,Float> item = mBreakdown.get(position);
+            holder.setItem(position,
+                           new AbstractMap.SimpleEntry<>(item.getKey(),item.getValue()),
+                           mExistingCategories,
+                           mPercentView,
+                           mIncomeAmount);
+        }
     }
 
     @Override
@@ -248,14 +284,17 @@ public class BreakdownInputAdapter extends RecyclerView.Adapter<BreakdownInputAd
         return mBreakdown.size();
     }
 
-    private void updateItem(int index, AbstractMap.SimpleEntry<TransactionCategories, Float> item) {
+    private void updateItem(int index,
+                            AbstractMap.SimpleEntry<TransactionCategories, Float> item,
+                            boolean notify) {
+
         AbstractMap.SimpleEntry<TransactionCategories, Float> itemBefore = mBreakdown.get(index);
         if (itemBefore.getKey() != item.getKey() ||
             !itemBefore.getValue().equals(item.getValue())) {
             mBreakdown.set(index, item);
             mExistingCategories = getExistingCategories();
             mListener.applyChanges(getBreakdownAsHash());
-            if (!mBinding) {
+            if (notify) {
                 notifyDataSetChanged();
             }
         }
@@ -264,7 +303,6 @@ public class BreakdownInputAdapter extends RecyclerView.Adapter<BreakdownInputAd
     public void changeView(boolean percent) {
         if (mPercentView != percent) {
             mPercentView = percent;
-            notifyDataSetChanged();
         }
     }
 
@@ -274,6 +312,22 @@ public class BreakdownInputAdapter extends RecyclerView.Adapter<BreakdownInputAd
             categories.add(entry.getKey());
         }
         return categories;
+    }
+
+    public void addCategory() {
+        TransactionCategories[] values = TransactionCategories.values();
+        TransactionCategories category = null;
+        for (TransactionCategories cat : values) {
+            if (!mExistingCategories.contains(cat)) {
+                category = cat;
+                break;
+            }
+        }
+        if (category != null) {
+            mBreakdown.add(new AbstractMap.SimpleEntry<>(category, .01f));
+            mExistingCategories = getExistingCategories();
+            notifyDataSetChanged();
+        }
     }
 
 
