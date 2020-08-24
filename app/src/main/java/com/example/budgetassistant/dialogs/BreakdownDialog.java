@@ -97,7 +97,7 @@ public class BreakdownDialog extends AppCompatDialogFragment {
         mRecycler = mView.findViewById(R.id.BreakdownDialogRecycler);
         Button percentButton = mView.findViewById(R.id.dialogBreakdownPercentView);
         Button dollarButton = mView.findViewById(R.id.dialogBreakdownDollarView);
-        Button addCategoryButton = mView.findViewById(R.id.BreakdownDialogAddCategoryBtn);
+        final Button addCategoryButton = mView.findViewById(R.id.BreakdownDialogAddCategoryBtn);
 
         mRecycler.setHasFixedSize(false);
         mRecycler.setLayoutManager(new LinearLayoutManager(getContext()));
@@ -110,6 +110,9 @@ public class BreakdownDialog extends AppCompatDialogFragment {
             }
         });
         mRecycler.setAdapter(mAdapter);
+
+        addCategoryButton.setVisibility((mBreakdown.keySet().size() < (TransactionCategories.values().length -1) ?
+                                         View.VISIBLE :View.INVISIBLE));
 
         percentButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -126,7 +129,9 @@ public class BreakdownDialog extends AppCompatDialogFragment {
         addCategoryButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                mAdapter.addCategory();
+                if(mAdapter.addCategory()){
+                   addCategoryButton.setVisibility(View.INVISIBLE);
+                }
             }
         });
 
@@ -136,11 +141,11 @@ public class BreakdownDialog extends AppCompatDialogFragment {
 
     private void updateView() {
 
-        Log.d(":", "updating the graph!");
         Button percentButton = mView.findViewById(R.id.dialogBreakdownPercentView);
         Button dollarButton = mView.findViewById(R.id.dialogBreakdownDollarView);
         TextView incomeAmountText = mView.findViewById(R.id.dialogbreakdownIncomeAmount);
         TextView totalValueText = mView.findViewById(R.id.DialogBreakdownTotalValue);
+        Button addCategoryButton = mView.findViewById(R.id.BreakdownDialogAddCategoryBtn);
 
         percentButton.setBackgroundColor(mPercentView ? selectedColor : surfaceColor);
         dollarButton.setBackgroundColor(!mPercentView ? selectedColor : surfaceColor);

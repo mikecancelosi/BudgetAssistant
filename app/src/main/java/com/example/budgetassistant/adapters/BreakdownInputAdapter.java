@@ -20,7 +20,6 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.budgetassistant.Enums.TransactionCategories;
 import com.example.budgetassistant.R;
-import com.example.budgetassistant.models.Transaction;
 
 import java.util.AbstractMap;
 import java.util.ArrayList;
@@ -49,6 +48,8 @@ public class BreakdownInputAdapter extends RecyclerView.Adapter<BreakdownInputAd
 
             void onItemChanging(int index,
                                 AbstractMap.SimpleEntry<TransactionCategories, Float> item);
+
+            void onItemRemoved(int index);
         }
 
 
@@ -139,6 +140,8 @@ public class BreakdownInputAdapter extends RecyclerView.Adapter<BreakdownInputAd
                                     mItem.setValue(decimalValue);
                                     mListener.onItemChanged(mIndex, mItem);
                                 }
+                            } else {
+                                mListener.onItemRemoved(mIndex);
                             }
                         }
                     }
@@ -261,6 +264,11 @@ public class BreakdownInputAdapter extends RecyclerView.Adapter<BreakdownInputAd
                 updateItem(index, item, false);
 
             }
+
+            @Override
+            public void onItemRemoved(int index) {
+                removeItem(index);
+            }
         };
 
         return new MyViewHolder(view, mExistingCategories,
@@ -300,6 +308,12 @@ public class BreakdownInputAdapter extends RecyclerView.Adapter<BreakdownInputAd
         }
     }
 
+    private void removeItem(int index){
+        notifyItemRemoved(index); //TODO: breaks when you scroll out of focus and remove
+        mBreakdown.remove(index);
+        mListener.applyChanges(getBreakdownAsHash());
+    }
+
     public void changeView(boolean percent) {
         if (mPercentView != percent) {
             mPercentView = percent;
@@ -314,11 +328,12 @@ public class BreakdownInputAdapter extends RecyclerView.Adapter<BreakdownInputAd
         return categories;
     }
 
-    public void addCategory() {
+    public boolean addCategory() {
         TransactionCategories[] values = TransactionCategories.values();
         TransactionCategories category = null;
         for (TransactionCategories cat : values) {
-            if (!mExistingCategories.contains(cat)) {
+            if (cat != TransactionCategories.INCOME &&
+                !mExistingCategories.contains(cat)) {
                 category = cat;
                 break;
             }
@@ -326,8 +341,11 @@ public class BreakdownInputAdapter extends RecyclerView.Adapter<BreakdownInputAd
         if (category != null) {
             mBreakdown.add(new AbstractMap.SimpleEntry<>(category, .01f));
             mExistingCategories = getExistingCategories();
+            mListener.applyChanges(getBreakdownAsHash()); //TODO: Make more efficient then updating whole breakdown
             notifyDataSetChanged();
         }
+
+        return (mExistingCategories.size() == values.length - 1);
     }
 
 
