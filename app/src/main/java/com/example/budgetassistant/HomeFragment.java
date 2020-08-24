@@ -115,10 +115,13 @@ public class HomeFragment extends Fragment {
         List<PieEntry> pieEntries = new ArrayList<>();
 
         float expensePercentage = mViewModel.getExpenseAsPercentage();
+
         pieEntries.add(new PieEntry(expensePercentage,"Expenses"));
         if(expensePercentage < 1) {
             pieEntries.add(new PieEntry(1-expensePercentage, "Unspent"));
         }
+
+
 
         PieDataSet dataSet = new PieDataSet(pieEntries,"");
         dataSet.setDrawValues(false);
