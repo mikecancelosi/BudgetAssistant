@@ -24,7 +24,6 @@ public class CalendarUtil {
         }
 
         return count;
-
     }
 
     public static int daysBetween(Date d1, Date d2){
