@@ -1,5 +1,7 @@
 package com.example.budgetassistant.Utils;
 
+import android.util.Log;
+
 import com.example.budgetassistant.models.Transaction;
 
 import java.util.ArrayList;
@@ -20,26 +22,25 @@ public class TransactionUtil {
         Calendar transCal = Calendar.getInstance();
         for(Transaction t : sourceTransactions){
             transCal.setTime(t.DateOfTransaction);
-            if(startCal.getTime() == t.DateOfTransaction || (transCal.after(startCal) && transCal.before(endCal))){
+            if(CalendarUtil.isSameDay(startCal.getTime(),t.DateOfTransaction) || (transCal.after(startCal) && transCal.before(endCal))){
                 transactions.add(t);
             }
         }
-
         return transactions;
     }
 
     public static Float getExpenseTotal(List<Transaction> transactions){
-        Float expenseTotal = 0f;
+        float expenseTotal = 0f;
         for(Transaction t : transactions){
             if(t.Amount < 0) {
                 expenseTotal += t.Amount;
             }
         }
-        return expenseTotal;
+        return Math.abs(expenseTotal);
     }
 
     public static Float getIncomeTotal(List<Transaction> transactions){
-        Float incomeTotal = 0f;
+        float incomeTotal = 0f;
         for(Transaction t : transactions){
             if(t.Amount > 0) {
                 incomeTotal += t.Amount;

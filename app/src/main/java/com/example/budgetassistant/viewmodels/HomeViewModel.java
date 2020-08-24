@@ -85,9 +85,9 @@ public class HomeViewModel extends ViewModel {
         }
 
         return Math.abs(expenses/budget);
-
-
     }
+
+
 
 
 

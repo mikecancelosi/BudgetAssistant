@@ -1,5 +1,7 @@
 package com.example.budgetassistant.Utils;
 
+import android.util.Log;
+
 import java.util.AbstractMap;
 import java.util.Calendar;
 import java.util.Date;
@@ -16,11 +18,12 @@ public class CalendarUtil {
         Calendar iterCal = Calendar.getInstance();
         iterCal.setTime(StartDate);
         int count = 0;
-        while(iterCal.before(endCal) && iterCal.after(startCal)){
+        while(iterCal.before(endCal)){
             count++;
             iterCal.add(period.getKey(),period.getValue());
         }
-        return count--;
+
+        return count;
 
     }
 
@@ -60,5 +63,16 @@ public class CalendarUtil {
             default:
                 return -1;
         }
+    }
+
+    public static boolean isSameDay(Date d1, Date d2){
+        Calendar cal1 = Calendar.getInstance();
+        cal1.setTime(d1);
+        Calendar cal2 = Calendar.getInstance();
+        cal2.setTime(d2);
+        return cal1.get(Calendar.YEAR) == cal2.get(Calendar.YEAR) &&
+         cal1.get(Calendar.MONTH) == cal2.get(Calendar.MONTH) &&
+         cal1.get(Calendar.DAY_OF_MONTH) == cal2.get(Calendar.DAY_OF_MONTH);
+
     }
 }

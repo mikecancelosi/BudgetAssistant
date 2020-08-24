@@ -1,5 +1,7 @@
 package com.example.budgetassistant.repositories;
 
+import android.util.Log;
+
 import androidx.lifecycle.MutableLiveData;
 
 import com.example.budgetassistant.Enums.TransactionCategories;
@@ -17,16 +19,18 @@ import java.util.concurrent.ThreadLocalRandom;
 public class TransactionRepository {
 
     private static TransactionRepository instance;
-    public static TransactionRepository getInstance(){
-        if(instance == null){
+
+    public static TransactionRepository getInstance() {
+        if (instance == null) {
             instance = new TransactionRepository();
         }
         return instance;
     }
 
     private ArrayList<Transaction> dataSet = new ArrayList<>();
-    public MutableLiveData<List<Transaction>> getTransactions(){
-        if(dataSet.size() == 0) {
+
+    public MutableLiveData<List<Transaction>> getTransactions() {
+        if (dataSet.size() == 0) {
             setTransactions();
         }
         MutableLiveData<List<Transaction>> data = new MutableLiveData<>();
@@ -36,19 +40,21 @@ public class TransactionRepository {
 
     private void setTransactions() {
         dataSet.clear();
-        for(int i = 0; i < 14;i++){
+        for (int i = 0; i < 14; i++) {
             //create 14 months of data; i is months before current
             Calendar transCal = Calendar.getInstance();
             transCal.add(Calendar.MONTH, i * -1);
-            YearMonth yearMonthObject = YearMonth.of(transCal.get(Calendar.YEAR),transCal.get(Calendar.MONTH) + 1);
+            YearMonth yearMonthObject = YearMonth.of(transCal.get(Calendar.YEAR),
+                                                     transCal.get(Calendar.MONTH) + 1);
             int daysInMonth = yearMonthObject.lengthOfMonth();
-            for(int j = daysInMonth; j > 0; j--){
+            for (int j = daysInMonth; j > 0; j--) {
                 //Create data for each day in the month
-                transCal.set(Calendar.DATE,j);
+                transCal.set(Calendar.DATE, j);
                 Transaction newTrans = new Transaction(transCal.getTime());
-                int randInt = ThreadLocalRandom.current().nextInt(0,TransactionCategories.values().length);
+                int randInt = ThreadLocalRandom.current().nextInt(0,
+                                                                  TransactionCategories.values().length);
                 TransactionCategories category = TransactionCategories.values()[randInt];
-                if(category != TransactionCategories.INCOME){
+                if (category != TransactionCategories.INCOME) {
                     //We only want to add expenses here.
                     newTrans.Amount += (ThreadLocalRandom.current().nextFloat() * -125f);
                     newTrans.Category = category;
@@ -60,7 +66,8 @@ public class TransactionRepository {
         dataSet.addAll(generateIncomeHistory());
 
     }
-    private List<Transaction> generateIncomeHistory(){
+
+    private List<Transaction> generateIncomeHistory() {
         List<Transaction> output = new ArrayList<>();
         UserSettings settings = UserSettingsRepository.getInstance().getSettings().getValue();
         Income income = settings.income;
@@ -68,15 +75,18 @@ public class TransactionRepository {
         Calendar iterCal = Calendar.getInstance();
         iterCal.setTime(startIncome);
         Calendar nowCal = Calendar.getInstance();
-        while(iterCal.before(nowCal)){
-            output.add(new Transaction(income.Amount,"Income",TransactionCategories.INCOME,iterCal.getTime()));
-            iterCal.add(income.Period.getKey(),income.Period.getValue());
+        while (iterCal.before(nowCal)) {
+            output.add(new Transaction(income.Amount,
+                                       "Income",
+                                       TransactionCategories.INCOME,
+                                       iterCal.getTime()));
+            iterCal.add(income.Period.getKey(), income.Period.getValue());
         }
 
         return output;
     }
 
-    public void postTransaction(Transaction t){
+    public void postTransaction(Transaction t) {
         boolean found = false;
         for (Transaction trans : dataSet) {
             if (trans.Id == t.Id) {

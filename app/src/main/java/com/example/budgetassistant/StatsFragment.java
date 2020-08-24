@@ -7,6 +7,7 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -51,6 +52,9 @@ public class StatsFragment extends Fragment {
 
     private StatsViewModel mViewModel;
     private View view;
+    private List<Transaction> mTransactionsInTimePeriod;
+    private Date mStartDate;
+    private Date mEndDate;
 
     public StatsFragment() {
         // Required empty public constructor
@@ -94,29 +98,41 @@ public class StatsFragment extends Fragment {
         String[] frequencyItems = new String[]{"Pay Period", "Month"," Year","All Time"};
         ArrayAdapter<String> freqAdapter = new ArrayAdapter<>(getContext(), R.layout.support_simple_spinner_dropdown_item,frequencyItems);
         timeSpinner.setAdapter(freqAdapter);
-        timeSpinner.setSelection(0);
         timeSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
 
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
                 switch(i){
                     case 0:
-                        updateCategoryExpensePieChart(mViewModel.getPayPeriodStartDate(),mViewModel.getPayPeriodEndDate());
-                        updateCategoricalHorizontalBarChart(mViewModel.getPayPeriodStartDate(),mViewModel.getPayPeriodEndDate());
+                        mStartDate = mViewModel.getPayPeriodStartDate();
+                        mEndDate = mViewModel.getPayPeriodEndDate();
+                        mTransactionsInTimePeriod = mViewModel.getTransactionsInTimePeriod(mStartDate,mEndDate);
+                        updateCategoryExpensePieChart();
+                        updateCategoricalHorizontalBarChart();
                         break;
                     case 1:
-                        updateCategoryExpensePieChart(mViewModel.getMonthStartDate(),mViewModel.getMonthEndDate());
-                        updateCategoricalHorizontalBarChart(mViewModel.getMonthStartDate(),mViewModel.getMonthEndDate());
+                        mStartDate = mViewModel.getMonthStartDate();
+                        mEndDate = mViewModel.getMonthEndDate();
+                        mTransactionsInTimePeriod = mViewModel.getTransactionsInTimePeriod(mStartDate,mEndDate);
+                        updateCategoryExpensePieChart();
+                        updateCategoricalHorizontalBarChart();
                         break;
                     case 2:
-                        updateCategoryExpensePieChart(mViewModel.getYearStartDate(),mViewModel.getYearEndDate());
-                        updateCategoricalHorizontalBarChart(mViewModel.getYearStartDate(),mViewModel.getYearEndDate());
+                        mStartDate = mViewModel.getYearStartDate();
+                        mEndDate = mViewModel.getYearEndDate();
+                        mTransactionsInTimePeriod = mViewModel.getTransactionsInTimePeriod(mStartDate,mEndDate);
+                        updateCategoryExpensePieChart();
+                        updateCategoricalHorizontalBarChart();
                         break;
                     case 3:
-                        updateCategoryExpensePieChart(new Date(0L),new Date(Long.MAX_VALUE));
-                        updateCategoricalHorizontalBarChart(new Date(0L),new Date(Long.MAX_VALUE));
+                        mStartDate = new Date(0L);
+                        mEndDate = new Date(Long.MAX_VALUE);
+                        mTransactionsInTimePeriod = mViewModel.getTransactionsInTimePeriod(mStartDate,mEndDate);
+                        updateCategoryExpensePieChart();
+                        updateCategoricalHorizontalBarChart();
                         break;
                 }
+
             }
 
             @Override
@@ -125,26 +141,27 @@ public class StatsFragment extends Fragment {
             }
         });
 
-        updateCategoryExpensePieChart(mViewModel.getPayPeriodStartDate(),mViewModel.getPayPeriodEndDate());
-        updateCategoricalHorizontalBarChart(mViewModel.getPayPeriodStartDate(),mViewModel.getPayPeriodEndDate());
+        timeSpinner.setSelection(0);
 
     }
 
-    private void updateCategoryExpensePieChart(Date startDate, Date endDate){
+    private void updateCategoryExpensePieChart(){
         PieChart chart = view.findViewById(R.id.CategoricalPieChart);
 
-        float savings = mViewModel.getUnspentBudgetForPeriod(startDate,endDate);
+        float savings = mViewModel.getUnspentBudgetForPeriod(mTransactionsInTimePeriod);
         int colorId = savings > 0 ? R.color.colorPrimary : R.color.colorSecondary;
         int colorValue = ContextCompat.getColor(getContext(),colorId);
 
         List<PieEntry> pieEntries = new ArrayList<>();
-        for(Map.Entry<TransactionCategories,Float> t : mViewModel.getCategorizedExpensesForTimeLine(startDate, endDate).entrySet()){
+        for(Map.Entry<TransactionCategories,Float> t : mViewModel.getCategorizedExpenses(mTransactionsInTimePeriod).entrySet()){
             pieEntries.add(new PieEntry(t.getValue(), t.getKey().name()));
         }
 
         PieDataSet dataSet = new PieDataSet(pieEntries,"");
         dataSet.setColors(colorValue);
         dataSet.setDrawValues(false);
+
+        dataSet.setSliceSpace(5f);
         PieData data = new PieData(dataSet);
         chart.setData(data);
         //Remove legend.
@@ -153,7 +170,6 @@ public class StatsFragment extends Fragment {
         //Remove description
         Description des = chart.getDescription();
         des.setEnabled(false);
-        dataSet.setSliceSpace(2f);
         chart.setHoleColor(00000000);
         chart.setTouchEnabled(false);
 
@@ -170,11 +186,11 @@ public class StatsFragment extends Fragment {
     }
 
     // TODO: Adjust for percentage / Actual $
-    private void updateCategoricalHorizontalBarChart(Date startDate, Date endDate){
+    private void updateCategoricalHorizontalBarChart(){
         HorizontalBarChart chart = view.findViewById(R.id.CategoricalBreakdownSummaryBarChart);
         List<BarEntry> entries = new ArrayList<>();
 
-        int daysBetween = CalendarUtil.daysBetween(startDate, endDate);
+        int daysBetween = CalendarUtil.daysBetween(mStartDate, mEndDate);
 
         final List<String> labels = new ArrayList<>();
         for(int i = 0 ; i < TransactionCategories.values().length;i++){
@@ -183,10 +199,11 @@ public class StatsFragment extends Fragment {
                 labels.add(category.name());
                 //Find Ideal Value
                 float ideal = mViewModel.getIdealValueForCategory(category,
-                                                                  startDate,endDate,
+                                                                  mStartDate,mEndDate,
+                                                                  mTransactionsInTimePeriod,
                                                                   mViewModel.getSettings().getValue().income.Period);
                 //Find Current Pay Period Value
-                float current = mViewModel.getCurrentValueForCategory(category,startDate,endDate);
+                float current = mViewModel.getCurrentValueForCategory(category,mTransactionsInTimePeriod);
                 //Find Lifetime average value
                 float average = mViewModel.getLifetimeAverageValueForCategory(category,daysBetween);
                 float[] valueArray = new float[]{ideal,current,average};
